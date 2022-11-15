@@ -1,0 +1,33 @@
+name: "test"
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  testbuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: cachix/install-nix-action@v15
+        with:
+          nix_path: nixpkgs=channel:nixos-21.11
+
+      - uses: cachix/cachix-action@v10
+        with:
+          name: holochain-ci
+
+      - name: Install & Test
+        run: |
+          nix-shell default.nix \
+            --keep NIX_PATH \
+            --pure \
+            --run "
+            cargo install --git  https://github.com/holochain/scaffolding  holochain_scaffolding_cli
+            sh run_test.sh
+            "
+
