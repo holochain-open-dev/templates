@@ -95,7 +95,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
     `;
   }
   
-  render{{pascal_case entry_type.name}}({{#if}}maybe{{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}>{{else}}maybeEntryState: EntryState<{{pascal_case entry_type.name}}>{{/if}} | undefined) {
+  render{{pascal_case entry_type.name}}({{#if entry_type.fixed}}maybe{{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}>{{else}}maybeEntryState: EntryState<{{pascal_case entry_type.name}}>{{/if}} | undefined) {
     if (!maybeEntryState) return html`<span>The requested {{lower_case entry_type.name}} doesn't exist</span>`;
     
     {{#if crud.update}}
