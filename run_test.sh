@@ -9,6 +9,7 @@ mv forum-lit /tmp
 cd /tmp/forum-lit
 nix-shell . --run "
 set -e
+npm i
 hc-scaffold dna forum 
 hc-scaffold zome posts --integrity dnas/forum/zomes/integrity/ --coordinator dnas/forum/zomes/coordinator/
 hc-scaffold entry-type post --fixed false --crud crud --link-from-original-to-each-update true --depends-on --depends-on-itself false --fields

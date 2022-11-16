@@ -65,7 +65,7 @@ import { {{pascal_case entry_type.name}} } from './types';
   {{/if}}
 
   {{#if crud.update}}
-  update{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash, previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type}}>> {
+  update{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash, previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
     const updateRecord = await this.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash,{{/if}} previous{{pascal_case entry_type.name}}Hash, updated{{pascal_case entry_type.name}});
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {

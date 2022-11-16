@@ -1,7 +1,0 @@
----
-manifest_version: "1"
-name: forum-lit
-ui:
-  bundled: "../ui/dist.zip"
-happ_manifest:
-  bundled: "./forum-lit.happ"
