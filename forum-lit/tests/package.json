@@ -1,0 +1,18 @@
+{
+  "name": "tests",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "TEST_EXTENSIONS=.test.ts ts-node-test src"
+  },
+  "author": "",
+  "license": "CAL-1.0",
+  "dependencies": {
+    "@msgpack/msgpack": "^2.7.0",
+    "@holochain/client": "^0.9.2",
+    "@holochain/tryorama": "^0.9.0",
+    "ts-node-test": "^0.2.0"
+  },
+  "type": "module"
+}
