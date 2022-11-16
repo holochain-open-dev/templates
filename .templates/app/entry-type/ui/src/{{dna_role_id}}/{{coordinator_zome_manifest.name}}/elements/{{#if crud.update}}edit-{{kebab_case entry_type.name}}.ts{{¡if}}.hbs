@@ -6,39 +6,36 @@ import { decode } from '@msgpack/msgpack';
 import '@material/mwc-button';
 import { Snackbar } from '@material/mwc-snackbar';
 {{#each entry_type.fields}}
-{{> (concat field_type "/" widget "/create/imports") }}
+{{> (concat field_type "/" widget "/edit/imports") }}
 {{/each}}
 
-import { appWebsocketContext, appInfoContext } from '../../contexts';
-import { {{pascal_case entry_type.name}} } from './types';
+import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
+import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
+import { {{pascal_case entry_type.name}} } from '../types';
 
 @customElement('edit-{{kebab_case entry_type.name}}')
 export class Edit{{pascal_case entry_type.name}} extends LitElement {
 
-  {{#if link_from_original_to_each_update}}
   @property({
       hasChanged: (newVal: ActionHash, oldVal: ActionHash) => newVal.toString() !== oldVal.toString()
   })
   original{{pascal_case entry_type.name}}Hash!: ActionHash;
-
-  {{/if}}
   
   @property()
-  record!: Record;
+  currentRecord!: EntryRecord<{{pascal_case entry_type.name}}>;
  
-  get current{{pascal_case entry_type.name}}() {
-    return decode((this.record.entry as any).Present.entry) as {{pascal_case entry_type.name}};
-  }
+  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext })
+  {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
  
   {{#each entry_type.fields}}
     {{#if widget }}
       {{#if (not (eq cardinality "vector" ) )}}
   @state()
-  _{{camel_case field_name}}: {{> (concat field_type "/type") }} | undefined = this.current{{pascal_case ../entry_type.name}}.{{snake_case field_name}};
+  _{{camel_case field_name}}: {{> (concat field_type "/type") }} | undefined = this.currentRecord.entry.{{snake_case field_name}};
 
       {{else}}
   @state()
-  _{{camel_case field_name}}: Array<{{> (concat field_type "/type") }} | undefined> = this.current{{pascal_case ../entry_type.name}}.{{snake_case field_name}};
+  _{{camel_case field_name}}: Array<{{> (concat field_type "/type") }} | undefined> = this.currentRecord.entry.{{snake_case field_name}};
 
       {{/if}}
     {{/if}}
@@ -48,15 +45,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
     return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && this._{{camel_case field_name}}{{/if}}{{#if (eq cardinality "vector")}} && this._{{camel_case field_name}}.all(e => e !== undefined){{/if}}{{/if}}{{/each}};
   }
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
-
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
-
   async update{{pascal_case entry_type.name}}() {
-    const cellData = this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === '{{dna_role_id}}')!;
-
     const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = { 
     {{#each entry_type.fields}}
       {{#if widget}}
@@ -69,36 +58,25 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
     {{/each}}
     {{#each entry_type.fields}}
       {{#if (not widget)}}
-      {{snake_case field_name}}: this.current{{pascal_case ../entry_type.name}}.{{snake_case field_name}},
+      {{snake_case field_name}}: this.currentRecord.entry.{{snake_case field_name}},
       {{/if}}
     {{/each}}
     };
 
     try {
-      const updateRecord: Record = await this.appWebsocket.callZome({
-        cap_secret: null,
-        cell_id: cellData.cell_id,
-        zome_name: '{{coordinator_zome_manifest.name}}',
-        fn_name: 'update_{{snake_case entry_type.name}}',
-        payload: {
-          {{#if link_from_original_to_each_update}}
-          original_{{snake_case entry_type.name}}_hash: this.original{{pascal_case entry_type.name}}Hash,
-          {{/if}}
-          previous_{{snake_case entry_type.name}}_hash: this.record.signed_action.hashed.hash,
-          updated_{{snake_case entry_type.name}}: {{camel_case entry_type.name}}
-        },
-        provenance: cellData.cell_id[1]
-      });
+      const updateRecord = await this.{{camel_case coordinator_zome_manifest.name}}Store.update{{pascal_case entry_type.name}}(
+        this.original{{pascal_case entry_type.name}}Hash,
+        this.currentRecord.actionHash,
+        {{camel_case entry_type.name}}
+      );
   
       this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-updated', {
         composed: true,
         bubbles: true,
         detail: {
-          {{#if link_from_original_to_each_update}}
           original{{pascal_case entry_type.name}}Hash: this.original{{pascal_case entry_type.name}}Hash,
-          {{/if}}
-          previous{{pascal_case entry_type.name}}Hash: this.record.signed_action.hashed.hash,
-          updated{{pascal_case entry_type.name}}Hash: updateRecord.signed_action.hashed.hash
+          previous{{pascal_case entry_type.name}}Hash: this.currentRecord.actionHash,
+          updated{{pascal_case entry_type.name}}Hash: this.updateRecord.actionHash
         }
       }));
     } catch (e: any) {
@@ -146,5 +124,17 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
           ></mwc-button>
         </div>
       </div>`;
+  }
+  
+  static get scopedElements() {
+    return {
+        'mwc-snackbar': Snackbar,
+        'mwc-button': Button,
+        {{#each entry_type.fields}}
+          {{#if widget}}
+      {{> (concat field_type "/" widget "/edit/scoped-elements") }},
+          {{/if}}
+        {{/each}}
+    };
   }
 }

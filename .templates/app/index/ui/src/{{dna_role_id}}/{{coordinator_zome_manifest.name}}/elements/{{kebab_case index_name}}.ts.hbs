@@ -2,15 +2,15 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, AgentPubKey, EntryHash, ActionHash, Record, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
-import { Task } from '@lit-labs/task';
-import { appWebsocketContext, appInfoContext } from '../../contexts';
-import '@material/mwc-circular-progress';
-{{#each entry_types}}
-import './{{kebab_case this}}-detail';
-{{/each}}
+import { TaskSubscriber } from 'lit-svelte-stores';
+import { CircularProgress } from '@scoped-elements/material-web';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-@customElement('{{kebab_case index_name}}')
-export class {{pascal_case index_name}} extends LitElement {
+import { {{pascal_case referenceable.name}} } from './{{kebab_case this}}-detail';
+import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
+import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
+
+export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) {
   {{#if (eq index_type.type "ByAuthor")}}
 
   @property({
@@ -19,24 +19,13 @@ export class {{pascal_case index_name}} extends LitElement {
   author!: AgentPubKey;
   {{/if}}
   
-  _fetch{{pascal_case (plural referenceable.name)}} = new Task(this, ([{{#if (eq index_type.type "ByAuthor")}}author{{/if}}]) => this.appWebsocket.callZome({
-      cap_secret: null,
-      cell_id: this.cellData.cell_id,
-      zome_name: '{{coordinator_zome_manifest.name}}',
-      fn_name: 'get_{{snake_case index_name}}',
-      payload: {{#if (eq index_type.type "ByAuthor")}}author{{else}}null{{/if}},
-      provenance: this.cellData.cell_id[1]
-  }) as Promise<Array<{{referenceable.hash_type}}>>, () => [{{#if (eq index_type.type "ByAuthor")}}this.author{{/if}}]);
+  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext })
+  {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  @contextProvided({ context: appWebsocketContext })
-  appWebsocket!: AppWebsocket;
-
-  @contextProvided({ context: appInfoContext })
-  appInfo!: InstalledAppInfo;
-  
-  get cellData() {
-    return this.appInfo.cell_data.find((c: InstalledCell) => c.role_id === '{{dna_role_id}}')!;
-  }
+  _fetch{{pascal_case index_name}} = new TaskSubscriber(this, 
+    ([{{#if (eq index_type.type "ByAuthor")}}author{{/if}}]) => this.{{camel_case coordinator_zome_manifest.name}}Store.fetch{{pascal_case index_name}}({{#if (eq index_type.type "ByAuthor")}}author{{else}}{{/if}}), 
+    () => [{{#if (eq index_type.type "ByAuthor")}}this.author{{/if}}]
+  );
 
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
     if (hashes.length === 0) return html`<span>No {{lower_case (plural referenceable.name)}} found.</span>`;
@@ -51,12 +40,19 @@ export class {{pascal_case index_name}} extends LitElement {
   }
 
   render() {
-    return this._fetch{{pascal_case (plural referenceable.name)}}.render({
+    return this._fetch{{pascal_case index_name}}.render({
       pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
         <mwc-circular-progress indeterminate></mwc-circular-progress>
       </div>`,
       complete: (hashes) => this.renderList(hashes),
       error: (e: any) => html`<span>Error fetching the {{lower_case (plural referenceable.name)}}: ${e.data.data}.</span>`
     });
+  }
+
+  static get scopedElements() {
+    return {
+      'mwc-circular-progress': CircularProgress,
+      '{{kebab_case entry_type.name}}-detail': {{pascal_case entry_type.name}}Detail
+    };
   }
 }
