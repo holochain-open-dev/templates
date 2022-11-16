@@ -104,7 +104,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
           {{#if link_from_original_to_each_update}}
     	  .original{{pascal_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
     	  {{/if}}
-    	  .currentRecord=${ {{#if}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}} }
+    	  .currentRecord=${ {{#if entry_type.fixed}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}} }
     	  @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
     	  @edit-canceled=${() => { this._editing = false; } }
     	  style="display: flex; flex: 1;"
@@ -112,7 +112,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
     }
 
     {{/if}}
-    return this.renderDetail({{#if}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}});
+    return this.renderDetail({{#if entry_type.fixed}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}});
   }
 
   render() {
