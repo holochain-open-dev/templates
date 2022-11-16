@@ -40,7 +40,7 @@ import { {{pascal_case entry_type.name}} } from './types';
     return new EntryRecord(record);
   }
   {{else}}
-  fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: ActionHash): Promise<Readable<EntryState<{{pascal_case entry_type.name}}> | undefined>> {
+  fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: ActionHash): Promise<Readable<EntryState<{{pascal_case entry_type.name}}> | undefined>>> {
     const record = await this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash);
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
@@ -96,7 +96,7 @@ import { {{pascal_case entry_type.name}} } from './types';
   
   {{#if entry_type.depends_on_itself}}
   fetch{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}): Promise<Readable<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> {
-    const hashes = await this.client.get{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case referenceable.singular_arg}});
+    const hashes = await this.client.get{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash);
     
     this._{{camel_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case entry_type.name}}Hash) || [];

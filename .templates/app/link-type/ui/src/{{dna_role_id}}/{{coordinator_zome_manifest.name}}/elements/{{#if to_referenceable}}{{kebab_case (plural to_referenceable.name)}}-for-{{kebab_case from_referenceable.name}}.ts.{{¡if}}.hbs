@@ -6,7 +6,7 @@ import { TaskSubscriber } from 'lit-svelte-stores';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-import { {{pascal_case referenceable.name}} } from './{{kebab_case this}}-detail';
+import { {{pascal_case to_referenceable.name}} } from './{{kebab_case to_referenceable.name}}-detail';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 
@@ -50,7 +50,7 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   static get scopedElements() {
     return {
       'mwc-circular-progress': CircularProgress,
-      '{{kebab_case entry_type.name}}-detail': {{pascal_case entry_type.name}}Detail
+      '{{kebab_case to_referenceable.name}}-detail': {{pascal_case to_referenceable.name}}Detail
     };
   }
 }

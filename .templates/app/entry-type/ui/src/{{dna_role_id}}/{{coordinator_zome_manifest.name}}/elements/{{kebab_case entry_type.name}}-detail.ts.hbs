@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, AppWebsocket, EntryHash, Record, ActionHash, InstalledAppInfo } from '@holochain/client';
+import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { TaskSubscriber } from 'lit-svelte-stores';
 import { EntryState } from '@holochain-open-dev/utils';
 import { contextProvided } from '@lit-labs/context';
@@ -11,6 +12,7 @@ import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 {{#each entry_type.fields}}
 {{> (concat field_type "/" widget "/detail/imports") }}
+
 {{/each}}
 {{#if crud.update}}
 import { Edit{{pascal_case entry_type.name}} } from './edit-{{kebab_case entry_type.name}}';
@@ -129,9 +131,9 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
   
   static get scopedElements() {
     return {
-        'edit-{{kebab_case entry_type.name}}': Edit{{pascal_case entry_type.name}},
-        'mwc-snackbar': Snackbar,
-        'mwc-card': Card,
+      'edit-{{kebab_case entry_type.name}}': Edit{{pascal_case entry_type.name}},
+      'mwc-snackbar': Snackbar,
+      'mwc-card': Card,
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/edit/scoped-elements") }},

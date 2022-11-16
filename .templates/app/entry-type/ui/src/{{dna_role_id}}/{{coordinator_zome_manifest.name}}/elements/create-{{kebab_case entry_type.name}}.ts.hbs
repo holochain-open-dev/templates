@@ -1,12 +1,14 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AgentPubKey, EntryHash, AppWebsocket, InstalledAppInfo } from '@holochain/client';
+import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { contextProvided } from '@lit-labs/context';
 import { Snackbar, Button, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 {{#each entry_type.fields}}
 {{> (concat field_type "/" widget "/edit/imports") }}
+
 {{/each}}
 
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
@@ -116,9 +118,9 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
   
   static get scopedElements() {
     return {
-        'mwc-snackbar': Snackbar,
-        'mwc-button': Button,
-        'mwc-card': Card,
+      'mwc-snackbar': Snackbar,
+      'mwc-button': Button,
+      'mwc-card': Card,
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/edit/scoped-elements") }},

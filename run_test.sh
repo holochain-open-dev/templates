@@ -9,7 +9,6 @@ mv forum-lit /tmp
 cd /tmp/forum-lit
 nix-shell . --run "
 set -e
-npm i
 hc-scaffold dna forum 
 hc-scaffold zome posts --integrity dnas/forum/zomes/integrity/ --coordinator dnas/forum/zomes/coordinator/
 hc-scaffold entry-type post --fixed false --crud crud --link-from-original-to-each-update true --depends-on --depends-on-itself false --fields
@@ -27,5 +26,6 @@ hc-scaffold link-type comment like:EntryHash --bidireccional true
 hc-scaffold link-type certificate:EntryHash like --bidireccional false
 hc-scaffold link-type agent:Creator post:EntryHash --bidireccional true
 
+npm i
 npm run build -w ui
 "

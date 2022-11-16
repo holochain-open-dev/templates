@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, Record, AppWebsocket, EntryHash, ActionHash, InstalledAppInfo } from '@holochain/client';
+import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { contextProvided } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { CircularProgress } from '@scoped-elements/material-web';

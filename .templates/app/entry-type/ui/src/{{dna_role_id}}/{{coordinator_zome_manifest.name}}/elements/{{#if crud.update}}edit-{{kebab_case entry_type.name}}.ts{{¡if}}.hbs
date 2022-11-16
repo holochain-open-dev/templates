@@ -1,19 +1,21 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AppWebsocket, InstalledAppInfo } from '@holochain/client';
+import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { contextProvided } from '@lit-labs/context';
 import { decode } from '@msgpack/msgpack';
 import '@material/mwc-button';
 import { Snackbar } from '@material/mwc-snackbar';
+
 {{#each entry_type.fields}}
 {{> (concat field_type "/" widget "/edit/imports") }}
+
 {{/each}}
 
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
 
-@customElement('edit-{{kebab_case entry_type.name}}')
 export class Edit{{pascal_case entry_type.name}} extends LitElement {
 
   @property({
@@ -31,7 +33,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
     {{#if widget }}
       {{#if (not (eq cardinality "vector" ) )}}
   @state()
-  _{{camel_case field_name}}: {{> (concat field_type "/type") }} | undefined = this.currentRecord.entry.{{snake_case field_name}};
+  _{{camel_case field_name}}: {{> (concat field_type "/type") }} = this.currentRecord.entry.{{snake_case field_name}};
 
       {{else}}
   @state()
@@ -76,7 +78,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
         detail: {
           original{{pascal_case entry_type.name}}Hash: this.original{{pascal_case entry_type.name}}Hash,
           previous{{pascal_case entry_type.name}}Hash: this.currentRecord.actionHash,
-          updated{{pascal_case entry_type.name}}Hash: this.updateRecord.actionHash
+          updated{{pascal_case entry_type.name}}Hash: updateRecord.actionHash
         }
       }));
     } catch (e: any) {
@@ -128,8 +130,8 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
   
   static get scopedElements() {
     return {
-        'mwc-snackbar': Snackbar,
-        'mwc-button': Button,
+      'mwc-snackbar': Snackbar,
+      'mwc-button': Button,
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/edit/scoped-elements") }},
