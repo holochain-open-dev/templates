@@ -4,6 +4,6 @@ Scaffold the profiles zome in this DNA by running these commands:
 
   hc-scaffold zome profiles --coordinator dnas/{{dna_name}}/zomes/coordinator --integrity dnas/{{dna_name}}/zomes/integrity
   cargo add -p profiles --git https://github.com/holochain-open-dev/profiles hc_zome_profiles_coordinator
-  echo "extern crate hc_zome_profiles_coordinator" > dnas/{{dna_name}}/zomes/coordinator/profiles/src/lib.rs
+  echo "extern crate hc_zome_profiles_coordinator;" > dnas/{{dna_name}}/zomes/coordinator/profiles/src/lib.rs
   cargo add -p profiles_integrity --git https://github.com/holochain-open-dev/profiles hc_zome_profiles_integrity
-  echo "extern crate hc_zome_profiles_integrity" > dnas/{{dna_name}}/zomes/integrity/profiles/src/lib.rs
+  echo "extern crate hc_zome_profiles_integrity;" > dnas/{{dna_name}}/zomes/integrity/profiles/src/lib.rs
