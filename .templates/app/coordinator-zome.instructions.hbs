@@ -1,0 +1,8 @@
+Complete these steps to be able to use the UI elements:
+
+In the `ui/src/<APP_NAME>-app.ts` file:
+
+1. Import the newly created `{{pascal_case zome_manifest.name}}Client`, `{{pascal_case zome_manifest.name}}Store` and `{{camel_case zome_manifest.name}}StoreContext` from the appropriate files at `ui/src/{{dna_role_id}}/{{snake_case zome_manifest.name}}`.
+2. Copy and paste the field for `_profilesStore`, changing its to the newly created `{{pascal_case zome_manifest.name}}Store` and its context to `{{camel_case zome_manifest.name}}StoreContext`.
+3. Initialize the `{{pascal_case zome_manifest.name}}Store`, at the end of the `initStores()` function.
+4. Import the UI elements that you want to present at first to the user, and insert them in the `renderContent()` function.

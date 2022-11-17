@@ -53,9 +53,13 @@ export class {{pascal_case app_name}}App extends ScopedElementsMixin(LitElement)
 
     const cellClient = new CellClient(client, profilesCell);
 
-    this._profilesStore = new ProfilesStore(new ProfilesService(cellClient));
+    await initStores(cellClient);
 
     this._loading = false;
+  }
+  
+  async initStores(cellClient: CellClient) {
+      this._profilesStore = new ProfilesStore(new ProfilesService(cellClient));
   }
 
   renderMyProfile() {
