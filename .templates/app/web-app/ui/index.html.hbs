@@ -34,12 +34,12 @@
   </head>
 
   <body>
-    <{{kebab_case app_name}}-app style="flex: 1"></{{kebab_case app_name}}-app>
+    <holochain-app style="flex: 1"></holochain-app>
 
     <script type="module">
-      import { {{pascal_case app_name}}App } from './out-tsc/{{kebab_case app_name}}-app.js';
+      import { HolochainApp } from './out-tsc/holochain-app.js';
 
-      customElements.define('{{kebab_case app_name}}-app', {{pascal_case app_name}}App);
+      customElements.define('holochain-app', HolochainApp);
     </script>
 
   </body>
