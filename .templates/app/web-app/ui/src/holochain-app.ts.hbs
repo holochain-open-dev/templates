@@ -53,7 +53,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
 
     const cellClient = new CellClient(client, profilesCell);
 
-    await initStores(cellClient);
+    await this.initStores(cellClient);
 
     this._loading = false;
   }
