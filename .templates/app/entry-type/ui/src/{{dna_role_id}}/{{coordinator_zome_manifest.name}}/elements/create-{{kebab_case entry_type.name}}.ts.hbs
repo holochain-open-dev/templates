@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AgentPubKey, EntryHash, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
+import { hashProperty, hashState } from '@holochain-open-dev/elements';
 import { contextProvided } from '@lit-labs/context';
 import { Snackbar, Button, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
@@ -14,12 +15,13 @@ import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
+import { sharedStyles } from '../../../shared-styles';
 
 export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(LitElement) {
   {{#each entry_type.fields}}
     {{#if (not widget) }}
       {{#if (not (eq cardinality "vector" ) )}}
-  @property()
+  @property({{#if (or (eq field_type "AgentPubKey") (eq field_type "ActionHash") (eq field_type "EntryHash"))}}hashProperty('{{kebab_case field_name}}'){{/if}})
   {{camel_case field_name}}!: {{> (concat field_type "/type") }};
 
       {{else}}
@@ -33,7 +35,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
   {{#each entry_type.fields}}
     {{#if widget }}
       {{#if (not (eq cardinality "vector" ) )}}
-  @state()
+  @state({{#if (or (eq field_type "AgentPubKey") (eq field_type "ActionHash") (eq field_type "EntryHash"))}}hashState(){{/if}})
   _{{camel_case field_name}}: {{> (concat field_type "/type") }} | undefined;
 
       {{else}}
@@ -48,7 +50,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
     return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && this._{{camel_case field_name}}{{/if}}{{#if (eq cardinality "vector")}} && this._{{camel_case field_name}}.all(e => e !== undefined){{/if}}{{/if}}{{/each}};
   }
 
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext })
+  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   async create{{pascal_case entry_type.name}}() {
@@ -128,4 +130,6 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
         {{/each}}
     };
   }
+  
+  static styles = [sharedStyles];
 }

@@ -3,28 +3,28 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, AgentPubKey, EntryHash, ActionHash, Record, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
 import { TaskSubscriber } from 'lit-svelte-stores';
+import { hashProperty } from '@holochain-open-dev/elements';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-import { {{pascal_case referenceable.name}} } from './{{kebab_case referenceable.name}}-detail';
+import { {{pascal_case referenceable.name}}Detail } from './{{kebab_case referenceable.name}}-detail';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
+import { sharedStyles } from '../../../shared-styles';
 
 export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) {
   {{#if (eq index_type.type "ByAuthor")}}
 
-  @property({
-    hasChanged: (newVal: AgentPubKey, oldVal: AgentPubKey) => newVal.toString() !== oldVal.toString()
-  })
+  @property(hashProperty('author'))
   author!: AgentPubKey;
   {{/if}}
   
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext })
+  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case index_name}} = new TaskSubscriber(this, 
-    ([{{#if (eq index_type.type "ByAuthor")}}author{{/if}}]) => this.{{camel_case coordinator_zome_manifest.name}}Store.fetch{{pascal_case index_name}}({{#if (eq index_type.type "ByAuthor")}}author{{else}}{{/if}}), 
-    () => [{{#if (eq index_type.type "ByAuthor")}}this.author{{/if}}]
+    ([store{{#if (eq index_type.type "ByAuthor")}}, author{{/if}}]) => store.fetch{{pascal_case index_name}}({{#if (eq index_type.type "ByAuthor")}}author{{else}}{{/if}}), 
+    () => [this.{{camel_case coordinator_zome_manifest.name}}Store{{#if (eq index_type.type "ByAuthor")}}, this.author{{/if}}] as [{{pascal_case coordinator_zome_manifest.name}}Store{{#if (eq index_type.type "ByAuthor")}}, AgentPubKey{{/if}}]
   );
 
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
@@ -55,4 +55,6 @@ export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) 
       '{{kebab_case referenceable.name}}-detail': {{pascal_case referenceable.name}}Detail
     };
   }
+  
+  static styles = [sharedStyles];
 }

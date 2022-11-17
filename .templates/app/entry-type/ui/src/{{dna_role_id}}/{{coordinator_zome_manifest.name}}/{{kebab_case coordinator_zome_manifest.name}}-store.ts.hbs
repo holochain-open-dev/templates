@@ -1,7 +1,6 @@
 import { {{pascal_case entry_type.name}} } from './types';
 
 {{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
-
   {{previous_scope_content}}
   
   /** {{title_case entry_type.name}} **/
@@ -9,78 +8,80 @@ import { {{pascal_case entry_type.name}} } from './types';
   private _{{camel_case (plural entry_type.name)}}: Writable<RecordBag<{{pascal_case entry_type.name}}>> = writable(new RecordBag());
 
   {{#each entry_type.depends_on}}
-  private _{{camel_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}: Writable<{{referenceable.hash_type}}Map<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>> = writable(new {{referenceable.hash_type}}Map());
+  private _{{camel_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}: Writable<{{referenceable.hash_type}}Map<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> = writable(new {{referenceable.hash_type}}Map());
 
   {{/each}}
   {{#if entry_type.depends_on_itself}}
-  private _{{camel_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}: Writable<{{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}Map<{{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>> = writable(new {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}Map());
+  private _{{camel_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}: Writable<{{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}Map<Array<{{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> = writable(new {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}Map());
   {{/if}}
-  
-
-  create{{pascal_case entry_type.name}}({{camel_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<Record> {
+  async create{{pascal_case entry_type.name}}({{camel_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<Record> {
     const record = await this.client.create{{pascal_case entry_type.name}}({{camel_case entry_type.name}});
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
-      bag.add(record);
+      bag.add([record]);
       return bag;
-    };
+    });
     
     return record;
   }
 
   {{#if entry_type.fixed}}
-  fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}: EntryHash): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
+  async fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}: EntryHash): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
     const record = await this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}});
     
+    if (!record) return undefined;
+    
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
-      bag.add(record);
+      bag.add([record]);
       return bag;
-    };
+    });
     
     return new EntryRecord(record);
   }
   {{else}}
-  fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: ActionHash): Promise<Readable<EntryState<{{pascal_case entry_type.name}}> | undefined>>> {
+  async fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: ActionHash): Promise<Readable<EntryState<{{pascal_case entry_type.name}}> | undefined>> {
     const record = await this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash);
     
-    this._{{camel_case (plural entry_type.name)}}.update(bag => {
-      bag.add(record);
-      return bag;
-    };
+    if (record) {   
+      this._{{camel_case (plural entry_type.name)}}.update(bag => {
+        bag.add([record]);
+        return bag;
+      });
+    }
     
-    return derived(this._{{camel_case (plural entry_type.name)}}, bag => reduceEntryState(bag, {{camel_case entry_type.name}}Hash));
+    return derived(this._{{camel_case (plural entry_type.name)}}, bag => entryState(bag, {{camel_case entry_type.name}}Hash));
   }
   {{/if}}
   
   {{#if crud.delete}}
-  delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<void> {
+  async delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<void> {
     const deleteActionHash = await this.client.delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash);
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
       const deletes = bag.deletes.get(original{{pascal_case entry_type.name}}Hash) || [];
       bag.deletes.put(original{{pascal_case entry_type.name}}Hash, [...deletes, deleteActionHash]);
-      return deletes;
-    };
+      return bag;
+    });
   }
   {{/if}}
 
   {{#if crud.update}}
-  update{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash, previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
+  async update{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash, previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
     const updateRecord = await this.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash,{{/if}} previous{{pascal_case entry_type.name}}Hash, updated{{pascal_case entry_type.name}});
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
-      bag.add(updateRecord);
+      bag.add([updateRecord]);
       const updates = bag.updates.get(original{{pascal_case entry_type.name}}Hash) || [];
-      bag.updates.put(original{{pascal_case entry_type.name}}Hash, [...updates, updateActionHash]);
+      bag.updates.put(original{{pascal_case entry_type.name}}Hash, [...updates, updateRecord.signed_action.hashed.hash]);
       return bag;
-    };
+    });
     
-    return updateRecord;
+    return new EntryRecord(updateRecord);
   }
   {{/if}}
   
   {{#each entry_type.depends_on}}
-  fetch{{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}({{camel_case referenceable.singular_arg}}: {{referenceable.hash_type}}): Promise<Readable<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> {
+  async fetch{{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}({{camel_case referenceable.singular_arg}}: {{referenceable.hash_type}}): Promise<Readable<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> {
     const hashes = await this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}({{camel_case referenceable.singular_arg}});
     
     this._{{camel_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}.update(hashMap => {
@@ -95,7 +96,7 @@ import { {{pascal_case entry_type.name}} } from './types';
   
   
   {{#if entry_type.depends_on_itself}}
-  fetch{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}): Promise<Readable<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> {
+  async fetch{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}): Promise<Readable<Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>>> {
     const hashes = await this.client.get{{pascal_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash);
     
     this._{{camel_case (plural entry_type.name)}}For{{pascal_case entry_type.name}}.update(hashMap => {

@@ -2,7 +2,6 @@ import { {{pascal_case entry_type.name}} } from './types';
 
 {{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client {" ) }}
   {{previous_scope_content}}
-
   /** {{title_case entry_type.name}} **/
 
   create{{pascal_case entry_type.name}}({{camel_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<Record> {

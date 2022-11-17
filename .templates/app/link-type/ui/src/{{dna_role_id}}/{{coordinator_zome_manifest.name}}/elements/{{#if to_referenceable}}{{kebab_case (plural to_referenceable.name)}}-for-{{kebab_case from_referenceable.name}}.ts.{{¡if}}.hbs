@@ -2,27 +2,31 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { InstalledCell, AgentPubKey, EntryHash, ActionHash, Record, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { contextProvided } from '@lit-labs/context';
+import { hashProperty } from '@holochain-open-dev/elements';
 import { TaskSubscriber } from 'lit-svelte-stores';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-import { {{pascal_case to_referenceable.name}} } from './{{kebab_case to_referenceable.name}}-detail';
+{{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
+import { {{pascal_case to_referenceable.name}}Detail } from './{{kebab_case to_referenceable.name}}-detail';
+{{else}}
+import { AgentAvatar } from '@holochain-open-dev/profiles';
+{{/if}}
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
+import { sharedStyles } from '../../../shared-styles';
 
 export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} extends ScopedElementsMixin(LitElement) {
 
-  @property({
-    hasChanged: (newVal: {{from_referenceable.hash_type}}, oldVal: {{from_referenceable.hash_type}}) => newVal.toString() !== oldVal.toString()
-  })
+  @property(hashPropery('{{kebab_case from_referenceable.singular_arg}}'))
   {{camel_case from_referenceable.singular_arg}}!: {{from_referenceable.hash_type}}; 
 
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext })
+  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case (plural to_referenceable.name)}} = new TaskSubscriber(this,
-    ([{{camel_case from_referenceable.singular_arg}}]) => this.{{camel_case coordinator_zome_manifest.name}}Store.fetch{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}), 
-    () => [this.{{camel_case from_referenceable.singular_arg}}]
+    ([store, {{camel_case from_referenceable.singular_arg}}]) => store.fetch{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}), 
+    () => [this.{{camel_case coordinator_zome_manifest.name}}Store, this.{{camel_case from_referenceable.singular_arg}}] as [{{pascal_case coordinator_zome_manifest.name}}Store, {{from_referenceable.hash_type}}]
   );
 
   renderList(hashes: Array<{{to_referenceable.hash_type}}>) {
@@ -31,7 +35,11 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
     return html`
       <div style="display: flex; flex-direction: column">
         ${hashes.map(hash => 
+      {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
           html`<{{kebab_case to_referenceable.name}}-detail .{{camel_case to_referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case to_referenceable.name}}-detail>`
+      {{else}}
+          html`<agent-avatar .agentPubKey=${hash}></agent-avatar>`
+      {{/if}}
         )}
       </div>
     `;
@@ -50,7 +58,13 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   static get scopedElements() {
     return {
       'mwc-circular-progress': CircularProgress,
-      '{{kebab_case to_referenceable.name}}-detail': {{pascal_case to_referenceable.name}}Detail
+      {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
+      '{{kebab_case to_referenceable.name}}-detail': {{pascal_case to_referenceable.name}}Detail,
+      {{else}}
+      'agent-avatar': AgentAvatar
+      {{/if}}
     };
   }
+  
+  static styles = [sharedStyles];
 }

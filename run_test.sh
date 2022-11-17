@@ -1,14 +1,12 @@
 #!/usr/bin/bash
 set -e
 
-rm -rf /tmp/forum-lit
+rm -rf /tmp/forum-lit-open-dev
 
-hc-scaffold web-app forum-lit --setup-nix true --template app --templates-path .templates
+hc-scaffold web-app forum-lit-open-dev --setup-nix true --template app --templates-path .templates
 
-mv forum-lit /tmp
-cd /tmp/forum-lit
-nix-shell . --run "
-set -e
+mv forum-lit-open-dev /tmp
+cd /tmp/forum-lit-open-dev
 hc-scaffold dna forum 
 hc-scaffold zome posts --integrity dnas/forum/zomes/integrity/ --coordinator dnas/forum/zomes/coordinator/
 hc-scaffold entry-type post --fixed false --crud crud --link-from-original-to-each-update true --depends-on --depends-on-itself false --fields
@@ -26,6 +24,8 @@ hc-scaffold link-type comment like:EntryHash --bidireccional true
 hc-scaffold link-type certificate:EntryHash like --bidireccional false
 hc-scaffold link-type agent:Creator post:EntryHash --bidireccional true
 
+nix-shell . --run "
+set -e
 npm i
 npm run build -w ui
 "

@@ -1,7 +1,7 @@
 import { Record, ActionHash, EntryHash, AgentPubKey } from '@holochain/client';
 import { {{pascal_case zome_manifest.name}}Client } from './{{kebab_case zome_manifest.name}}-client';
 import { writable, Writable, derived, Readable, get } from 'svelte/store';
-import { AgentPubKeyMap, ActionHashMap, RecordBag, EntryHashMap, reduceEntryState, EntryState } from '@holochain-open-dev/utils';
+import { AgentPubKeyMap, ActionHashMap, RecordBag, EntryHashMap, entryState, EntryRecord, EntryState } from '@holochain-open-dev/utils';
 
 export class {{pascal_case zome_manifest.name}}Store {
 
@@ -9,7 +9,7 @@ export class {{pascal_case zome_manifest.name}}Store {
   public myAgentPubKey: AgentPubKey;
 
   constructor(public client: {{pascal_case zome_manifest.name}}Client) {
-    this.myAgentPubKey = service.cellClient.cell.cell_id[1];
+    this.myAgentPubKey = client.cellClient.cell.cell_id[1];
   }
   
 }

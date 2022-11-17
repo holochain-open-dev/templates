@@ -19,14 +19,28 @@
         padding: 0;
         font-family: sans-serif;
         background-color: #ededed;
+        height: 100%;
+      }
+      body {
+        display: flex;
+      }
+
+      :root {
+        --mdc-theme-primary: #7B1FA2;
+        --mdc-theme-secondary: #FF5722;
       }
     </style>
-    <title>lit-element</title>
+    <title>{{title_case app_name}}</title>
   </head>
 
   <body>
-    <holochain-app></holochain-app>
+    <{{kebab_case app_name}}-app style="flex: 1"></{{kebab_case app_name}}-app>
 
-    <script type="module" src="./out-tsc/holochain-app.js"></script>
+    <script type="module">
+      import { {{pascal_case app_name}}App } from './out-tsc/{{kebab_case app_name}}-app.js';
+
+      customElements.define('{{kebab_case app_name}}-app', {{pascal_case app_name}}App);
+    </script>
+
   </body>
 </html>

@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, Record, AppWebsocket, EntryHash, ActionHash, InstalledAppInfo, AgentPubKey } from '@holochain/client';
 import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
+import { hashProperty } from '@holochain-open-dev/elements';
 import { contextProvided } from '@lit-labs/context';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { TaskSubscriber } from 'lit-svelte-stores';
@@ -11,20 +12,19 @@ import { {{pascal_case ../coordinator_zome_manifest.name}}Store } from '../{{keb
 import { {{camel_case ../coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case ../entry_type.name}} } from '../types';
 import { {{pascal_case ../entry_type.name}}Detail } from './{{kebab_case ../entry_type.name}}-detail';
+import { sharedStyles } from '../../../shared-styles';
 
 export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name }} extends ScopedElementsMixin(LitElement) {
 
-  @property({
-    hasChanged: (newVal: {{referenceable.hash_type}}, oldVal: {{referenceable.hash_type}}) => newVal.toString() !== oldVal.toString()
-  })
+  @property(hashProperty('{{kebab_case referenceable.singular_arg}}'))
   {{camel_case referenceable.singular_arg}}!: {{referenceable.hash_type}};
 
-  @contextProvided({ context: {{camel_case ../coordinator_zome_manifest.name}}StoreContext })
+  @contextProvided({ context: {{camel_case ../coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case ../coordinator_zome_manifest.name}}Store!: {{pascal_case ../coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case (plural ../entry_type.name)}} = new TaskSubscriber(this, 
-    ([{{camel_case referenceable.singular_arg}}]) => this.{{camel_case ../coordinator_zome_manifest.name}}Store.fetch{{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}({{camel_case referenceable.singular_arg}}), 
-    () => [this.{{camel_case referenceable.singular_arg}}]
+    ([store, {{camel_case referenceable.singular_arg}}]) => store.fetch{{pascal_case (plural ../entry_type.name)}}For{{pascal_case referenceable.name}}({{camel_case referenceable.singular_arg}}), 
+    () => [this.{{camel_case ../coordinator_zome_manifest.name}}Store, this.{{camel_case referenceable.singular_arg}}] as [{{pascal_case ../coordinator_zome_manifest.name}}Store, {{referenceable.hash_type}}]
   );
 
   renderList(hashes: Array<{{#if ../entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}>) {
@@ -55,4 +55,6 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case referen
       '{{kebab_case ../entry_type.name}}-detail': {{pascal_case ../entry_type.name}}Detail
     };
   }
+  
+  static styles = [sharedStyles];
 }
