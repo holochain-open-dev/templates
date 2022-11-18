@@ -35,4 +35,5 @@ nix-shell . --run "
 set -e
 npm i
 npm run build -w ui
+npm run lint -w ui
 "

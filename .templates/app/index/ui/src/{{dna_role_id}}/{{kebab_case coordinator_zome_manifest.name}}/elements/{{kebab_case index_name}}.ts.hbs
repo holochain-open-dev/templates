@@ -7,7 +7,7 @@ import { hashProperty } from '@holochain-open-dev/elements';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-import { {{pascal_case referenceable.name}}Detail } from './{{kebab_case referenceable.name}}-detail';
+import { {{pascal_case referenceable.name}}Summary } from './{{kebab_case referenceable.name}}-summary';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { sharedStyles } from '../../../shared-styles';
@@ -33,7 +33,7 @@ export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) 
     return html`
       <div style="display: flex; flex-direction: column">
         ${hashes.map(hash => 
-          html`<{{kebab_case referenceable.name}}-detail .{{camel_case referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case referenceable.name}}-detail>`
+          html`<{{kebab_case referenceable.name}}-summary .{{camel_case referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case referenceable.name}}-summary>`
         )}
       </div>
     `;
@@ -52,7 +52,7 @@ export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) 
   static get scopedElements() {
     return {
       'mwc-circular-progress': CircularProgress,
-      '{{kebab_case referenceable.name}}-detail': {{pascal_case referenceable.name}}Detail
+      '{{kebab_case referenceable.name}}-summary': {{pascal_case referenceable.name}}Summary
     };
   }
   

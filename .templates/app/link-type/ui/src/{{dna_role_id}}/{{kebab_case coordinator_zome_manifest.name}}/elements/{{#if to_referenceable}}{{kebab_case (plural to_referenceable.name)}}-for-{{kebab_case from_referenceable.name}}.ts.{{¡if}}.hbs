@@ -8,7 +8,7 @@ import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
-import { {{pascal_case to_referenceable.name}}Detail } from './{{kebab_case to_referenceable.name}}-detail';
+import { {{pascal_case to_referenceable.name}}Summary } from './{{kebab_case to_referenceable.name}}-summary';
 {{else}}
 import { AgentAvatar } from '@holochain-open-dev/profiles';
 {{/if}}
@@ -36,7 +36,7 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
       <div style="display: flex; flex-direction: column">
         ${hashes.map(hash => 
       {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
-          html`<{{kebab_case to_referenceable.name}}-detail .{{camel_case to_referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case to_referenceable.name}}-detail>`
+          html`<{{kebab_case to_referenceable.name}}-summary .{{camel_case to_referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case to_referenceable.name}}-summary>`
       {{else}}
           html`<agent-avatar .agentPubKey=${hash}></agent-avatar>`
       {{/if}}
@@ -59,7 +59,7 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
     return {
       'mwc-circular-progress': CircularProgress,
       {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
-      '{{kebab_case to_referenceable.name}}-detail': {{pascal_case to_referenceable.name}}Detail,
+      '{{kebab_case to_referenceable.name}}-summary': {{pascal_case to_referenceable.name}}Summary,
       {{else}}
       'agent-avatar': AgentAvatar
       {{/if}}
