@@ -63,7 +63,6 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
       	<div style="display: flex; flex-direction: row">
           <span style="font-size: 18px; flex: 1;">{{title_case entry_type.name}}</span>
 
-          {{/if}}
           {{#if crud.delete}}
           <mwc-icon-button style="margin-left: 8px" icon="delete" @click=${() => this.delete{{pascal_case entry_type.name}}()}></mwc-icon-button>
           {{/if}}

@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "scripts": {
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
-    "format": "eslint --ext .ts,.html . --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "format": "prettier \"**/*.ts\" --write --ignore-path .gitignore && eslint --fix --ext .ts,html . --ignore-path .gitignore",
     "build": "rimraf dist && tsc && rollup -c rollup.config.js",
     "build:watch": "run-singleton \"tsc --watch --preserveWatchOutput\"",
     "start": "tsc && concurrently -r \"npm run build:watch\" \"wds\"",
@@ -38,8 +38,9 @@
     "@rollup/plugin-commonjs": "18.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-replace": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.29.2",
-    "@typescript-eslint/parser": "^4.29.2",
+    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
     "@web/dev-server": "0.1.21",
     "@web/dev-server-rollup": "^0.3.10",
     "@web/rollup-plugin-html": "^1.9.1",
@@ -52,6 +53,7 @@
     "eslint-config-prettier": "^8.3.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.3.2",
+    "prettier-plugin-organize-imports": "^3.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.56.2",
     "rollup-plugin-terser": "^7.0.2",
@@ -69,6 +71,9 @@
       "@typescript-eslint"
     ],
     "rules": {
+      "prefer-destructuring": "off",
+      "no-useless-constructor": "off",
+      "no-empty-function": "off",
       "no-empty-pattern": "off",
       "camelcase": "off",
       "import/no-duplicates": "off",
@@ -81,6 +86,10 @@
   },
   "prettier": {
     "singleQuote": true,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "importOrder": ["@webcomponents/scoped-custom-element-registry", "<THIRD_PARTY_MODULES>", "^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderParserPlugins": ["typescript", "decorators-legacy"]
   }
 }

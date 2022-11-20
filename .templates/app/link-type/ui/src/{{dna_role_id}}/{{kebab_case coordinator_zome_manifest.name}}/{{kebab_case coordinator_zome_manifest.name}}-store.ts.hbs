@@ -1,6 +1,6 @@
 {{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
   {{previous_scope_content}}
-  /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} **/
+  /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
   private _{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}: Writable<{{from_referenceable.hash_type}}Map<Array<{{to_referenceable.hash_type}}>>> = writable(new {{from_referenceable.hash_type}}Map());
   {{#if bidireccional}}
   private _{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}: Writable<{{to_referenceable.hash_type}}Map<Array<{{from_referenceable.hash_type}}>>> = writable(new {{to_referenceable.hash_type}}Map());

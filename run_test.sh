@@ -3,7 +3,7 @@ set -e
 
 rm -rf /tmp/forum-lit-open-dev
 
-hc-scaffold web-app forum-lit-open-dev --setup-nix true --template app --templates-path .templates
+hc-scaffold web-app forum-lit-open-dev --setup-nix false --template app --templates-path .templates
 
 mv forum-lit-open-dev /tmp
 cd /tmp/forum-lit-open-dev
@@ -31,9 +31,10 @@ echo "extern crate hc_zome_profiles_coordinator;" > dnas/forum/zomes/coordinator
 cargo add -p profiles_integrity --git https://github.com/holochain-open-dev/profiles hc_zome_profiles_integrity
 echo "extern crate hc_zome_profiles_integrity;" > dnas/forum/zomes/integrity/profiles/src/lib.rs
 
-nix-shell . --run "
+nix-shell https://holochain.love --run "
 set -e
 npm i
-npm run build -w ui
+npm run format -w ui
 npm run lint -w ui
+npm run build -w ui
 "
