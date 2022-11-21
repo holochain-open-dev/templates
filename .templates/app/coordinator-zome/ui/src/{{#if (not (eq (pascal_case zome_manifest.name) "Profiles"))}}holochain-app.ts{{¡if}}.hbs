@@ -1,4 +1,17 @@
-{{#if (not (eq (pascal_case zome_manifest.name) "Profiles"))}}
+{{#if (eq (pascal_case zome_manifest.name) "FileStorage")}}
+import { fileStorageClientContext, FileStorageClient } from '@holochain-open-dev/file-storage';
+
+{{#merge_scope previous_file_content "export class HolochainApp extends ScopedElementsMixin(LitElement) {"}}
+  @contextProvider({ context: fileStorageClientContext })
+  @property()
+  _fileStorageClient!: FileStorageClient;
+
+  {{#merge_scope previous_scope_content "async initStores(cellClient: CellClient) {"}}
+    {{previous_scope_content}}
+    this._fileStorageClient = new FileStorageClient(new {{pascal_case zome_manifest.name}}Client(cellClient));
+  {{/merge_scope}}
+{{/merge_scope}}
+{{else}}
 import { {{camel_case zome_manifest.name}}StoreContext } from './{{dna_role_id}}/{{kebab_case zome_manifest.name}}/context';
 import { {{pascal_case zome_manifest.name}}Client } from './{{dna_role_id}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-client';
 import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_id}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store';
@@ -13,7 +26,4 @@ import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_id}}/{{keb
     this._{{camel_case zome_manifest.name}}Store = new {{pascal_case zome_manifest.name}}Store(new {{pascal_case zome_manifest.name}}Client(cellClient));
   {{/merge_scope}}
 {{/merge_scope}}
-{{else}}
-{{previous_file_content}}
 {{/if}}
-
