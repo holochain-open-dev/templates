@@ -8,7 +8,7 @@ import { fileStorageClientContext, FileStorageClient } from '@holochain-open-dev
 
   {{#merge_scope previous_scope_content "async initStores(cellClient: CellClient) {"}}
     {{previous_scope_content}}
-    this._fileStorageClient = new FileStorageClient(new {{pascal_case zome_manifest.name}}Client(cellClient));
+    this._fileStorageClient = new FileStorageClient(cellClient);
   {{/merge_scope}}
 {{/merge_scope}}
 {{else}}

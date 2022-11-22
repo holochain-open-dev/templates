@@ -133,7 +133,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
       'mwc-button': Button,
         {{#each entry_type.fields}}
           {{#if widget}}
-      {{> (concat field_type "/" widget "/edit/scoped-elements") }},
+      {{> (concat field_type "/" widget "/edit/scoped-elements") }}
           {{/if}}
         {{/each}}
     };

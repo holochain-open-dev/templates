@@ -26,14 +26,14 @@ import { sharedStyles } from '../../../shared-styles';
 
 export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(LitElement) {
   @property(hashProperty('{{kebab_case entry_type.name}}-hash'))
-  {{camel_case entry_type.name}}Hash!: {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}};
+  {{camel_case entry_type.name}}Hash!: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}};
 
   @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  _fetch{{pascal_case entry_type.name}} = new Task{{#if (not entry_type.fixed)}}Subscriber{{/if}}(this, 
+  _fetch{{pascal_case entry_type.name}} = new Task{{#if (not entry_type.reference_entry_hash)}}Subscriber{{/if}}(this, 
     ([store, {{camel_case entry_type.name}}Hash]) => store.fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash), 
-    () => [this.{{camel_case coordinator_zome_manifest.name}}Store, this.{{camel_case entry_type.name}}Hash] as [{{pascal_case coordinator_zome_manifest.name}}Store, {{#if entry_type.fixed}}EntryHash{{else}}ActionHash{{/if}}]
+    () => [this.{{camel_case coordinator_zome_manifest.name}}Store, this.{{camel_case entry_type.name}}Hash] as [{{pascal_case coordinator_zome_manifest.name}}Store, {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}]
   );
 
   {{#if crud.update}}
@@ -96,8 +96,8 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
     `;
   }
   
-  render{{pascal_case entry_type.name}}({{#if entry_type.fixed}}maybe{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}>{{else}}maybeEntryState: EntryState<{{pascal_case entry_type.name}}>{{/if}} | undefined) {
-    if (!{{#if entry_type.fixed}}maybe{{pascal_case entry_type.name}}{{else}}maybeEntryState{{/if}}) return html`<span>The requested {{lower_case entry_type.name}} doesn't exist</span>`;
+  render{{pascal_case entry_type.name}}({{#if entry_type.reference_entry_hash}}maybe{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}>{{else}}maybeEntryState: EntryState<{{pascal_case entry_type.name}}>{{/if}} | undefined) {
+    if (!{{#if entry_type.reference_entry_hash}}maybe{{pascal_case entry_type.name}}{{else}}maybeEntryState{{/if}}) return html`<span>The requested {{lower_case entry_type.name}} doesn't exist</span>`;
     
     {{#if crud.update}}
     if (this._editing) {
@@ -105,7 +105,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
           {{#if link_from_original_to_each_update}}
     	  .original{{pascal_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
     	  {{/if}}
-    	  .currentRecord=${ {{#if entry_type.fixed}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}} }
+    	  .currentRecord=${ {{#if entry_type.reference_entry_hash}}maybe{{camel_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}} }
     	  @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
     	  @edit-canceled=${() => { this._editing = false; } }
     	  style="display: flex; flex: 1;"
@@ -113,7 +113,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
     }
 
     {{/if}}
-    return this.renderDetail({{#if entry_type.fixed}}maybe{{pascal_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}});
+    return this.renderDetail({{#if entry_type.reference_entry_hash}}maybe{{pascal_case entry_type.name}}{{else}}maybeEntryState.lastUpdate{{/if}});
   }
 
   render() {
@@ -137,7 +137,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
       'mwc-card': Card,
         {{#each entry_type.fields}}
           {{#if widget}}
-      {{> (concat field_type "/" widget "/edit/scoped-elements") }},
+      {{> (concat field_type "/" widget "/detail/scoped-elements") }}
           {{/if}}
         {{/each}}
     };

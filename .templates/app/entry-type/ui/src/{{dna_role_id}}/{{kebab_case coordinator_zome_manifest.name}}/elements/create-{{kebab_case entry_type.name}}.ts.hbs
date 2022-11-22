@@ -125,7 +125,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
       'mwc-card': Card,
         {{#each entry_type.fields}}
           {{#if widget}}
-      {{> (concat field_type "/" widget "/edit/scoped-elements") }},
+      {{> (concat field_type "/" widget "/edit/scoped-elements") }}
           {{/if}}
         {{/each}}
     };
