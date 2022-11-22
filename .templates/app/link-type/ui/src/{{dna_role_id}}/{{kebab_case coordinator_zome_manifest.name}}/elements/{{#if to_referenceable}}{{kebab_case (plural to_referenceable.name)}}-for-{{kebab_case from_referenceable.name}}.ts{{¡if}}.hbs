@@ -18,7 +18,7 @@ import { sharedStyles } from '../../../shared-styles';
 
 export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} extends ScopedElementsMixin(LitElement) {
 
-  @property(hashPropery('{{kebab_case from_referenceable.singular_arg}}'))
+  @property(hashProperty('{{kebab_case from_referenceable.singular_arg}}'))
   {{camel_case from_referenceable.singular_arg}}!: {{from_referenceable.hash_type}}; 
 
   @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
@@ -36,7 +36,7 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
       <div style="display: flex; flex-direction: column">
         ${hashes.map(hash => 
       {{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
-          html`<{{kebab_case to_referenceable.name}}-summary .{{camel_case to_referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case to_referenceable.name}}-summary>`
+          html`<{{kebab_case to_referenceable.name}}-summary .{{camel_case to_referenceable.name}}Hash=${hash} style="margin-bottom: 16px;" ></{{kebab_case to_referenceable.name}}-summary>`
       {{else}}
           html`<agent-avatar .agentPubKey=${hash}></agent-avatar>`
       {{/if}}
