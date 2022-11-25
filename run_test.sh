@@ -3,10 +3,13 @@ set -e
 
 rm -rf /tmp/forum-lit-open-dev
 
-hc-scaffold web-app forum-lit-open-dev --setup-nix true --template app --templates-path .templates
+hc-scaffold web-app forum-lit-open-dev --setup-nix false --template app --templates-path .templates
 
 mv forum-lit-open-dev /tmp
 cd /tmp/forum-lit-open-dev
+cp ../forum-lit/default.nix .
+cp -R ../forum-lit/nix .
+
 hc-scaffold dna forum 
 
 hc-scaffold zome posts --integrity dnas/forum/zomes/integrity/ --coordinator dnas/forum/zomes/coordinator/

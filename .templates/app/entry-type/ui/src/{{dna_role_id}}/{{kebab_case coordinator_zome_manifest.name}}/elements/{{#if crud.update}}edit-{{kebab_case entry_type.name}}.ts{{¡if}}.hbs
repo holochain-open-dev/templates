@@ -35,7 +35,7 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
     {{#if widget }}
       {{#if (not (eq cardinality "vector" ) )}}
   @state({{#if (or (eq field_type "AgentPubKey") (eq field_type "ActionHash") (eq field_type "EntryHash"))}}hashState(){{/if}})
-  _{{camel_case field_name}}: {{> (concat field_type "/type") }};
+  _{{camel_case field_name}}{{#if (eq cardinality "single" )}}!{{/if}}: {{> (concat field_type "/type") }}{{#if (eq cardinality "option" )}} | undefined{{/if}};
 
       {{else}}
   @state()
