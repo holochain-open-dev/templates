@@ -10,7 +10,7 @@
     
     this._{{camel_case index_name}}.update(hashMap => {
       const previousHashes = hashMap.get(author) || [];
-      hashMap.put(author, [...previousHashes, ...hashes]);
+      hashMap.put(author, uniqWith([...previousHashes, ...hashes], isEqual));
       return hashMap;
     });
     

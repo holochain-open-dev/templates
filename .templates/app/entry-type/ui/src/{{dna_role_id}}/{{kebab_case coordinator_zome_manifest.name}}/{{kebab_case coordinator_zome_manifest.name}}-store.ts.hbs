@@ -58,7 +58,7 @@ import { {{pascal_case entry_type.name}} } from './types';
     
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
       const deletes = bag.deletes.get(original{{pascal_case entry_type.name}}Hash) || [];
-      bag.deletes.put(original{{pascal_case entry_type.name}}Hash, [...deletes, deleteActionHash]);
+      bag.deletes.put(original{{pascal_case entry_type.name}}Hash, uniqWith([...deletes, deleteActionHash], isEqual));
       return bag;
     });
   }
@@ -71,7 +71,7 @@ import { {{pascal_case entry_type.name}} } from './types';
     this._{{camel_case (plural entry_type.name)}}.update(bag => {
       bag.add([updateRecord]);
       const updates = bag.updates.get(original{{pascal_case entry_type.name}}Hash) || [];
-      bag.updates.put(original{{pascal_case entry_type.name}}Hash, [...updates, updateRecord.signed_action.hashed.hash]);
+      bag.updates.put(original{{pascal_case entry_type.name}}Hash, uniqWith([...updates, updateRecord.signed_action.hashed.hash], isEqual));
       return bag;
     });
     
@@ -86,7 +86,7 @@ import { {{pascal_case entry_type.name}} } from './types';
     
     this._{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case linked_from.singular_arg}}) || [];
-      hashMap.put({{camel_case linked_from.singular_arg}}, [...previousHashes, ...hashes]);
+      hashMap.put({{camel_case linked_from.singular_arg}}, uniqWith([...previousHashes, ...hashes], isEqual));
       return hashMap;
     });
     

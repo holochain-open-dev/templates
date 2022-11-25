@@ -8,8 +8,10 @@ import { Snackbar, Button, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 {{#each entry_type.fields}}
+  {{#if widget}}
 {{> (concat field_type "/" widget "/edit/imports") }}
 
+  {{/if}}
 {{/each}}
 
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
@@ -99,13 +101,15 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
   
           {{#each entry_type.fields}}
             {{#if widget}}
+          <div style="margin-bottom: 16px;">
               {{#if (not (eq cardinality "vector") )}}
           {{> (concat field_type "/" widget "/edit/render") label=(title_case field_name) variable_to_change=(concat "this._" (camel_case field_name) ) }}
               {{else}}
           {{> Vec/edit/render field_name=field_name field_type=field_type widget=widget }}
               {{/if}}
+          </div>
+              
             {{/if}}
-
           {{/each}}
 
           <mwc-button 
@@ -114,8 +118,8 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
             .disabled=${!this.is{{pascal_case entry_type.name}}Valid()}
             @click=${() => this.create{{pascal_case entry_type.name}}()}
           ></mwc-button>
-        </mwc-card>
-    </div>`;
+        </div> 
+      </mwc-card>`;
   }
   
   static get scopedElements() {
@@ -126,6 +130,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/edit/scoped-elements") }}
+
           {{/if}}
         {{/each}}
     };

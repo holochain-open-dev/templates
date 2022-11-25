@@ -8,7 +8,7 @@ import { hashProperty } from '@holochain-open-dev/elements';
 import { contextProvided } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
-import { CircularProgress, Card, Button, Snackbar } from '@scoped-elements/material-web';
+import { CircularProgress, Card, IconButton, Button, Snackbar } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 {{#each entry_type.fields}}
 {{> (concat field_type "/" widget "/detail/imports") }}
@@ -59,7 +59,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
   }
   {{/if}}
 
-  renderDetail(maybeEntryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
+  renderDetail(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`{{#if crud.delete}}
       <mwc-snackbar id="delete-error" leading>
       </mwc-snackbar>
@@ -80,12 +80,12 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
 	{{#each entry_type.fields}}
           {{#if widget}}	  
             {{#if (not (eq cardinality "vector") )}}
- 	<div style="display: flex; flex-direction: row">
+ 	<div style="display: flex; flex-direction: row; margin-bottom: 16px">
 	  <span><strong>{{title_case field_name}}</strong></span>
- 	  <span style="white-space: pre-line">{{> (concat field_type "/" widget "/detail/render") variable_to_read=(concat "maybeEntryRecord.entry." (snake_case field_name) ) }}</span>
+ 	  <span style="white-space: pre-line">{{> (concat field_type "/" widget "/detail/render") variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
 	</div>
             {{else}}
-          {{> Vec/detail/render variable_to_read=(concat "maybeEntryRecord.entry." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
+          {{> Vec/detail/render variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
             {{/if}}
 
  	  {{/if}}
@@ -133,9 +133,11 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
       {{/if}}
       'mwc-snackbar': Snackbar,
       'mwc-card': Card,
+      'mwc-icon-button': IconButton,
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/detail/scoped-elements") }}
+
           {{/if}}
         {{/each}}
 

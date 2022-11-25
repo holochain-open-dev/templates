@@ -29,8 +29,11 @@ import { StoreSubscriber, TaskSubscriber } from 'lit-svelte-stores';
 
 import { sharedStyles } from './shared-styles';
 
+type View = { view: 'main' };
+
 export class HolochainApp extends ScopedElementsMixin(LitElement) {
   @state() _loading = true;
+  @state() _view = { view: 'main' };
 
   @contextProvider({ context: profilesStoreContext })
   @property()
@@ -84,6 +87,18 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
   renderContent() {
     return html``;
   }
+  
+  renderBackButton() {
+    if (this._view.view === 'main') return html``;
+
+    return html`
+      <mwc-icon-button
+        icon="arrow_back"
+        slot="navigationIcon"
+        @click=${() => { this._view = { view: 'main' } } }
+      ></mwc-icon-button>
+    `;
+  }
 
   render() {
     if (this._loading)
@@ -96,6 +111,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
 
     return html`
       <mwc-top-app-bar style="flex: 1; display: flex;">
+        ${this.renderBackButton()}
         <div slot="title">{{title_case app_name}}</div>
         <div class="fill row" style="width: 100vw; height: 100%;">
           <profile-prompt 

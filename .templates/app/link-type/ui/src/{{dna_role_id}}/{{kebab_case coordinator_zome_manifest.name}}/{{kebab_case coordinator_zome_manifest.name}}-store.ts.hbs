@@ -11,26 +11,26 @@
     
     this._{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case from_referenceable.singular_arg}}) || [];
-      hashMap.put({{camel_case from_referenceable.singular_arg}}, [...previousHashes, ...hashes]);
+      hashMap.put({{camel_case from_referenceable.singular_arg}}, uniqWith([...previousHashes, ...hashes], isEqual));
       return hashMap;
     });
     
     return derived(this._{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}, hashMap => hashMap.get({{camel_case from_referenceable.singular_arg}}));
   }
   
-  async add{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}, {{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<void> {
-    await this.client.add{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}, {{camel_case to_referenceable.singular_arg}});
+  async add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}, {{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<void> {
+    await this.client.add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}, {{camel_case to_referenceable.singular_arg}});
     
     this._{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case from_referenceable.singular_arg}}) || [];
-      hashMap.put({{camel_case from_referenceable.singular_arg}}, [...previousHashes, {{camel_case to_referenceable.singular_arg}}]);
+      hashMap.put({{camel_case from_referenceable.singular_arg}}, uniqWith([...previousHashes, {{camel_case to_referenceable.singular_arg}}], isEqual));
       return hashMap;
     });
     
     {{#if bidireccional}}
     this._{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case to_referenceable.singular_arg}}) || [];
-      hashMap.put({{camel_case to_referenceable.singular_arg}}, [...previousHashes, {{camel_case from_referenceable.singular_arg}}]);
+      hashMap.put({{camel_case to_referenceable.singular_arg}}, uniqWith([...previousHashes, {{camel_case from_referenceable.singular_arg}}], isEqual));
       return hashMap;
     });
     {{/if}}
@@ -42,7 +42,7 @@
     
     this._{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.update(hashMap => {
       const previousHashes = hashMap.get({{camel_case to_referenceable.singular_arg}}) || [];
-      hashMap.put({{camel_case to_referenceable.singular_arg}}, [...previousHashes, ...hashes]);
+      hashMap.put({{camel_case to_referenceable.singular_arg}}, uniqWith([...previousHashes, ...hashes], isEqual));
       return hashMap;
     });
     
