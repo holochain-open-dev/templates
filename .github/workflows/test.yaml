@@ -27,7 +27,7 @@ jobs:
             --keep NIX_PATH \
             --pure \
             --run "
-            cargo install --git  https://github.com/holochain/scaffolding  holochain_scaffolding_cli
+            cargo install holochain_scaffolding_cli
             sh run_test.sh
             "
 
