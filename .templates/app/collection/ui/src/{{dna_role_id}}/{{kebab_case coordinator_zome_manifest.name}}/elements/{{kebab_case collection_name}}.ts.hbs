@@ -12,8 +12,8 @@ import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { sharedStyles } from '../../../shared-styles';
 
-export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) {
-  {{#if (eq index_type.type "ByAuthor")}}
+export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElement) {
+  {{#if (eq collection_type.type "ByAuthor")}}
 
   @property(hashProperty('author'))
   author!: AgentPubKey;
@@ -22,9 +22,9 @@ export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) 
   @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  _fetch{{pascal_case index_name}} = new TaskSubscriber(this, 
-    ([store{{#if (eq index_type.type "ByAuthor")}}, author{{/if}}]) => store.fetch{{pascal_case index_name}}({{#if (eq index_type.type "ByAuthor")}}author{{else}}{{/if}}), 
-    () => [this.{{camel_case coordinator_zome_manifest.name}}Store{{#if (eq index_type.type "ByAuthor")}}, this.author{{/if}}] as [{{pascal_case coordinator_zome_manifest.name}}Store{{#if (eq index_type.type "ByAuthor")}}, AgentPubKey{{/if}}]
+  _fetch{{pascal_case collection_name}} = new TaskSubscriber(this, 
+    ([store{{#if (eq collection_type.type "ByAuthor")}}, author{{/if}}]) => store.fetch{{pascal_case collection_name}}({{#if (eq collection_type.type "ByAuthor")}}author{{else}}{{/if}}), 
+    () => [this.{{camel_case coordinator_zome_manifest.name}}Store{{#if (eq collection_type.type "ByAuthor")}}, this.author{{/if}}] as [{{pascal_case coordinator_zome_manifest.name}}Store{{#if (eq collection_type.type "ByAuthor")}}, AgentPubKey{{/if}}]
   );
 
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
@@ -40,7 +40,7 @@ export class {{pascal_case index_name}} extends ScopedElementsMixin(LitElement) 
   }
 
   render() {
-    return this._fetch{{pascal_case index_name}}.render({
+    return this._fetch{{pascal_case collection_name}}.render({
       pending: () => html`<div style="display: flex; flex: 1; align-items: center; justify-content: center">
         <mwc-circular-progress indeterminate></mwc-circular-progress>
       </div>`,
