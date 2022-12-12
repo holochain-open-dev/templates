@@ -5,7 +5,7 @@ import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { TaskSubscriber } from 'lit-svelte-stores';
 import { EntryState } from '@holochain-open-dev/utils';
 import { hashProperty } from '@holochain-open-dev/elements';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 import { CircularProgress, Card, Button, Snackbar } from '@scoped-elements/material-web';
@@ -27,7 +27,7 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
   @property(hashProperty('{{kebab_case entry_type.name}}-hash'))
   {{camel_case entry_type.name}}Hash!: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}};
 
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
+  @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case entry_type.name}} = new Task{{#if (not entry_type.reference_entry_hash)}}Subscriber{{/if}}(this, 

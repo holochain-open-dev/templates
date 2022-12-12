@@ -1,7 +1,7 @@
 import '@webcomponents/scoped-custom-element-registry';
 
 import { LitElement, css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import {
   AppWebsocket,
   InstalledCell,
@@ -10,7 +10,7 @@ import {
 } from '@holochain/client';
 import { HolochainClient, CellClient } from '@holochain-open-dev/cell-client';
 import { serializeHash } from '@holochain-open-dev/utils';
-import { contextProvider } from '@lit-labs/context';
+import { provide } from '@lit-labs/context';
 import {
   AgentAvatar,
   Profile,
@@ -35,7 +35,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
   @state() _loading = true;
   @state() _view = { view: 'main' };
 
-  @contextProvider({ context: profilesStoreContext })
+  @provide({ context: profilesStoreContext })
   @property()
   _profilesStore!: ProfilesStore;
 

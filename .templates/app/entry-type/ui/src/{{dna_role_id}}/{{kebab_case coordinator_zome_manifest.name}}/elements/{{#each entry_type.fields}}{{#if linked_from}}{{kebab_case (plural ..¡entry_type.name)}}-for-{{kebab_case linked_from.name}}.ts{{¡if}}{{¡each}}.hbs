@@ -3,7 +3,7 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, Record, AppWebsocket, EntryHash, ActionHash, InstalledAppInfo, AgentPubKey } from '@holochain/client';
 import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { hashProperty } from '@holochain-open-dev/elements';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { TaskSubscriber } from 'lit-svelte-stores';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
@@ -19,7 +19,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
   @property(hashProperty('{{kebab_case linked_from.singular_arg}}'))
   {{camel_case linked_from.singular_arg}}!: {{linked_from.hash_type}};
 
-  @contextProvided({ context: {{camel_case ../coordinator_zome_manifest.name}}StoreContext, subscribe: true })
+  @consume({ context: {{camel_case ../coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case ../coordinator_zome_manifest.name}}Store!: {{pascal_case ../coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case (plural ../entry_type.name)}} = new TaskSubscriber(this, 

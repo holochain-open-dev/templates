@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, AgentPubKey, EntryHash, ActionHash, Record, AppWebsocket, InstalledAppInfo } from '@holochain/client';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { TaskSubscriber } from 'lit-svelte-stores';
 import { hashProperty } from '@holochain-open-dev/elements';
 import { CircularProgress } from '@scoped-elements/material-web';
@@ -19,7 +19,7 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
   author!: AgentPubKey;
   {{/if}}
   
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
+  @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   _fetch{{pascal_case collection_name}} = new TaskSubscriber(this, 

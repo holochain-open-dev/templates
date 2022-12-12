@@ -3,7 +3,7 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { InstalledCell, ActionHash, Record, AgentPubKey, EntryHash, AppWebsocket, InstalledAppInfo } from '@holochain/client';
 import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { hashProperty, hashState } from '@holochain-open-dev/elements';
-import { contextProvided } from '@lit-labs/context';
+import { consume } from '@lit-labs/context';
 import { Snackbar, Button, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
@@ -52,7 +52,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
     return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && this._{{camel_case field_name}} !== undefined{{/if}}{{#if (eq cardinality "vector")}} && this._{{camel_case field_name}}.every(e => e !== undefined){{/if}}{{/if}}{{/each}};
   }
 
-  @contextProvided({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
+  @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
   async create{{pascal_case entry_type.name}}() {
