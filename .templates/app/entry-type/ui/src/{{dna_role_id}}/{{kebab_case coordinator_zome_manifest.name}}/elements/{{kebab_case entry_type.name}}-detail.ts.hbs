@@ -10,9 +10,15 @@ import { Task } from '@lit-labs/task';
 import { decode } from '@msgpack/msgpack';
 import { CircularProgress, Card, IconButton, Button, Snackbar } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-{{#each entry_type.fields}}
+
+{{#uniq_lines}}
+  {{#each entry_type.fields}}
+    {{if widget}}
 {{> (concat field_type "/" widget "/detail/imports") }}
-{{/each}}
+    {{/if}}
+  {{/each}}
+{{/uniq_lines}}
+
 {{#if crud.update}}
 import { Edit{{pascal_case entry_type.name}} } from './edit-{{kebab_case entry_type.name}}';
 {{/if}}
@@ -134,13 +140,15 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
       'mwc-snackbar': Snackbar,
       'mwc-card': Card,
       'mwc-icon-button': IconButton,
+      {{#uniq_lines}}
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/detail/scoped-elements") }}
 
           {{/if}}
         {{/each}}
-
+      {{/uniq_lines}}
+        
     };
   }
   

@@ -7,12 +7,14 @@ import { consume } from '@lit-labs/context';
 import { Snackbar, Button, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
-{{#each entry_type.fields}}
-  {{#if widget}}
+{{#uniq_lines}}
+  {{#each entry_type.fields}}
+    {{#if widget}}
 {{> (concat field_type "/" widget "/edit/imports") }}
 
-  {{/if}}
-{{/each}}
+    {{/if}}
+  {{/each}}
+{{/uniq_lines}}
 
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
@@ -127,12 +129,14 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
       'mwc-snackbar': Snackbar,
       'mwc-button': Button,
       'mwc-card': Card,
+      {{#uniq_lines}}
         {{#each entry_type.fields}}
           {{#if widget}}
       {{> (concat field_type "/" widget "/edit/scoped-elements") }}
 
           {{/if}}
         {{/each}}
+      {{/uniq_lines}}
     };
   }
   
