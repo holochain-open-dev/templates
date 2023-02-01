@@ -1,0 +1,4 @@
+{{previous_file_contents}}
+
+{{zome_manifest.name}} = { path = "../dnas/{{dna_role_name}}/zomes/coordinator/{{zome_manifest.name}}" }
+

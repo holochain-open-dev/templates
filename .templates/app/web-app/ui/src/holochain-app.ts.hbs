@@ -2,22 +2,19 @@ import '@webcomponents/scoped-custom-element-registry';
 
 import { LitElement, css, html } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import {
-  AppWebsocket,
-  InstalledCell,
-  ActionHash,
-  InstalledAppInfo,
-} from '@holochain/client';
-import { HolochainClient, CellClient } from '@holochain-open-dev/cell-client';
-import { serializeHash } from '@holochain-open-dev/utils';
+import { AppAgentWebsocket, AppAgentClient, ActionHash } from '@holochain/client';
+import { AsyncStatus, StoreSubscriber } from '@holochain-open-dev/stores';
+import { sharedStyles, DisplayError } from '@holochain-open-dev/elements';
 import { provide } from '@lit-labs/context';
+import { localized, msg } from '@lit/localize';
 import {
   AgentAvatar,
   Profile,
   ProfilePrompt,
-  ProfilesService,
+  ProfileListItemSkeleton,
+  ProfilesClient,
   ProfilesStore,
-  profilesStoreContext,
+  profilesStoreContext
 } from '@holochain-open-dev/profiles';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import {
@@ -25,12 +22,10 @@ import {
   IconButton,
   TopAppBar,
 } from '@scoped-elements/material-web';
-import { StoreSubscriber, TaskSubscriber } from 'lit-svelte-stores';
-
-import { sharedStyles } from './shared-styles';
 
 type View = { view: 'main' };
 
+@localized()
 export class HolochainApp extends ScopedElementsMixin(LitElement) {
   @state() _loading = true;
   @state() _view = { view: 'main' };
@@ -39,51 +34,46 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
   @property()
   _profilesStore!: ProfilesStore;
 
-  _myProfileTask!: TaskSubscriber<[], Profile | undefined>;
+  _client!: AppAgentClient;
+
+  _myProfile!: StoreSubscriber<AsyncStatus<Profile | undefined>>;
 
   async firstUpdated() {
-    const url = `ws://localhost:${process.env.HC_PORT}`;
+    this._client = await AppAgentWebsocket.connect('', '{{app_name}}');
 
-    const appWebsocket = await AppWebsocket.connect(url);
-    const client = new HolochainClient(appWebsocket);
-
-    const appInfo = await appWebsocket.appInfo({
-      installed_app_id: '{{app_name}}',
-    });
-
-    const installedCells = appInfo.cell_data;
-    const profilesCell = installedCells[0] as InstalledCell;
-
-    const cellClient = new CellClient(client, profilesCell);
-
-    await this.initStores(cellClient);
+    await this.initStores(this._client);
 
     this._loading = false;
   }
-  
-  async initStores(cellClient: CellClient) {
-      this._profilesStore = new ProfilesStore(new ProfilesService(cellClient));
+
+  async initStores(appAgentClient: AppAgentClient) {
+    // Don't change this  
   }
 
   renderMyProfile() {
-    return this._myProfileTask?.render({
-      pending: () => html``,
-      complete: profile =>
-        profile
-          ? html` <div
+    switch (this._myProfile.value.status) {
+      case 'pending': 
+        return html`<profile-list-item-skeleton />`;
+      case 'complete':
+        const profile = this._myProfile.value.value;
+        if (!profile) return html``;
+        
+        return html`<div
               class="row"
               style="align-items: center;"
               slot="actionItems"
             >
               <agent-avatar
-                .agentPubKey=${this._profilesStore.myAgentPubKey}
+                .agentPubKey=${this._client.myPubKey}
               ></agent-avatar>
               <span style="margin: 0 16px;">${profile?.nickname}</span>
-            </div>`
-          : undefined,
-    });
+            </div>`;
+      case 'error':
+        return html`<display-error .error=${this._myProfile.value.error.data.data} tooltip></display-error>`;
+    }
   }
 
+  // TODO: add here the content of your application
   renderContent() {
     return html``;
   }
@@ -112,11 +102,11 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
     return html`
       <mwc-top-app-bar style="flex: 1; display: flex;">
         ${this.renderBackButton()}
-        <div slot="title">{{title_case app_name}}</div>
+        <div slot="title">${msg("{{title_case app_name}}")}</div>
         <div class="fill row" style="width: 100vw; height: 100%;">
           <profile-prompt 
             style="flex: 1;"
-            @profile-created=${() => this._myProfileTask.run()}
+            @profile-created=${() => this._myProfile = new StoreSubscriber(this, this._profilesStore.myProfile)}
           >
             ${this.renderContent()}
           </profile-prompt>
@@ -130,9 +120,12 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
     return {
       'agent-avatar': AgentAvatar,
       'profile-prompt': ProfilePrompt,
+      'profiles-context': ProfilesContext,
       'mwc-icon-button': IconButton,
       'mwc-top-app-bar': TopAppBar,
       'mwc-circular-progress': CircularProgress,
+      'profile-list-item-skeleton': ProfileListItemSkeleton,
+      'display-error': DisplayError
     };
   }
 

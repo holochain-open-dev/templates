@@ -19,12 +19,8 @@
         padding: 0;
         font-family: sans-serif;
         background-color: #ededed;
-        height: 100%;
       }
-      body {
-        display: flex;
-      }
-
+      
       :root {
         --mdc-theme-primary: #7B1FA2;
         --mdc-theme-secondary: #FF5722;
@@ -34,13 +30,8 @@
   </head>
 
   <body>
-    <holochain-app style="flex: 1"></holochain-app>
+    <holochain-app></holochain-app>
 
-    <script type="module">
-      import { HolochainApp } from './out-tsc/holochain-app.js';
-
-      customElements.define('holochain-app', HolochainApp);
-    </script>
-
+    <script type="module" src="./src/holochain-app.ts"></script>
   </body>
 </html>
