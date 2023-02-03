@@ -4,7 +4,7 @@
   /** {{title_case collection_name}} */
 
   {{#if (eq collection_type.type "ByAuthor")}}
-  {{camel_case collection_name}} = new LazyHoloHashMap<AgentPubKey, AsyncReadable<Array<{{referenceable.hash_type}}>>>((author: AgentPubKey) => 
+  {{camel_case collection_name}} = new LazyHoloHashMap((author: AgentPubKey) => 
     lazyLoadAndPoll(async () => {
       const records = await this.client.get{{pascal_case collection_name}}(author);
       return records.map(r => {{#if (eq referenceable.hash_type "ActionHash")}}r.actionHash{{else}}r.entryHash{{/if}});

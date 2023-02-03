@@ -1,15 +1,10 @@
 import { 
-  SignedActionHashed, 
   AppAgentClient, 
   Record, 
   ActionHash, 
   EntryHash, 
   AgentPubKey,
-  Create,
-  Update,
-  Delete,
-  CreateLink,
-  DeleteLink
+  AppAgentCallZomeRequest
 } from '@holochain/client';
 import { isSignalFromCellWithRole, EntryRecord } from '@holochain-open-dev/utils';
 import { UnsubscribeFunction } from "emittery";

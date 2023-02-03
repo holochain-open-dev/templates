@@ -21,6 +21,10 @@ import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
 
+/**
+ * @element create-{{kebab_case entry_type.name}}
+ * @fires {{kebab_case entry_type.name}}-created: detail will contain { {{camel_case entry_type.name}}Hash }
+ */
 @localized()
 export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(LitElement) {
   {{#each entry_type.fields}}

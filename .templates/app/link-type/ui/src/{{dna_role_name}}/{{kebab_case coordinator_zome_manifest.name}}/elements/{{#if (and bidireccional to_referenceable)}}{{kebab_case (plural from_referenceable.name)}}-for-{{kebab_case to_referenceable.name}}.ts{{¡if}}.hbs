@@ -16,6 +16,9 @@ import { AgentAvatar } from '@holochain-open-dev/profiles';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 
+/**
+ * @element {{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}
+ */
 @localized()
 export class {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} extends ScopedElementsMixin(LitElement) {
 

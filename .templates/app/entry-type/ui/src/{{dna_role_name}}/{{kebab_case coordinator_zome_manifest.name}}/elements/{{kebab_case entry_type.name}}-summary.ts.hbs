@@ -22,6 +22,10 @@ import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
 
+/**
+ * @element {{kebab_case entry_type.name}}-summary
+ * @fires {{kebab_case entry_type.name}}-selected: detail will contain { {{camel_case entry_type.name}}Hash }
+ */
 @localized()
 export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(LitElement) {
 
@@ -35,10 +39,10 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
   @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  _fetch{{pascal_case entry_type.name}} = new Task{{#if (not entry_type.reference_entry_hash)}}Subscriber{{/if}}(this, 
-    ([store, {{camel_case entry_type.name}}Hash]) => store.fetch{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash), 
-    () => [this.{{camel_case coordinator_zome_manifest.name}}Store, this.{{camel_case entry_type.name}}Hash] as [{{pascal_case coordinator_zome_manifest.name}}Store, {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}]
-  );
+  /**
+   * @internal
+   */
+  _{{camel_case entry_type.name}} = new StoreSubscriber(this, () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash));
 
   renderSummary(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`

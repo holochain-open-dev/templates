@@ -53,7 +53,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
   renderMyProfile() {
     switch (this._myProfile.value.status) {
       case 'pending': 
-        return html`<profile-list-item-skeleton />`;
+        return html`<profile-list-item-skeleton></profile-list-item-skeleton>`;
       case 'complete':
         const profile = this._myProfile.value.value;
         if (!profile) return html``;
@@ -104,10 +104,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
         ${this.renderBackButton()}
         <div slot="title">${msg("{{title_case app_name}}")}</div>
         <div class="fill row" style="width: 100vw; height: 100%;">
-          <profile-prompt 
-            style="flex: 1;"
-            @profile-created=${() => this._myProfile = new StoreSubscriber(this, this._profilesStore.myProfile)}
-          >
+          <profile-prompt style="flex: 1;">
             ${this.renderContent()}
           </profile-prompt>
         </div>
@@ -120,7 +117,6 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
     return {
       'agent-avatar': AgentAvatar,
       'profile-prompt': ProfilePrompt,
-      'profiles-context': ProfilesContext,
       'mwc-icon-button': IconButton,
       'mwc-top-app-bar': TopAppBar,
       'mwc-circular-progress': CircularProgress,

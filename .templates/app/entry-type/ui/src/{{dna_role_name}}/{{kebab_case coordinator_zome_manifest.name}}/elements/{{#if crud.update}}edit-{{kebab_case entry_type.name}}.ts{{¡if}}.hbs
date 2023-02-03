@@ -21,12 +21,18 @@ import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
 
+/**
+ * @element edit-{{kebab_case entry_type.name}}
+ * @fires {{kebab_case entry_type.name}}-updated: detail will contain { {{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash, {{/if}}previous{{pascal_case entry_type.name}}Hash, updated{{pascal_case entry_type.name}}Hash }
+ */
 @localized()
 export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(LitElement) {
 
+{{#if link_from_original_to_each_update}}
   // REQUIRED. The hash of the original `Create` action for this {{pascal_case entry_type.name}}
   @property(hashProperty('original-{{kebab_case entry_type.name}}-hash'))
   original{{pascal_case entry_type.name}}Hash!: ActionHash;
+{{/if}}
   
   // REQUIRED. The current {{pascal_case entry_type.name}} record that should be updated
   @property()
@@ -91,7 +97,9 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
 
     try {
       const updateRecord = await this.{{camel_case coordinator_zome_manifest.name}}Store.client.update{{pascal_case entry_type.name}}(
+  {{#if link_from_original_to_each_update}}
         this.original{{pascal_case entry_type.name}}Hash,
+  {{/if}}
         this.currentRecord.actionHash,
         {{camel_case entry_type.name}}
       );
@@ -100,7 +108,9 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
         composed: true,
         bubbles: true,
         detail: {
+{{#if link_from_original_to_each_update}}
           original{{pascal_case entry_type.name}}Hash: this.original{{pascal_case entry_type.name}}Hash,
+{{/if}}
           previous{{pascal_case entry_type.name}}Hash: this.currentRecord.actionHash,
           updated{{pascal_case entry_type.name}}Hash: updateRecord.actionHash
         }

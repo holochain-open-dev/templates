@@ -26,6 +26,10 @@ import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 import { {{pascal_case entry_type.name}} } from '../types';
 
+/**
+ * @element {{kebab_case entry_type.name}}-detail
+ * @fires {{kebab_case entry_type.name}}-deleted: detail will contain { {{camel_case entry_type.name}}Hash }
+ */
 @localized()
 export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(LitElement) {
 
@@ -107,10 +111,6 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
     `;
   }
   
-  render{{pascal_case entry_type.name}}(maybe{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> | undefined) {
-
-  }
-
   render{{pascal_case entry_type.name}}() {
     switch (this._{{camel_case entry_type.name}}.value.status) {
       case "pending":
@@ -147,15 +147,10 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
   }
   
   render() {
-    return html`<mwc-card style="display: flex; flex: 1; cursor: grab;" @click=${() => this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-selected', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
-          }
-        }))}>
+    return html`<mwc-card style="display: flex; flex: 1;">
       ${this.render{{pascal_case entry_type.name}}()}
     </mwc-card>`;
+  }
     
   static get scopedElements() {
     return {

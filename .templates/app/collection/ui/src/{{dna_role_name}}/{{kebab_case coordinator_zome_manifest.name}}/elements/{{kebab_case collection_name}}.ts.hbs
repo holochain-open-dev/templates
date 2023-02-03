@@ -3,9 +3,8 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
-import { TaskSubscriber } from 'lit-svelte-stores';
 import { localized, msg } from '@lit/localize';
-import { hashProperty, sharedStyles } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
 import { CircularProgress } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
@@ -13,6 +12,9 @@ import { {{pascal_case referenceable.name}}Summary } from './{{kebab_case refere
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 
+/**
+ * @element {{kebab_case collection_name}}
+ */
 @localized()
 export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElement) {
   {{#if (eq collection_type.type "ByAuthor")}}

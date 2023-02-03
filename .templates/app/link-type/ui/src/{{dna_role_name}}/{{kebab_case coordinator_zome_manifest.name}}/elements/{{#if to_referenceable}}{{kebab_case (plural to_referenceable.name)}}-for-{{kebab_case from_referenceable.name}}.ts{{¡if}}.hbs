@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { state, property, customElement } from 'lit/decorators.js';
+import { state, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { consume } from '@lit-labs/context';
 import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
@@ -16,6 +16,9 @@ import { AgentAvatar } from '@holochain-open-dev/profiles';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
 
+/**
+ * @element {{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}
+ */
 @localized()
 export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} extends ScopedElementsMixin(LitElement) {
 
