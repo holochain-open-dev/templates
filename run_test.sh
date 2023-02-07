@@ -32,7 +32,7 @@ hc-scaffold link-type agent:creator post:EntryHash --delete false --bidirecciona
 hc-scaffold zome profiles --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 hc-scaffold zome file_storage --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 
-nix-shell . --run "
+nix-shell https://holochain.love --run "
 set -e
 
 cargo add -p profiles hc_zome_profiles_coordinator

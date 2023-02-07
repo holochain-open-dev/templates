@@ -28,6 +28,7 @@ type View = { view: 'main' };
 @localized()
 export class HolochainApp extends ScopedElementsMixin(LitElement) {
   @state() _loading = true;
+
   @state() _view = { view: 'main' };
 
   @provide({ context: profilesStoreContext })
