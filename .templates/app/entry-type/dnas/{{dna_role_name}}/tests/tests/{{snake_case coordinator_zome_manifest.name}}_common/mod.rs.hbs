@@ -1,6 +1,5 @@
 {{previous_file_content}}
 
-#[allow(unused_variables)]
 pub async fn sample_{{snake_case entry_type.name}}_1(conductor: &SweetConductor, zome: &SweetZome) -> {{pascal_case entry_type.name}} {
     {{pascal_case entry_type.name}} {
 {{#each entry_type.fields}}
@@ -32,9 +31,9 @@ pub async fn sample_{{snake_case entry_type.name}}_1(conductor: &SweetConductor,
     {{/if}}
   {{else}}
       {{#if (eq cardinality "vector")}}
-	  {{field_name}}: vec![{{> (concat field_type "/sample1")}}],
+	  {{field_name}}: vec![{{> (concat field_type.type "/sample1")}}],
       {{else}}
-	  {{field_name}}: {{> (concat field_type "/sample1")}},
+	  {{field_name}}: {{> (concat field_type.type "/sample1")}},
       {{/if}}
   {{/if}}
 {{/each}}
@@ -72,9 +71,9 @@ pub async fn sample_{{snake_case entry_type.name}}_2(conductor: &SweetConductor,
     {{/if}}
   {{else}}
       {{#if (eq cardinality "vector")}}
-	  {{field_name}}: vec![{{> (concat field_type "/sample2")}}],
+	  {{field_name}}: vec![{{> (concat field_type.type "/sample2")}}],
       {{else}}
-	  {{field_name}}: {{> (concat field_type "/sample2")}},
+	  {{field_name}}: {{> (concat field_type.type "/sample2")}},
       {{/if}}
   {{/if}}
 {{/each}}

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
@@ -181,14 +182,14 @@ async fn create_and_delete_{{snake_case entry_type.name}}() {
     // Alice creates a {{pascal_case entry_type.name}}
     let record: Record = create_{{snake_case entry_type.name}}(&conductors[0], &alice_zome, sample_1.clone()).await;
     let original_action_hash = record.signed_action.hashed.hash;
-        
-    consistency_10s([&alice, &bobbo]).await;
     
     // Alice deletes the {{pascal_case entry_type.name}}
-    let _delete_record: Record = conductors[0]
+    let _delete_action_hash: ActionHash = conductors[0]
         .call(&alice_zome, "delete_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
-    
+
+    consistency_10s([&alice, &bobbo]).await;
+
     let get_record: Option<Record> = conductors[1]
         .call(&bob_zome, "get_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
