@@ -3,10 +3,10 @@ set -e
 
 rm -rf /tmp/forum-lit-open-dev
 
-nix-shell https://holochain.love --run "
-set -e
+# nix-shell https://holochain.love --run "
+# set -e
 hc-scaffold web-app forum-lit-open-dev --setup-nix false --template app --templates-path .templates
-"
+# "
 cp -R nix default.nix forum-lit-open-dev
 mv forum-lit-open-dev /tmp
 cd /tmp/forum-lit-open-dev

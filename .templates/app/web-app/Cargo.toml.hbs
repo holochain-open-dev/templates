@@ -5,5 +5,10 @@ opt-level = "z"
 opt-level = "z"
 
 [workspace]
-members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*", "tests"]
+members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*", "dnas/*/tests"]
 resolver = "2"
+
+[workspace.dependencies]
+holochain = { version = "{{holochain_version}}", default-features = false, features = [
+  "test_utils",
+] }
