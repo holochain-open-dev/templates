@@ -24,7 +24,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../../workdir/{{dna_role_name}}.dna");
+        .join("../../../workdir/{{dna_role_name}}.dna");
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors
