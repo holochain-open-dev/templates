@@ -1,4 +1,6 @@
 #![allow(dead_code)]
+#![allow(unused_variables)]
+#![allow(unused_imports)]
 
 use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
@@ -7,14 +9,14 @@ use holochain::{conductor::config::ConductorConfig, sweettest::*};
 use {{snake_case coordinator_zome_manifest.name}}::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
 
 {{#if (or (ne from_referenceable.hash_type "AgentPubKey") (ne to_referenceable.hash_type "AgentPubKey"))}}
-mod {{snake_case coordinator_zome_manifest.name}}_common;
+mod common;
 {{/if}}
 
 {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-use {{snake_case coordinator_zome_manifest.name}}_common::{create_{{snake_case from_referenceable.name}}, sample_{{snake_case from_referenceable.name}}_1};
+use common::{create_{{snake_case from_referenceable.name}}, sample_{{snake_case from_referenceable.name}}_1};
 {{/if}}
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-use {{snake_case coordinator_zome_manifest.name}}_common::{create_{{snake_case to_referenceable.name}}, sample_{{snake_case to_referenceable.name}}_1};
+use common::{create_{{snake_case to_referenceable.name}}, sample_{{snake_case to_referenceable.name}}_1};
 {{/if}}
 
 #[tokio::test(flavor = "multi_thread")]
@@ -22,7 +24,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../workdir/{{dna_role_name}}.dna");
+        .join("../../../../workdir/{{dna_role_name}}.dna");
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors

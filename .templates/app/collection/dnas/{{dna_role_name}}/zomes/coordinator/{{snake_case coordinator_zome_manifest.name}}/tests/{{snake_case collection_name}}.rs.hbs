@@ -1,18 +1,20 @@
 #![allow(dead_code)]
+#![allow(unused_variables)]
+#![allow(unused_imports)]
 
 use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
-mod {{snake_case coordinator_zome_manifest.name}}_common;
-use {{snake_case coordinator_zome_manifest.name}}_common::{create_{{snake_case referenceable.name}}, sample_{{snake_case referenceable.name}}_1};
+mod common;
+use common::{create_{{snake_case referenceable.name}}, sample_{{snake_case referenceable.name}}_1};
 
 #[tokio::test(flavor = "multi_thread")]
 async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collection_name}}() {
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../workdir/{{dna_role_name}}.dna");
+        .join("../../../../workdir/{{dna_role_name}}.dna");
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors
