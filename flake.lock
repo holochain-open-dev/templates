@@ -187,11 +187,11 @@
         "versions": "versions"
       },
       "locked": {
-        "lastModified": 1675946664,
-        "narHash": "sha256-M/FKgcrdR1q65xkiD+96M5/Vsfc83tzCP2lPF0J6gPY=",
+        "lastModified": 1675976010,
+        "narHash": "sha256-YPgXiBMGjDM6g62H7F5XEvwlUqNEGQQsqar3FKOBf1Q=",
         "owner": "holochain",
         "repo": "holochain",
-        "rev": "5bc270684494149356fdd65aace0d8e1e1abe49f",
+        "rev": "51d20c5860f361eaf73bc8c911686c647c265f72",
         "type": "github"
       },
       "original": {
@@ -237,11 +237,11 @@
     "launcher": {
       "flake": false,
       "locked": {
-        "lastModified": 1675898067,
-        "narHash": "sha256-MM0aGiIns83jsSNw8ewsN5lpn0Bhyu0UT357vkhgE+w=",
+        "lastModified": 1675974122,
+        "narHash": "sha256-eSYSMR4fHnwgquWaFZM2DOl7LRTsDrOGZTYkDc8HE3Q=",
         "owner": "holochain",
         "repo": "launcher",
-        "rev": "b3a14c79198ef0b52f55a0e646a371fcb49f53e4",
+        "rev": "3bcd14e81cda07e015071b070c2ef032aa1d1193",
         "type": "github"
       },
       "original": {
@@ -360,11 +360,11 @@
     "scaffolding": {
       "flake": false,
       "locked": {
-        "lastModified": 1675936628,
-        "narHash": "sha256-qLt3My0dEmbvivhg0Krxo1GyawInmxw3FAARdAvpxWo=",
+        "lastModified": 1675974711,
+        "narHash": "sha256-RnSpN5S8hOzCScScrZw9iEUMgy2G58R/K9EpkqHZT24=",
         "owner": "holochain",
         "repo": "scaffolding",
-        "rev": "8d8024b8d00b9ca4dcc4144fc2581ef1b3c41a7f",
+        "rev": "9d4802ae11b0d32b94f63959d74697a53bde96a4",
         "type": "github"
       },
       "original": {
@@ -383,17 +383,16 @@
       },
       "locked": {
         "dir": "versions/0_1",
-        "lastModified": 1675946664,
-        "narHash": "sha256-M/FKgcrdR1q65xkiD+96M5/Vsfc83tzCP2lPF0J6gPY=",
+        "lastModified": 1675976010,
+        "narHash": "sha256-YPgXiBMGjDM6g62H7F5XEvwlUqNEGQQsqar3FKOBf1Q=",
         "owner": "holochain",
         "repo": "holochain",
-        "rev": "5bc270684494149356fdd65aace0d8e1e1abe49f",
+        "rev": "51d20c5860f361eaf73bc8c911686c647c265f72",
         "type": "github"
       },
       "original": {
         "dir": "versions/0_1",
         "owner": "holochain",
-        "ref": "pr_holonix_on_flakes",
         "repo": "holochain",
         "type": "github"
       }
