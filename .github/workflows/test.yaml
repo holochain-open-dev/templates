@@ -23,11 +23,5 @@ jobs:
 
       - name: Install & Test
         run: |
-          nix-shell default.nix \
-            --keep NIX_PATH \
-            --pure \
-            --run "
-            cargo install holochain_scaffolding_cli
-            sh run_test.sh
-            "
+          nix develop --command bash -c "sh run_test.sh"
 
