@@ -1,14 +1,10 @@
 #!/usr/bin/bash
+# Run this inside `nix develop`
 set -e
 
-rm -rf /tmp/forum-lit-open-dev
+rm -rf /tmp/forum-lit-open-dev forum-lit-open-dev
 
-# nix-shell https://holochain.love --run "
-# set -e
-hc-scaffold web-app forum-lit-open-dev --setup-nix false --template app --templates-path .templates
-# "
-
-cp -R nix default.nix forum-lit-open-dev
+hc-scaffold web-app forum-lit-open-dev --setup-nix true --template app --templates-path .templates
 mv forum-lit-open-dev /tmp
 cd /tmp/forum-lit-open-dev
 
@@ -33,17 +29,15 @@ hc-scaffold link-type agent:creator post:EntryHash --delete false --bidirecciona
 hc-scaffold zome profiles --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 hc-scaffold zome file_storage --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 
-nix-shell https://holochain.love --run "
-set -e
 
 cargo add -p profiles hc_zome_profiles_coordinator
-echo \"extern crate hc_zome_profiles_coordinator;\" > dnas/forum/zomes/coordinator/profiles/src/lib.rs
+echo "extern crate hc_zome_profiles_coordinator;" > dnas/forum/zomes/coordinator/profiles/src/lib.rs
 cargo add -p profiles_integrity hc_zome_profiles_integrity
-echo \"extern crate hc_zome_profiles_integrity;\" > dnas/forum/zomes/integrity/profiles/src/lib.rs
+echo "extern crate hc_zome_profiles_integrity;" > dnas/forum/zomes/integrity/profiles/src/lib.rs
 cargo add -p file_storage hc_zome_file_storage_coordinator
-echo \"extern crate hc_zome_file_storage_coordinator;\" > dnas/forum/zomes/coordinator/file_storage/src/lib.rs
+echo "extern crate hc_zome_file_storage_coordinator;" > dnas/forum/zomes/coordinator/file_storage/src/lib.rs
 cargo add -p file_storage_integrity hc_zome_file_storage_integrity
-echo \"extern crate hc_zome_file_storage_integrity;\" > dnas/forum/zomes/integrity/file_storage/src/lib.rs
+echo "extern crate hc_zome_file_storage_integrity;" > dnas/forum/zomes/integrity/file_storage/src/lib.rs
 
 npm t
 
@@ -55,4 +49,3 @@ npm run format -w ui
 npm run lint -w ui
 npm run build -w ui
 
-"
