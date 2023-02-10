@@ -19,7 +19,7 @@ import { localized, msg } from '@lit/localize';
 
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
 
 /**
  * @element edit-{{kebab_case entry_type.name}}
