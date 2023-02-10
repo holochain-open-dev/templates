@@ -47,16 +47,12 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
   renderSummary(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`
       <div style="display: flex; flex-direction: column">
-      	<div style="display: flex; flex-direction: row">
-          <span style="font-size: 18px; flex: 1;">${msg("{{title_case entry_type.name}}")}</span>
-
-        </div>
 
 	{{#each entry_type.fields}}
           {{#if widget}}	  
             {{#if (not (eq cardinality "vector") )}}
  	<div style="display: flex; flex-direction: row; margin-bottom: 16px">
-	  <span><strong>${msg("{{title_case field_name}}")}</strong></span>
+	  <span style="margin-right: 4px"><strong>${msg("{{title_case field_name}}")}:</strong></span>
  	  <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
 	</div>
             {{else}}

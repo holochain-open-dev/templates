@@ -58,7 +58,7 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
    * @internal
    */
   @state()
-  _{{camel_case field_name}}: Array<{{> (concat field_type.type "/type") }} | undefined>;
+  _{{camel_case field_name}}: Array<{{> (concat field_type.type "/type") }}>;
 
       {{/if}}
     {{/if}}
