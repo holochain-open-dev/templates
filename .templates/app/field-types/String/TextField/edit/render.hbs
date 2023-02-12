@@ -1,1 +1,6 @@
-<mwc-textfield outlined .label=${msg("{{label}}")} {{#if variable_to_read}}.value=${ {{variable_to_read}} }{{/if}} @input=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as any).value; } }></mwc-textfield>
+<md-outlined-text-field
+  .label=${msg("{{label}}")} 
+  .defaultValue=${ {{variable_to_read}} } 
+  {{#if required}}required{{/if}} 
+  @input=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdTextfield).value; } }
+></md-outlined-text-field>

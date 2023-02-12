@@ -44,11 +44,11 @@ echo \"extern crate hc_zome_file_storage_coordinator;\" > dnas/forum/zomes/coord
 cargo add -p file_storage_integrity hc_zome_file_storage_integrity
 echo \"extern crate hc_zome_file_storage_integrity;\" > dnas/forum/zomes/integrity/file_storage/src/lib.rs
 
-npm t
-
 npm i
 
 npm i -w ui @holochain-open-dev/file-storage
+
+npm t
 
 npm run format -w ui
 npm run lint -w ui

@@ -6,11 +6,11 @@
     justify-content: center;
   "
 >
-  <md-checkbox 
+  <md-switch 
     style="margin-right: 4px" 
-    .checked=${ {{variable_to_read}} } 
-    @change=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdCheckbox).checked;} }
-  ></md-checkbox>
+    .selected=${ {{variable_to_read}} } 
+    @change=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdSwitch).selected;} }
+  ></md-switch>
   ${msg("{{label}}")}
 </label>
 
