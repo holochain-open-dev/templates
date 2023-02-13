@@ -4,7 +4,7 @@ import { ActionHash, Record, AgentPubKey, EntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { hashProperty, hashState, sharedStyles } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { Snackbar, Button, Card } from '@scoped-elements/material-web';
+import { Snackbar, MdFilledButton, Card } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
 
@@ -123,12 +123,11 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
             {{/if}}
           {{/each}}
 
-          <mwc-button 
-            raised
+          <md-filled-button 
             .label=${msg("Create {{title_case entry_type.name}}")}
             .disabled=${!this.is{{pascal_case entry_type.name}}Valid()}
             @click=${() => this.create{{pascal_case entry_type.name}}()}
-          ></mwc-button>
+          ></md-filled-button>
         </div> 
       </mwc-card>`;
   }
@@ -136,7 +135,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
   static get scopedElements() {
     return {
       'mwc-snackbar': Snackbar,
-      'mwc-button': Button,
+      'md-filled-button': MdFilledButton,
       'mwc-card': Card,
       {{#uniq_lines}}
         {{#each entry_type.fields}}

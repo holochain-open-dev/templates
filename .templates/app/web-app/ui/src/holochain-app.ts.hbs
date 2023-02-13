@@ -19,7 +19,7 @@ import {
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import {
   CircularProgress,
-  IconButton,
+  MdStandardIconButton,
   TopAppBar,
 } from '@scoped-elements/material-web';
 
@@ -83,11 +83,11 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
     if (this._view.view === 'main') return html``;
 
     return html`
-      <mwc-icon-button
+      <md-standard-icon-button
         icon="arrow_back"
         slot="navigationIcon"
         @click=${() => { this._view = { view: 'main' } } }
-      ></mwc-icon-button>
+      ></md-standard-icon-button>
     `;
   }
 
@@ -118,7 +118,7 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
     return {
       'agent-avatar': AgentAvatar,
       'profile-prompt': ProfilePrompt,
-      'mwc-icon-button': IconButton,
+      'md-standard-icon-button': MdStandardIconButton,
       'mwc-top-app-bar': TopAppBar,
       'mwc-circular-progress': CircularProgress,
       'profile-list-item-skeleton': ProfileListItemSkeleton,

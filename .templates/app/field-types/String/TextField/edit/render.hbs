@@ -2,5 +2,5 @@
   .label=${msg("{{label}}")} 
   .defaultValue=${ {{variable_to_read}} } 
   {{#if required}}required{{/if}} 
-  @input=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdTextfield).value; } }
+  @input=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as any).value; } }
 ></md-outlined-text-field>

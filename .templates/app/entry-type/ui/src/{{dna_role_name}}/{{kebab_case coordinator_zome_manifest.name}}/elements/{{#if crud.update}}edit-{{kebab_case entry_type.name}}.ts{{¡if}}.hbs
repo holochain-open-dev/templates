@@ -4,7 +4,7 @@ import { ActionHash, Record } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { hashState, sharedStyles, hashProperty } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { Button, Snackbar } from '@scoped-elements/material-web';
+import { MdFilledButton, MdOutlinedButton, Snackbar } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
 
@@ -137,22 +137,20 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
 
 
         <div style="display: flex; flex-direction: row">
-          <mwc-button
-            outlined
+          <md-outlined-button
             .label=${msg("Cancel")}
             @click=${() => this.dispatchEvent(new CustomEvent('edit-canceled', {
               bubbles: true,
               composed: true
             }))}
             style="flex: 1;"
-          ></mwc-button>
-          <mwc-button 
-            raised
+          ></md-button>
+          <md-filled-button 
             .label=${msg("Save")}
             .disabled=${!this.is{{pascal_case entry_type.name}}Valid()}
             @click=${() => this.update{{pascal_case entry_type.name}}()}
             style="flex: 1;"
-          ></mwc-button>
+          ></md-filled-button>
         </div>
       </div>`;
   }
@@ -160,7 +158,8 @@ export class Edit{{pascal_case entry_type.name}} extends ScopedElementsMixin(Lit
   static get scopedElements() {
     return {
       'mwc-snackbar': Snackbar,
-      'mwc-button': Button,
+      'md-filled-button': MdFilledButton,
+      'md-outlined-button': MdOutlinedButton,
       {{#uniq_lines}}
         {{#each entry_type.fields}}
           {{#if widget}}

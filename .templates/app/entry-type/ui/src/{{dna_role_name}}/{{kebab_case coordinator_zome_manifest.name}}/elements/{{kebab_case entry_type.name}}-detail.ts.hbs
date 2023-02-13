@@ -5,7 +5,7 @@ import { EntryRecord } from '@holochain-open-dev/utils';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { sharedStyles, hashProperty, DisplayError } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { CircularProgress, Card, IconButton, Button, Snackbar } from '@scoped-elements/material-web';
+import { CircularProgress, Card, MdStandardIconButton, Snackbar } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
 
@@ -87,10 +87,10 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
           <span style="font-size: 18px; flex: 1;">${msg("{{title_case entry_type.name}}")}</span>
 
           {{#if crud.update}}
-          <mwc-icon-button style="margin-left: 8px" icon="edit" @click=${() => { this._editing = true; } }></mwc-icon-button>
+          <md-standard-icon-button style="margin-left: 8px" icon="edit" @click=${() => { this._editing = true; } }></md-standard-icon-buttonbutton>
           {{/if}}
           {{#if crud.delete}}
-          <mwc-icon-button style="margin-left: 8px" icon="delete" @click=${() => this.delete{{pascal_case entry_type.name}}()}></mwc-icon-button>
+          <md-standard-icon-button style="margin-left: 8px" icon="delete" @click=${() => this.delete{{pascal_case entry_type.name}}()}></md-standard-icon-button>
           {{/if}}
         </div>
 
@@ -161,7 +161,7 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
       'display-error': DisplayError,
       'mwc-card': Card,
       'mwc-circular-progress': CircularProgress,
-      'mwc-icon-button': IconButton,
+      'md-standard-icon-button': MdStandardIconButton,
       {{#uniq_lines}}
         {{#each entry_type.fields}}
           {{#if widget}}
