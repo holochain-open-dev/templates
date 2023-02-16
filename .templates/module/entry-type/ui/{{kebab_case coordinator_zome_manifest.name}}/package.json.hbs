@@ -1,0 +1,16 @@
+{{#merge_scope previous_file_content '"exports": {'}}
+  "./create-{{kebab_case entry_type.name}}": "./dist/definitions/create-{{kebab_case entry_type.name}}.js",
+  {{#each entry_type.fields}}
+    {{#if linked_from}}
+ "./{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}": "./dist/definitions/{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}.js",
+    {{/if}}
+  {{/each}}
+  "./create-{{kebab_case entry_type.name}}": "./dist/definitions/create-{{kebab_case entry_type.name}}.js",
+  {{#if crud.update}}
+  "./edit-{{kebab_case entry_type.name}}": "./dist/definitions/edit-{{kebab_case entry_type.name}}.js",
+  {{/if}}
+  "./{{kebab_case entry_type.name}}-summary": "./dist/definitions/{{kebab_case entry_type.name}}-summary.js",
+  "./{{kebab_case entry_type.name}}-detail": "./dist/definitions/{{kebab_case entry_type.name}}-detail.js",
+  {{previous_scope_content}}
+{{/merge_scope}}
+

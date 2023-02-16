@@ -1,0 +1,16 @@
+<label
+  style="
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <md-checkbox 
+    style="margin-right: 4px" 
+    .checked=${ {{variable_to_read}} } 
+    @change=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdCheckbox).checked;} }
+  ></md-checkbox>
+  ${msg("{{label}}")}
+</label>
+

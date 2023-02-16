@@ -1,0 +1,78 @@
+import { LitElement, html } from 'lit';
+import { state, customElement, property } from 'lit/decorators.js';
+import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
+import { StoreSubscriber } from '@holochain-open-dev/stores';
+import { consume } from '@lit-labs/context';
+import { localized, msg } from '@lit/localize';
+import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
+import { CircularProgress } from '@scoped-elements/material-web';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+
+import { {{pascal_case referenceable.name}}Summary } from './{{kebab_case referenceable.name}}-summary';
+import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
+import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
+
+/**
+ * @element {{kebab_case collection_name}}
+ */
+@localized()
+export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElement) {
+  {{#if (eq collection_type.type "ByAuthor")}}
+
+  // REQUIRED. The author for which the {{plural (pascal_case referenceable.name)}} should be fetched
+  @property(hashProperty('author'))
+  author!: AgentPubKey;
+  {{/if}}
+  
+  /**
+   * @internal
+   */
+  @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
+  {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
+
+  /**
+   * @internal
+   */
+  _{{camel_case collection_name}} = new StoreSubscriber(this, 
+    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}}
+  );
+
+  renderList(hashes: Array<{{referenceable.hash_type}}>) {
+    if (hashes.length === 0) return html`<span>${msg("No {{lower_case (plural referenceable.name)}} found.")}</span>`;
+    
+    return html`
+      <div style="display: flex; flex-direction: column; flex: 1">
+        ${hashes.map(hash => 
+          html`<{{kebab_case referenceable.name}}-summary .{{camel_case referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case referenceable.name}}-summary>`
+        )}
+      </div>
+    `;
+  }
+
+  render() {
+    switch (this._{{camel_case collection_name}}.value.status) {
+      case "pending":
+        return html`<div
+          style="display: flex; flex: 1; align-items: center; justify-content: center"
+        >
+          <mwc-circular-progress indeterminate></mwc-circular-progress>
+        </div>`;
+      case "complete":
+        return this.renderList(this._{{camel_case collection_name}}.value.value);
+      case "error":
+        return html`<display-error
+          .error=${this._{{camel_case collection_name}}.value.error.data.data}
+        ></display-error>`;
+    }
+  }
+
+  static get scopedElements() {
+    return {
+      'mwc-circular-progress': CircularProgress,
+      'display-error': DisplayError,
+      '{{kebab_case referenceable.name}}-summary': {{pascal_case referenceable.name}}Summary
+    };
+  }
+  
+  static styles = [sharedStyles];
+}

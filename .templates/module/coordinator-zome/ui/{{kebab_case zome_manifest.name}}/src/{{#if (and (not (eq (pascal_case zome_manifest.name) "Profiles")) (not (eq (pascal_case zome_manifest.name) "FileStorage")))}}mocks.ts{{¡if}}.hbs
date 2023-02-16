@@ -1,0 +1,23 @@
+import {
+  AgentPubKeyMap,
+  decodeEntry,
+  fakeEntry,
+  fakeRecord,
+  pickBy,
+  ZomeMock,
+} from "@holochain-open-dev/utils";
+import {
+  decodeHashFromBase64,
+  AgentPubKey,
+  AppAgentClient,
+  Record,
+} from "@holochain/client";
+
+export class {{pascal_case zome_manifest.name}}ZomeMock extends ZomeMock implements AppAgentClient {
+  constructor(
+    myPubKey?: AgentPubKey
+  ) {
+    super("{{snake_case dna_role_name}}", "{{snake_case zome_manifest.name}}", myPubKey);
+  }
+  
+}

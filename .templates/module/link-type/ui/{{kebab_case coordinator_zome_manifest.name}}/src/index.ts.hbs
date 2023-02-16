@@ -1,0 +1,8 @@
+{{previous_file_content}}
+
+{{#if to_referenceable}}
+export * from './elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable}}';
+  {{#if bidireccional}}
+export * from './elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable}}';
+  {{/if}}
+{{/if}}

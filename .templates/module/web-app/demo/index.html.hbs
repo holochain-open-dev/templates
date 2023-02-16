@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="Description" content="Put your description here." />
+    <base href="/" />
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+    <!-- Global theme for your application -->
+    <!-- Go here: https://m3.material.io/theme-builder#/dynamic to define your own custom theme -->
+    
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+        background-color: #ededed;
+        height: 100%;
+        width: 100%;
+      }
+      
+      body {
+        display: flex;
+      }
+            
+      :root {
+        --md-sys-color-primary: #006A6A;
+        --md-sys-color-primary-container: #6FF7F6;
+        --md-sys-color-on-primary: #FFFFFF;
+        --md-sys-color-on-primary-container: #002020;
+        --md-sys-color-secondary: #4A6363;
+        --md-sys-color-secondary-container: #CCE8E7;
+        --md-sys-color-on-secondary: #FFFFFF;
+        --md-sys-color-on-secondary-container: #051F1F;
+        --md-sys-color-tertiary: #4B607C;
+        --md-sys-color-tertiary-container: #D3E4FF;
+        --md-sys-color-on-tertiary: #FFFFFF;
+        --md-sys-color-on-tertiary-container: #041C35;
+        --md-sys-color-error: #BA1A1A;
+        --md-sys-color-error-container: #FFDAD6;
+        --md-sys-color-on-error: #FFFFFF;
+        --md-sys-color-on-error-container: #410002;
+        --md-sys-color-outline: #6F7979;
+        --md-sys-color-background: #FAFDFC;
+        --md-sys-color-on-background: #191C1C;
+        --md-sys-color-surface: #FAFDFC;
+        --md-sys-color-on-surface: #191C1C;
+        --md-sys-color-surface-variant: #DAE5E4;
+        --md-sys-color-on-surface-variant: #3F4948;
+        --md-sys-color-inverse-surface: #2D3131;
+        --md-sys-color-inverse-on-surface: #EFF1F0;
+        --md-sys-color-inverse-primary: #4CDADA;
+        --md-sys-color-shadow: #000000;
+        --md-sys-color-surface-tint: #006A6A;
+        --md-sys-color-outline-variant: #BEC9C8;
+        --md-sys-color-scrim: #000000;
+      }
+      
+      :root {
+        --mdc-theme-primary: var(--md-sys-color-primary);
+        --mdc-theme-secondary: var(--md-sys-color-secondary);
+      }
+    </style>
+    <title>{{title_case app_name}}</title>
+  </head>
+
+  <body>
+    <demo-app></demo-app>
+
+    <script type="module">
+import '@webcomponents/scoped-custom-element-registry';
+
+import { LitElement, css, html } from 'lit';
+import { AppAgentWebsocket } from '@holochain/client';
+import { StoreSubscriber } from '@holochain-open-dev/stores';
+import { sharedStyles, DisplayError } from '@holochain-open-dev/elements';
+import {
+  AgentAvatar,
+  ProfilePrompt,
+  ProfileListItemSkeleton,
+  ProfilesClient,
+  ProfilesStore,
+  profilesStoreContext
+} from '@holochain-open-dev/profiles';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import {
+  CircularProgress,
+  MdStandardIconButton,
+  TopAppBar,
+} from '@scoped-elements/material-web';
+
+export class DemoApp extends ScopedElementsMixin(LitElement) {
+
+  constructor() {
+    this._loading = true;
+    this._view = { view: 'main' };
+  }
+
+  async firstUpdated() {
+    this._client = await AppAgentWebsocket.connect('', '{{app_name}}');
+
+    await this.initStores(this._client);
+
+    this._loading = false;
+  }
+
+  async initStores(appAgentClient: AppAgentClient) {
+    // Don't change this  
+  }
+
+  renderMyProfile() {
+    switch (this._myProfile.value.status) {
+      case 'pending': 
+        return html`<profile-list-item-skeleton></profile-list-item-skeleton>`;
+      case 'complete':
+        const profile = this._myProfile.value.value;
+        if (!profile) return html``;
+        
+        return html`<div
+              class="row"
+              style="align-items: center;"
+              slot="actionItems"
+            >
+              <agent-avatar
+                .agentPubKey=${this._client.myPubKey}
+              ></agent-avatar>
+              <span style="margin: 0 16px;">${profile?.nickname}</span>
+            </div>`;
+      case 'error':
+        return html`<display-error .error=${this._myProfile.value.error.data.data} tooltip></display-error>`;
+    }
+  }
+
+  // TODO: add here the content of your application
+  renderContent() {
+    return html``;
+  }
+  
+  renderBackButton() {
+    if (this._view.view === 'main') return html``;
+
+    return html`
+      <md-standard-icon-button
+        icon="arrow_back"
+        slot="navigationIcon"
+        @click=${() => { this._view = { view: 'main' } } }
+      ></md-standard-icon-button>
+    `;
+  }
+
+  render() {
+    if (this._loading)
+      return html`<div
+        class="row"
+        style="flex: 1; height: 100%; align-items: center; justify-content: center;"
+      >
+        <mwc-circular-progress indeterminate></mwc-circular-progress>
+      </div>`;
+
+    return html`
+      <mwc-top-app-bar style="flex: 1; display: flex;">
+        ${this.renderBackButton()}
+        <div slot="title">${msg("{{title_case app_name}}")}</div>
+        <div class="fill row" style="width: 100vw; height: 100%;">
+          <profile-prompt style="flex: 1;">
+            ${this.renderContent()}
+          </profile-prompt>
+        </div>
+        ${this.renderMyProfile()}
+      </mwc-top-app-bar>
+    `;
+  }
+
+  static get scopedElements() {
+    return {
+      'agent-avatar': AgentAvatar,
+      'profile-prompt': ProfilePrompt,
+      'md-standard-icon-button': MdStandardIconButton,
+      'mwc-top-app-bar': TopAppBar,
+      'mwc-circular-progress': CircularProgress,
+      'profile-list-item-skeleton': ProfileListItemSkeleton,
+      'display-error': DisplayError
+    };
+  }
+
+  static styles = [
+    css`
+      :host {
+        display: flex;
+        flex: 1;
+      }
+    `,
+    sharedStyles,
+  ];
+}
+      
+      customElements.define('demo-app', DemoApp);
+    </script>
+  </body>
+</html>

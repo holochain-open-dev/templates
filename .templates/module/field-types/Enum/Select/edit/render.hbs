@@ -1,0 +1,5 @@
+<mwc-select outlined helper="{{label}}" {{#if required}}required{{/if}}>
+{{#each field_type.variants}}
+  <mwc-list-item {{#if ../variable_to_read}}.selected=${ {{../variable_to_read}} === '{{pascal_case this}}' }{{/if}} @request-selected=${() => { {{../variable_to_change}} = '{{pascal_case this}}'; } }>{{title_case this}}</mwc-list-item>
+{{/each}}
+</mwc-select>
