@@ -12,4 +12,4 @@ For now, only the `app` template is available. Soonish we'll add the `module` te
 
 1b. If you already have an existing project, run this inside a `nix develop` shell:
 
-`hc scaffold template get https://github.com/holochain-open-dev/template`
+`hc scaffold template get https://github.com/holochain-open-dev/templates`
