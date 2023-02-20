@@ -6,14 +6,10 @@ For now, only the `app` template is available. Soonish we'll add the `module` te
 
 ## Using the templates
 
-0. If you haven't already, install the scaffolding tool:
-
-`cargo install holochain_scaffolding_cli`
-
 1a. If you are scaffolding a new project, run this:
 
-`hc-scaffold web-app --templates-url https://github.com/holochain-open-dev/templates`
+`nix-shell htts://holochain.love --run "hc scaffold web-app --templates-url https://github.com/holochain-open-dev/templates"`
 
-1b. If you already have an existing project, run this:
+1b. If you already have an existing project, run this inside a `nix develop` shell:
 
-`hc-scaffold template get https://github.com/holochain-open-dev/template`
+`hc scaffold template get https://github.com/holochain-open-dev/template`

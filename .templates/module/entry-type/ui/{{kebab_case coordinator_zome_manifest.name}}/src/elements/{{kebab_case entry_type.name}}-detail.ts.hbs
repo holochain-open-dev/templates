@@ -148,7 +148,9 @@ export class {{pascal_case entry_type.name}}Detail extends ScopedElementsMixin(L
   
   render() {
     return html`<mwc-card style="display: flex; flex: 1;">
-      ${this.render{{pascal_case entry_type.name}}()}
+      <div style="margin: 16px">
+        ${this.render{{pascal_case entry_type.name}}()}
+      </div>
     </mwc-card>`;
   }
     

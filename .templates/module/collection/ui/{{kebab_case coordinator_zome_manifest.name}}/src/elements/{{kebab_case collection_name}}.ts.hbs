@@ -5,7 +5,7 @@ import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { consume } from '@lit-labs/context';
 import { localized, msg } from '@lit/localize';
 import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
-import { CircularProgress } from '@scoped-elements/material-web';
+import { CircularProgress, MdIcon } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 
 import { {{pascal_case referenceable.name}}Summary } from './{{kebab_case referenceable.name}}-summary';
@@ -38,8 +38,15 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
   );
 
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
-    if (hashes.length === 0) return html`<span>${msg("No {{lower_case (plural referenceable.name)}} found.")}</span>`;
-    
+    if (hashes.length === 0) 
+      return html` <div class="column center-content">
+        <md-icon
+          style="color: grey; height: 64px; width: 64px; --md-icon-size: 64px; margin-bottom: 16px"
+          >info_outlined</md-icon
+        >
+        <span class="placeholder">${msg("No {{lower_case (plural referenceable.name)}} found")}</span>
+      </div>`;
+
     return html`
       <div style="display: flex; flex-direction: column; flex: 1">
         ${hashes.map(hash => 
@@ -68,6 +75,7 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
 
   static get scopedElements() {
     return {
+      'md-icon': MdIcon,
       'mwc-circular-progress': CircularProgress,
       'display-error': DisplayError,
       '{{kebab_case referenceable.name}}-summary': {{pascal_case referenceable.name}}Summary

@@ -50,7 +50,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
    * @internal
    */
   @state({{#if (or (eq field_type.type "AgentPubKey") (eq field_type.type "ActionHash") (eq field_type.type "EntryHash"))}}hashState(){{/if}})
-  _{{camel_case field_name}}: {{> (concat field_type.type "/type") }}{{#if (eq cardinality "option")}} | undefined{{/if}} = {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}};
+  _{{camel_case field_name}}: {{> (concat field_type.type "/type") }}{{#if (or (eq field_type.type "AgentPubKey") (eq field_type.type "ActionHash") (eq field_type.type "EntryHash") (eq cardinality "option") ) }} | undefined{{/if}} = {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}};
 
       {{else}}
   /**
@@ -77,7 +77,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
     const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = { 
     {{#each entry_type.fields}}
       {{#if widget}}
-        {{snake_case field_name}}: this._{{camel_case field_name}},
+        {{snake_case field_name}}: this._{{camel_case field_name}}!,
       {{else}}
         {{snake_case field_name}}: this.{{camel_case field_name}},
       {{/if}}
@@ -107,7 +107,7 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
       </mwc-snackbar>
 
       <mwc-card style="display: flex; flex: 1;">
-        <div style="display: flex; flex: 1; flex-direction: column">
+        <div style="display: flex; flex: 1; flex-direction: column; margin: 8px">
           <span style="font-size: 18px">${msg("Create {{title_case entry_type.name}}")}</span>
   
           {{#each entry_type.fields}}

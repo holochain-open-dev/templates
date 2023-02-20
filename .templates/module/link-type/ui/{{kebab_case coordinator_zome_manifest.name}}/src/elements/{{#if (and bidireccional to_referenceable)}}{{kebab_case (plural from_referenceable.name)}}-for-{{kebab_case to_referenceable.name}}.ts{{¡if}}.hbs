@@ -4,7 +4,7 @@ import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { consume } from '@lit-labs/context';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
-import { CircularProgress } from '@scoped-elements/material-web';
+import { CircularProgress, MdIcon } from '@scoped-elements/material-web';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
 
@@ -40,7 +40,14 @@ export class {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to
   );
 
   renderList(hashes: Array<{{from_referenceable.hash_type}}>) {
-    if (hashes.length === 0) return html`<span>${msg("No {{lower_case (plural from_referenceable.name)}} found for this {{lower_case to_referenceable.name}}")}</span>`;
+    if (hashes.length === 0) 
+      return html` <div class="column center-content">
+        <md-icon
+          style="color: grey; height: 64px; width: 64px; --md-icon-size: 64px; margin-bottom: 16px"
+          >info_outlined</md-icon
+        >
+        <span class="placeholder">${msg("No {{lower_case (plural from_referenceable.name)}} found for this {{lower_case to_referenceable.name}}")}</span>
+      </div>`;
     
     return html`
       <div style="display: flex; flex-direction: column">
@@ -74,6 +81,7 @@ export class {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to
   
   static get scopedElements() {
     return {
+      'md-icon': MdIcon,
       'mwc-circular-progress': CircularProgress,
       'display-error': DisplayError,
       {{#if (not (eq from_referenceable.hash_type "AgentPubKey") )}}
