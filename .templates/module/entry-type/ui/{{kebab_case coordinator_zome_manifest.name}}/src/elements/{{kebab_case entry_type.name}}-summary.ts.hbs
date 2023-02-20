@@ -79,6 +79,7 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
         return this.renderSummary(this._{{camel_case entry_type.name}}.value.value);
       case "error":
         return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
           .error=${this._{{camel_case entry_type.name}}.value.error.data.data}
         ></display-error>`;
     }
@@ -92,7 +93,7 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
             {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
           }
         }))}>
-        <div style="margin: 8px">
+        <div style="margin: 16px">
           ${this.render{{pascal_case entry_type.name}}()}
         </div>
     </mwc-card>`;
