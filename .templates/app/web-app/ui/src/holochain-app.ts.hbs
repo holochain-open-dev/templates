@@ -70,7 +70,11 @@ export class HolochainApp extends ScopedElementsMixin(LitElement) {
               <span style="margin: 0 16px;">${profile?.nickname}</span>
             </div>`;
       case 'error':
-        return html`<display-error .error=${this._myProfile.value.error.data.data} tooltip></display-error>`;
+        return html`<display-error 
+          .headline=${msg("Error fetching the profile")}
+          .error=${this._myProfile.value.error.data.data} 
+          tooltip
+          ></display-error>`;
     }
   }
 

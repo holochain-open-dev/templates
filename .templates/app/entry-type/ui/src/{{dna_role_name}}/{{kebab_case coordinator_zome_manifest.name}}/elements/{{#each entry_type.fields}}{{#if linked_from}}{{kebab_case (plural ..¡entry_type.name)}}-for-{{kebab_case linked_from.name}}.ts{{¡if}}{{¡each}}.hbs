@@ -65,7 +65,10 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
       case "complete": 
         return this.renderList(this._{{camel_case (plural ../entry_type.name)}}.value.value);
       case "error":
-        return html`<display-error .error=${this._{{camel_case (plural ../entry_type.name)}}.value.error.data.data}></display-error>`;
+        return html`<display-error 
+          .headline=${msg("Error fetching the {{lower_case (plural ../entry_type.name)}}")}
+          .error=${this._{{camel_case (plural ../entry_type.name)}}.value.error.data.data}
+        ></display-error>`;
     }
   }
   

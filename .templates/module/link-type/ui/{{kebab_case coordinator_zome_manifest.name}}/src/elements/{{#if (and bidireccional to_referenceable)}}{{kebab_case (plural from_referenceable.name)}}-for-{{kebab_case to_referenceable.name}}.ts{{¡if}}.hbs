@@ -74,6 +74,7 @@ export class {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to
         return this.renderList(this._{{camel_case (plural from_referenceable.name)}}.value.value);
       case "error":
         return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural from_referenceable.name)}}")}
           .error=${this._{{camel_case (plural from_referenceable.name)}}.value.error.data.data}
         ></display-error>`;
     }

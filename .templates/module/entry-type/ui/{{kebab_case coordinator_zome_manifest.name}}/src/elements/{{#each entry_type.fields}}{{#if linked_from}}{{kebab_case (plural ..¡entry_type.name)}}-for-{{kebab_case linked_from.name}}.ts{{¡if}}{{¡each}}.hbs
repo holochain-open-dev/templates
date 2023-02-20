@@ -43,8 +43,15 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
   );
 
   renderList(hashes: Array<{{#if ../entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}>) {
-    if (hashes.length === 0) return html`<span>${msg("No {{lower_case (plural ../entry_type.name)}} found for this {{lower_case linked_from.name}}.")}</span>`;
-    
+    if (hashes.length === 0) 
+      return html` <div class="column center-content">
+        <md-icon
+          style="color: grey; height: 64px; width: 64px; --md-icon-size: 64px; margin-bottom: 16px"
+          >info_outlined</md-icon
+        >
+        <span class="placeholder">${msg("No {{lower_case (plural ../entry_type.name)}} found for this {{lower_case linked_from.name}}")}</span>
+      </div>`;
+
     return html`
       <div style="display: flex; flex-direction: column">
         ${hashes.map(hash =>
@@ -65,7 +72,10 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
       case "complete": 
         return this.renderList(this._{{camel_case (plural ../entry_type.name)}}.value.value);
       case "error":
-        return html`<display-error .error=${this._{{camel_case (plural ../entry_type.name)}}.value.error.data.data}></display-error>`;
+        return html`<display-error 
+          .headline=${msg("Error fetching the {{lower_case (plural ../entry_type.name)}}")}
+          .error=${this._{{camel_case (plural ../entry_type.name)}}.value.error.data.data}
+        ></display-error>`;
     }
   }
   

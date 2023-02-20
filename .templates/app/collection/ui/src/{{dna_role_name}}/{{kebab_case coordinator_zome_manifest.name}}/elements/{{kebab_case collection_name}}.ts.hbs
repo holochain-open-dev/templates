@@ -68,6 +68,7 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
         return this.renderList(this._{{camel_case collection_name}}.value.value);
       case "error":
         return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural referenceable.name)}}")}
           .error=${this._{{camel_case collection_name}}.value.error.data.data}
         ></display-error>`;
     }
