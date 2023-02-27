@@ -37,6 +37,14 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
     () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}}
   );
 
+  {{#if (eq collection_type.type "ByAuthor")}}
+  firstUpdated() {
+    if (this.author === undefined) {
+      throw new Error(`The author property is required for the {{pascal_case collection_name}} element`);
+    }
+  }
+  {{/if}}
+
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
     if (hashes.length === 0) 
       return html` <div class="column center-content">

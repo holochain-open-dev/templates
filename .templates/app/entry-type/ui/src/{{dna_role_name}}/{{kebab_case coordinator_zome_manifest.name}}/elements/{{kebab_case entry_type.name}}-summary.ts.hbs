@@ -44,6 +44,12 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
    */
   _{{camel_case entry_type.name}} = new StoreSubscriber(this, () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash));
 
+  firstUpdated() {
+    if (this.{{camel_case entry_type.name}}Hash === undefined) {
+      throw new Error(`The {{camel_case entry_type.name}}Hash property is required for the {{kebab_case entry_type.name}}-summary element`);
+    }
+  }
+
   renderSummary(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`
       <div style="display: flex; flex-direction: column">
