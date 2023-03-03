@@ -1,0 +1,7 @@
+import { createContext } from '@lit-labs/context';
+import { {{pascal_case app_name}}Store } from './{{kebab_case app_name}}-store';
+
+export const {{camel_case app_name}}StoreContext = createContext<{{pascal_case app_name}}Store>(
+  'hc_zome_{{snake_case app_name}}/store'
+);
+

@@ -13,11 +13,11 @@ import {
   Record,
 } from "@holochain/client";
 
-export class {{pascal_case zome_manifest.name}}ZomeMock extends ZomeMock implements AppAgentClient {
+export class {{pascal_case app_name}}ZomeMock extends ZomeMock implements AppAgentClient {
   constructor(
     myPubKey?: AgentPubKey
   ) {
-    super("{{snake_case dna_role_name}}", "{{snake_case zome_manifest.name}}", myPubKey);
+    super("{{snake_case app_name}}_test", "{{snake_case app_name}}", myPubKey);
   }
   
 }

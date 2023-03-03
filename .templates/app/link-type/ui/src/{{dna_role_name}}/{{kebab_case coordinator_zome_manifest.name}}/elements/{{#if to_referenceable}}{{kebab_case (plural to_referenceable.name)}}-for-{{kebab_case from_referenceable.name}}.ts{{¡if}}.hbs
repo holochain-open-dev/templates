@@ -36,7 +36,8 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
    * @internal
    */
   _{{camel_case (plural to_referenceable.name)}} = new StoreSubscriber(this,
-    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}})
+    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}),
+    () => [this.{{camel_case from_referenceable.singular_arg}}]
   );
   
   firstUpdated() {

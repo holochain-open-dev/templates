@@ -9,22 +9,22 @@ import {
 import { isSignalFromCellWithRole, EntryRecord } from '@holochain-open-dev/utils';
 import { UnsubscribeFunction } from "emittery";
 
-import { {{pascal_case zome_manifest.name}}Signal } from './types';
+import { {{pascal_case app_name}}Signal } from './types';
 
-export class {{pascal_case zome_manifest.name}}Client {
+export class {{pascal_case app_name}}Client {
 
-  constructor(public client: AppAgentClient, public roleName: string, public zomeName = '{{snake_case zome_manifest.name}}') {}
+  constructor(public client: AppAgentClient, public roleName: string, public zomeName = '{{snake_case app_name}}') {}
   
   on(
     eventName: 'signal',
-    listener: (eventData: {{pascal_case zome_manifest.name}}Signal) => void | Promise<void>
+    listener: (eventData: {{pascal_case app_name}}Signal) => void | Promise<void>
   ): UnsubscribeFunction {
     return this.client.on(eventName, async (signal) => {
       if (
         (await isSignalFromCellWithRole(this.client, this.roleName, signal)) &&
         this.zomeName === signal.zome_name
       ) {
-        listener(signal.payload as {{pascal_case zome_manifest.name}}Signal);
+        listener(signal.payload as {{pascal_case app_name}}Signal);
       }
     });
   }

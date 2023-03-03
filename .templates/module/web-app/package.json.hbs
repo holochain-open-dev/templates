@@ -2,18 +2,18 @@
   "name": "{{app_name}}-dev",
   "private": true,
   "workspaces": [
-    "ui/*"
+    "ui"
   ],
   "scripts": {
     "start": "AGENTS=2 npm run network",
-    "network": "hc s clean && npm run build:happ && UI_PORT=8888 concurrently \"vite --port $UI_PORT --clearScreen false\" \"npm run launch:happ\" \"holochain-playground\"",
+    "network": "hc s clean && npm run build:happ && UI_PORT=8888 concurrently -k \"npm start -w @holochain-open-dev/{{kebab_case app_name}}\" \"npm run launch:happ\" \"holochain-playground\"",
     "test": "npm run build:happ && RUSTFLAGS='' cargo nextest run -j 1",
     "launch:happ": "echo \"pass\" | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}.happ --ui-port $UI_PORT network mdns",
     "build:happ": "npm run build:zomes && hc app pack workdir --recursive",
     "build:zomes": "RUSTFLAGS='' CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
   },
   "devDependencies": {
-    "@holochain-playground/cli": "^0.1.0",
+    "@holochain-playground/cli": "^0.1.1",
     "@storybook/addon-essentials": "^7.0.0-beta.33",
     "@storybook/addon-links": "^7.0.0-beta.33",
     "@storybook/blocks": "^7.0.0-beta.33",
@@ -25,8 +25,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^7.0.0-beta.33"
-    "vite": "^4.0.0",
-    "vite-plugin-checker": "^0.5.3"
   },
   "engines": {
     "npm": ">=7.0.0"

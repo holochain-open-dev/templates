@@ -42,7 +42,10 @@ export class {{pascal_case entry_type.name}}Summary extends ScopedElementsMixin(
   /**
    * @internal
    */
-  _{{camel_case entry_type.name}} = new StoreSubscriber(this, () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash));
+  _{{camel_case entry_type.name}} = new StoreSubscriber(this, 
+    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash),
+    () => [this.{{camel_case entry_type.name}}Hash]
+  );
 
   firstUpdated() {
     if (this.{{camel_case entry_type.name}}Hash === undefined) {

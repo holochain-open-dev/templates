@@ -1,7 +1,8 @@
 {
-  "name": "@holochain-open-dev/{{kebab_case zome_manifest.name}}",
+  "name": "@holochain-open-dev/{{kebab_case app_name}}",
   "version": "0.0.1",
   "scripts": {
+    "start": "vite --open --clearScreen false --port $UI_PORT",
     "build": "npm run lint && tsc",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --fix --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
@@ -13,7 +14,7 @@
   "files": ["dist"],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/holochain-open-dev/{{kebab_case zome_manifest.name}}.git"
+    "url": "git+https://github.com/holochain-open-dev/{{kebab_case app_name}}.git"
   },
   "exports": {
     ".": "./dist/index.js",
@@ -29,7 +30,7 @@
     "@lit-labs/context": "^0.2.0",
     "@lit/localize": "^0.11.4",
     "@open-wc/scoped-elements": "^2.1.3",
-    "@scoped-elements/material-web": "^0.1.0",
+    "@scoped-elements/material-web": "^0.1.2",
     "@msgpack/msgpack": "^2.7.2",
     "@scoped-elements/shoelace": "0.0.8",
     "@vaadin/date-time-picker": "^23.2.8",
@@ -46,7 +47,9 @@
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.0"
+    "typescript": "^4.9.0",
+    "vite": "^4.0.0",
+    "vite-plugin-checker": "^0.5.3"
   },
   "publishConfig": {
     "access": "public"

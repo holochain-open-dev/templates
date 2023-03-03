@@ -34,7 +34,9 @@ export class {{pascal_case collection_name}} extends ScopedElementsMixin(LitElem
    * @internal
    */
   _{{camel_case collection_name}} = new StoreSubscriber(this, 
-    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}}
+    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author),
+    () => [this.author]
+    {{/if}}
   );
 
   {{#if (eq collection_type.type "ByAuthor")}}
