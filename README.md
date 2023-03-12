@@ -8,7 +8,7 @@ For now, only the `app` template is available. Soonish we'll add the `module` te
 
 1a. If you are scaffolding a new project, run this:
 
-`nix-shell https://holochain.love --run "hc scaffold web-app --templates-url https://github.com/holochain-open-dev/templates"`
+`nix run github:holochain/holochain#hc-scaffold -- web-app --templates-url https://github.com/holochain-open-dev/templates`
 
 1b. If you already have an existing project, run this inside a `nix develop` shell:
 
