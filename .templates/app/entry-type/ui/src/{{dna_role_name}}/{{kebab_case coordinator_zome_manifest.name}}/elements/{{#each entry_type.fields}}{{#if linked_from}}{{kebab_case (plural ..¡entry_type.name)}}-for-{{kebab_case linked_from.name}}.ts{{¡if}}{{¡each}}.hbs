@@ -6,7 +6,7 @@ import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
 import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
 import { localized, msg } from '@lit/localize';
-import { mdiInformationOutlined } from '@mdi/js';
+import { mdiInformationOutline } from '@mdi/js';
 
 import '@holochain-open-dev/elements/elements/display-error.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
@@ -51,7 +51,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
       return html` <div class="column center-content">
         <sl-icon
           style="color: grey; height: 64px; width: 64px; margin-bottom: 16px"
-          .src=${wrapPathInSvg(mdiInformationOutlined)}
+          .src=${wrapPathInSvg(mdiInformationOutline)}
         ></sl-icon>
         <span class="placeholder">${msg("No {{lower_case (plural ../entry_type.name)}} found for this {{lower_case linked_from.name}}")}</span>
       </div>`;

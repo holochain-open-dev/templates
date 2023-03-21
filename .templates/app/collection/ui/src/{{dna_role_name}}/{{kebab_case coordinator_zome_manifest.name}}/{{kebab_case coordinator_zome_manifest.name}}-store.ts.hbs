@@ -8,12 +8,12 @@
     lazyLoadAndPoll(async () => {
       const records = await this.client.get{{pascal_case collection_name}}(author);
       return records.map(r => {{#if (eq referenceable.hash_type "ActionHash")}}r.actionHash{{else}}r.entryHash{{/if}});
-    }, 1000)
+    }, 4000)
   );
   {{else}}
   {{camel_case collection_name}} = lazyLoadAndPoll(async () => {
     const records = await this.client.get{{pascal_case collection_name}}();
     return records.map(r => {{#if (eq referenceable.hash_type "ActionHash")}}r.actionHash{{else}}r.entryHash{{/if}});
-  }, 1000);
+  }, 4000);
   {{/if}}
 {{/merge_scope}}

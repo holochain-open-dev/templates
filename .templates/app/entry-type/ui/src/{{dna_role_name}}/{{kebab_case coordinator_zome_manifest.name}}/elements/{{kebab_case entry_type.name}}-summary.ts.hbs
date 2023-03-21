@@ -3,9 +3,8 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
-import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { CircularProgress, Card, Snackbar } from '@scoped-elements/material-web';
 
 import { localized, msg } from '@lit/localize';
 
@@ -97,9 +96,7 @@ export class {{pascal_case entry_type.name}}Summary extends LitElement {
             {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
           }
         }))}>
-        <div style="margin: 16px">
-          ${this.render{{pascal_case entry_type.name}}()}
-        </div>
+        ${this.render{{pascal_case entry_type.name}}()}
     </sl-card>`;
   }
 

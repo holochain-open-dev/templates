@@ -1,5 +1,5 @@
 // Replace 'ligth.css' with 'dark.css' if you want the dark theme
-import '@shoelace-style/shoelace/dist/theme/light.css';
+import '@shoelace-style/shoelace/dist/themes/light.css';
 
 import { LitElement, css, html } from 'lit';
 import { property, state, customElement } from 'lit/decorators.js';
@@ -105,7 +105,10 @@ export class HolochainApp extends LitElement {
 
     return html`
       <div class="column fill">
-        <div class="row" style="background-color: var(--sl-color-primary-50);">
+        <div
+          class="row"
+          style="align-items: center; color:white; background-color: var(--sl-color-primary-900); padding: 16px"
+        >
           ${this.renderBackButton()}
           <span class="title" style="flex: 1">${msg("{{title_case app_name}}")}</span>
 

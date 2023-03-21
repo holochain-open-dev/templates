@@ -47,9 +47,10 @@
     <holochain-app></holochain-app>
 
     <script type="module">
+      import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
       import { HolochainApp } from "./src/holochain-app.ts";
-      
-      customElements.define('holochain-app', HolochainApp);
+
+      setBasePath('shoelace');
     </script>
   </body>
 </html>

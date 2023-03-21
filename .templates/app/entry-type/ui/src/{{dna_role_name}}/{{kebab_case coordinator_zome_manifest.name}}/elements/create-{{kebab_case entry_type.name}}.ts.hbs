@@ -12,7 +12,8 @@ import '@holochain-open-dev/elements/elements/display-error.js';
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
-import { SlAlert } '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
   {{#each entry_type.fields}}
     {{#if widget}}
@@ -79,11 +80,11 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
   {{/if}}
 {{/each}}
 
-  async create{{pascal_case entry_type.name}}(fields: Partial<{{pascal_case entry_type.name}}>) {
+  async create{{pascal_case entry_type.name}}(fields: any) {
     {{#each entry_type.fields}}
       {{#if (not widget)}}
         {{#if (ne cardinality "option")}}
-    if (this.{{camel_case field_name}} === undefined) throw new Error('Cannot create a new {{title_case ..entry_type.name}} without its {{snake_case field_name}} field');
+    if (this.{{camel_case field_name}} === undefined) throw new Error('Cannot create a new {{title_case ../entry_type.name}} without its {{snake_case field_name}} field');
         {{/if}}
       {{/if}}
     {{/each}}
@@ -91,7 +92,7 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
     {{#each entry_type.fields}}
       {{#if widget}}
         {{#if (eq cardinality "vector")}}
-    if (!Array.isArray(fields['{{snake_case field_name}}'])) fields['{{snake_case field_name}}'] = [fields['{{snake_case field_name}}']];
+    if (!Array.isArray(fields.{{snake_case field_name}})) fields.{{snake_case field_name}} = [fields.{{snake_case field_name}}];
         {{/if}}
       {{/if}}
     {{/each}}
@@ -138,8 +139,8 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
 
         <form 
           id="create-form"
-          style="display: flex; flex: 1; flex-direction: column; margin: 16px"
-          ${onSubmit(fields => this.create{{pascal_case entry_type.name}}(fields)}
+          style="display: flex; flex: 1; flex-direction: column;"
+          ${onSubmit(fields => this.create{{pascal_case entry_type.name}}(fields))}
         >  
           {{#each entry_type.fields}}
             {{#if widget}}
