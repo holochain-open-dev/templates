@@ -4,38 +4,14 @@ import {
   ActionHash, 
   EntryHash, 
   AgentPubKey,
-  AppAgentCallZomeRequest
 } from '@holochain/client';
-import { isSignalFromCellWithRole, EntryRecord } from '@holochain-open-dev/utils';
-import { UnsubscribeFunction } from "emittery";
+import { isSignalFromCellWithRole, EntryRecord, ZomeClient } from '@holochain-open-dev/utils';
 
-import { {{pascal_case zome_manifest.name}}Signal } from './types';
+import { {{pascal_case app_name}}Signal } from './types';
 
-export class {{pascal_case zome_manifest.name}}Client {
+export class {{pascal_case app_name}}Client extends ZomeClient<{{pascal_case app_name}}Signal> {
 
-  constructor(public client: AppAgentClient, public roleName: string, public zomeName = '{{snake_case zome_manifest.name}}') {}
-  
-  on(
-    eventName: 'signal',
-    listener: (eventData: {{pascal_case zome_manifest.name}}Signal) => void | Promise<void>
-  ): UnsubscribeFunction {
-    return this.client.on(eventName, async (signal) => {
-      if (
-        (await isSignalFromCellWithRole(this.client, this.roleName, signal)) &&
-        this.zomeName === signal.zome_name
-      ) {
-        listener(signal.payload as {{pascal_case zome_manifest.name}}Signal);
-      }
-    });
-  }
-
-  private callZome(fn_name: string, payload: any) {
-    const req: AppAgentCallZomeRequest = {
-      role_name: this.roleName,
-      zome_name: this.zomeName,
-      fn_name,
-      payload,
-    };
-    return this.client.callZome(req);
+  constructor(public client: AppAgentClient, public roleName: string, public zomeName = '{{snake_case app_name}}') {
+    super(client, roleName, zomeName);
   }
 }

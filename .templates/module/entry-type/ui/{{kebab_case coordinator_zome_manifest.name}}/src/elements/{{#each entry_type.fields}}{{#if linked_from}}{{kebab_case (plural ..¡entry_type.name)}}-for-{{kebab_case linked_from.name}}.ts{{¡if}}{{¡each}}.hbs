@@ -3,27 +3,29 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { Record, EntryHash, ActionHash, AgentPubKey } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { RecordBag, EntryRecord } from '@holochain-open-dev/utils';
-import { hashProperty, sharedStyles, DisplayError } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles} from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { CircularProgress } from '@scoped-elements/material-web';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
+import { mdiInformationOutlined } from '@mdi/js';
 
-import { {{pascal_case ../coordinator_zome_manifest.name}}Store } from '../{{kebab_case ../coordinator_zome_manifest.name}}-store';
-import { {{camel_case ../coordinator_zome_manifest.name}}StoreContext } from '../context';
-import { {{pascal_case ../entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import '@holochain-open-dev/elements/elements/display-error.js';
+
+import { {{pascal_case ../coordinator_zome_manifest.name}}Store } from '../{{kebab_case ../coordinator_zome_manifest.name}}-store.js';
+import { {{camel_case ../coordinator_zome_manifest.name}}StoreContext } from '../context.js';
+import { {{pascal_case ../entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
 
 {{#if (not (eq linked_from.hash_type "AgentPubKey") )}}
-import { {{pascal_case ../entry_type.name}}Summary } from './{{kebab_case ../entry_type.name}}-summary';
+import './{{kebab_case ../entry_type.name}}-summary.js';
 {{else}}
-import { AgentAvatar } from '@holochain-open-dev/profiles';
+import '@holochain-open-dev/profiles/elements/agent-avatar.js';
 {{/if}}
 
 /**
  * @element {{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}
  */
 @localized()
-export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} extends ScopedElementsMixin(LitElement) {
+@customElement('{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}')
+export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} extends LitElement {
 
   // REQUIRED. The {{pascal_case linked_from.singular_arg}} for which the {{pascal_case (plural ../entry_type.name)}} should be fetched
   @property(hashProperty('{{kebab_case linked_from.singular_arg}}'))
@@ -45,9 +47,10 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
   renderList(hashes: Array<{{#if ../entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}>) {
     if (hashes.length === 0) 
       return html` <div class="column center-content">
-        <md-icon
-          style="color: grey; height: 64px; width: 64px; --md-icon-size: 64px; margin-bottom: 16px"
-          >info_outlined</md-icon
+        <sl-icon
+          style="color: grey; height: 64px; width: 64px; margin-bottom: 16px"
+          .src=${wrapPathInSvg(mdiInformationOutlined)}
+          ></sl-icon
         >
         <span class="placeholder">${msg("No {{lower_case (plural ../entry_type.name)}} found for this {{lower_case linked_from.name}}")}</span>
       </div>`;
@@ -67,7 +70,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
         return html`<div
           style="display: flex; flex: 1; align-items: center; justify-content: center"
         >
-          <mwc-circular-progress indeterminate></mwc-circular-progress>
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
         </div>`;
       case "complete": 
         return this.renderList(this._{{camel_case (plural ../entry_type.name)}}.value.value);
@@ -77,18 +80,6 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
           .error=${this._{{camel_case (plural ../entry_type.name)}}.value.error.data.data}
         ></display-error>`;
     }
-  }
-  
-  static get scopedElements() {
-    return {
-      'mwc-circular-progress': CircularProgress,
-      'display-error': DisplayError,
-    {{#if (not (eq linked_from.hash_type "AgentPubKey") )}}
-      '{{kebab_case ../entry_type.name}}-summary': {{pascal_case ../entry_type.name}}Summary
-    {{else}}
-      'agent-avatar': AgentAvatar
-    {{/if}}
-    };
   }
   
   static styles = [sharedStyles];

@@ -1,14 +1,18 @@
 import { LitElement, html } from 'lit';
-import { state, property } from 'lit/decorators.js';
+import { state, property, query, customElement } from 'lit/decorators.js';
 import { ActionHash, Record, DnaHash, AgentPubKey, EntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { hashProperty, hashState, sharedStyles } from '@holochain-open-dev/elements';
+import { hashProperty, hashState, sharedStyles, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
-import { Snackbar, MdFilledButton, Card } from '@scoped-elements/material-web';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { localized, msg } from '@lit/localize';
+import { mdiAlertCircleOutline } from "@mdi/js";
 
 {{#uniq_lines}}
+import '@holochain-open-dev/elements/elements/display-error.js';
+import '@shoelace-style/shoelace/dist/components/card/card.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import { SlAlert } '@shoelace-style/shoelace/dist/components/alert/alert.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
   {{#each entry_type.fields}}
     {{#if widget}}
 {{> (concat field_type.type "/" widget "/edit/imports") }}
@@ -17,16 +21,17 @@ import { localized, msg } from '@lit/localize';
   {{/each}}
 {{/uniq_lines}}
 
-import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
-import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
+import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
 
 /**
  * @element create-{{kebab_case entry_type.name}}
  * @fires {{kebab_case entry_type.name}}-created: detail will contain { {{camel_case entry_type.name}}Hash }
  */
 @localized()
-export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(LitElement) {
+@customElement('create-{{kebab_case entry_type.name}}')
+export class Create{{pascal_case entry_type.name}} extends LitElement {
   {{#each entry_type.fields}}
     {{#if (not widget) }}
       {{#if (not (eq cardinality "vector" ) )}}
@@ -43,48 +48,52 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
     {{/if}}
   {{/each}}
 
-  {{#each entry_type.fields}}
-    {{#if widget }}
-      {{#if (not (eq cardinality "vector" ) )}}
-  /**
-   * @internal
-   */
-  @state({{#if (or (eq field_type.type "AgentPubKey") (or (eq field_type.type "ActionHash") (eq field_type.type "EntryHash" ) ) ) }}hashState(){{/if}})
-  _{{camel_case field_name}}: {{> (concat field_type.type "/type") }}{{#if (or (eq field_type.type "AgentPubKey") (or (eq field_type.type "ActionHash") (or (eq field_type.type "EntryHash") (eq cardinality "option") ) ) ) }} | undefined{{/if}} = {{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}};
-
-      {{else}}
-  /**
-   * @internal
-   */
-  @state()
-  _{{camel_case field_name}}: Array<{{> (concat field_type.type "/type") }}> = [{{> (concat field_type.type "/" widget "/initial-value") field_type=field_type}}];
-
-      {{/if}}
-    {{/if}}
-  {{/each}}
-
-  is{{pascal_case entry_type.name}}Valid() {
-    return true{{#each entry_type.fields}}{{#if widget}}{{#if (eq cardinality "single")}} && {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate=(concat "this._" (camel_case field_name)) }}{{/if}}{{#if (eq cardinality "vector")}} && this._{{camel_case field_name}}.every(e => {{> (concat field_type.type "/" widget "/is-valid") variable_to_validate="e" }}){{/if}}{{/if}}{{/each}};
-  }
-
   /**
    * @internal
    */
   @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  async create{{pascal_case entry_type.name}}() {
-    const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = { 
+  /**
+   * @internal
+   */
+  @state()
+  committing = false;
+   
+  /**
+   * @internal
+   */
+  @query('#create-form')
+  form!: HTMLFormElement;
+
+  async create{{pascal_case entry_type.name}}(fields: Partial<{{pascal_case entry_type.name}}>) {
+    {{#each entry_type.fields}}
+      {{#if (not widget)}}
+        {{#if (ne cardinality "option")}}
+    if (this.{{camel_case field_name}} === undefined) throw new Error('Cannot create a new {{title_case ..entry_type.name}} without its {{snake_case field_name}} field');
+        {{/if}}
+      {{/if}}
+    {{/each}}
+
     {{#each entry_type.fields}}
       {{#if widget}}
-        {{snake_case field_name}}: this._{{camel_case field_name}}!,
-      {{else}}
+        {{#if (eq cardinality "vector")}}
+    if (!Array.isArray(fields['{{snake_case field_name}}'])) fields['{{snake_case field_name}}'] = [fields['{{snake_case field_name}}']];
+        {{/if}}
+      {{/if}}
+    {{/each}}
+  
+    const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = {
+      ...fields,
+    {{#each entry_type.fields}}
+      {{#if (not widget)}}
         {{snake_case field_name}}: this.{{camel_case field_name}},
       {{/if}}
     {{/each}}
     };
 
     try {
+      this.committing = true;
       const record: EntryRecord<{{pascal_case entry_type.name}}> = await this.{{camel_case coordinator_zome_manifest.name}}Store.client.create{{pascal_case entry_type.name}}({{camel_case entry_type.name}});
 
       this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-created', {
@@ -94,22 +103,31 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
           {{camel_case entry_type.name}}Hash: record.actionHash
         }
       }));
+      
+      this.form.reset();
     } catch (e: any) {
-      const errorSnackbar = this.shadowRoot?.getElementById('create-error') as Snackbar;
-      errorSnackbar.labelText = `${msg("Error creating the {{lower_case entry_type.name}}")}: ${e.data.data}`;
-      errorSnackbar.show();
+      console.error(e);
+      const errorAlert = this.shadowRoot?.getElementById('create-error') as SlAlert;
+      errorAlert.toast();
     }
+    this.committing = false;
   }
 
   render() {
     return html`
-      <mwc-snackbar id="create-error" leading>
-      </mwc-snackbar>
+      <sl-alert id="create-error" variant="danger" style="color: red">
+        <sl-icon slot="icon" .src=${wrapPathInSvg(mdiAlertCircleOutline)}></sl-icon>
+        <strong>${msg("Error creating the {{lower_case entry_type.name}}")}</strong><br />
+      </sl-alert>
 
-      <mwc-card style="display: flex; flex: 1;">
-        <div style="display: flex; flex: 1; flex-direction: column; margin: 16px">
-          <span style="font-size: 18px; margin-bottom: 16px;">${msg("Create {{title_case entry_type.name}}")}</span>
-  
+      <sl-card style="display: flex; flex: 1;">
+        <span slot="header">${msg("Create {{title_case entry_type.name}}")}</span>
+
+        <form 
+          id="create-form"
+          style="display: flex; flex: 1; flex-direction: column; margin: 16px"
+          ${onSubmit(fields => this.create{{pascal_case entry_type.name}}(fields)}
+        >  
           {{#each entry_type.fields}}
             {{#if widget}}
           <div style="margin-bottom: 16px;">
@@ -119,33 +137,18 @@ export class Create{{pascal_case entry_type.name}} extends ScopedElementsMixin(L
           {{> Vec/edit/render field_name=field_name field_type=field_type widget=widget }}
               {{/if}}
           </div>
-              
+
             {{/if}}
           {{/each}}
 
-          <md-filled-button 
+          <sl-button
+            variant="primary"
             .label=${msg("Create {{title_case entry_type.name}}")}
-            .disabled=${!this.is{{pascal_case entry_type.name}}Valid()}
-            @click=${() => this.create{{pascal_case entry_type.name}}()}
-          ></md-filled-button>
-        </div> 
-      </mwc-card>`;
-  }
-  
-  static get scopedElements() {
-    return {
-      'mwc-snackbar': Snackbar,
-      'md-filled-button': MdFilledButton,
-      'mwc-card': Card,
-      {{#uniq_lines}}
-        {{#each entry_type.fields}}
-          {{#if widget}}
-      {{> (concat field_type.type "/" widget "/edit/scoped-elements") }}
-
-          {{/if}}
-        {{/each}}
-      {{/uniq_lines}}
-    };
+            type="submit"
+            .loading=${this.committing}
+          ></sl-button>
+        </form> 
+      </sl-card>`;
   }
   
   static styles = [sharedStyles];
