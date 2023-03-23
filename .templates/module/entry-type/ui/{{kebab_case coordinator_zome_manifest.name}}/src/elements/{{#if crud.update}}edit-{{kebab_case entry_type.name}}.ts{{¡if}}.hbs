@@ -105,7 +105,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
 
   render() {
     return html`
-      <sl-alert id="update-error" variant="danger">
+      <sl-alert id="update-error" variant="danger" duration="3000">
         <sl-icon slot="icon" .src=${wrapPathInSvg(mdiAlertCircleOutline)} style="color: red"></sl-icon>
         <strong>${msg("Error updating the {{lower_case entry_type.name}}")}</strong><br />
       </sl-alert>

@@ -85,7 +85,7 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
 
   renderDetail(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`{{#if crud.delete}}
-      <sl-alert id="update-error" variant="danger">
+      <sl-alert id="update-error" variant="danger" duration="3000">
         <sl-icon slot="icon" .src=${wrapPathInSvg(mdiAlertCircleOutline)} style="color: red"></sl-icon>
         <strong>${msg("Error deleting the {{lower_case entry_type.name}}")}</strong><br />
       </sl-alert>

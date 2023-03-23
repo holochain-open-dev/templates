@@ -116,7 +116,7 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
 
   render() {
     return html`
-      <sl-alert id="create-error" variant="danger" style="color: red">
+      <sl-alert id="create-error" variant="danger" style="color: red" duration="3000">
         <sl-icon slot="icon" .src=${wrapPathInSvg(mdiAlertCircleOutline)}></sl-icon>
         <strong>${msg("Error creating the {{lower_case entry_type.name}}")}</strong><br />
       </sl-alert>

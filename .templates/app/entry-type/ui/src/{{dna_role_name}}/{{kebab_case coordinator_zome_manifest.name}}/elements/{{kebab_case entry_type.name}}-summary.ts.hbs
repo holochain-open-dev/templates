@@ -89,7 +89,7 @@ export class {{pascal_case entry_type.name}}Summary extends LitElement {
   }
   
   render() {
-    return html`<sl-card style="display: flex; flex: 1; cursor: grab;" @click=${() => this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-selected', {
+    return html`<sl-card style="flex: 1; cursor: grab;" @click=${() => this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-selected', {
           composed: true,
           bubbles: true,
           detail: {

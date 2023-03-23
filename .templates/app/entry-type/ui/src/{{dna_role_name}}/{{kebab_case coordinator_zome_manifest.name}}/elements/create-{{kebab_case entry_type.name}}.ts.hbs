@@ -1,8 +1,9 @@
 import { LitElement, html } from 'lit';
+import { keyed } from "lit/directives/keyed.js";
 import { state, property, query, customElement } from 'lit/decorators.js';
 import { ActionHash, Record, DnaHash, AgentPubKey, EntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { hashProperty, hashState, sharedStyles, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, notifyError, hashState, sharedStyles, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit-labs/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiDelete } from "@mdi/js";
@@ -88,20 +89,17 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
         {{/if}}
       {{/if}}
     {{/each}}
-
+  
+    const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = {
     {{#each entry_type.fields}}
       {{#if widget}}
         {{#if (eq cardinality "vector")}}
-    if (!Array.isArray(fields.{{snake_case field_name}})) fields.{{snake_case field_name}} = [fields.{{snake_case field_name}}];
+      {{snake_case field_name}}: (Array.isArray(fields.{{snake_case field_name}}) ? fields.{{snake_case field_name}} : [fields.{{snake_case field_name}}]).map((el: any) => {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read="el" }}),
+        {{else}}
+      {{snake_case field_name}}: {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read=(concat "fields." (snake_case field_name)) }},
         {{/if}}
-      {{/if}}
-    {{/each}}
-  
-    const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = {
-      ...fields,
-    {{#each entry_type.fields}}
-      {{#if (not widget)}}
-        {{snake_case field_name}}: this.{{camel_case field_name}},
+      {{else}}
+      {{snake_case field_name}}: this.{{camel_case field_name}},
       {{/if}}
     {{/each}}
     };
@@ -121,20 +119,14 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
       this.form.reset();
     } catch (e: any) {
       console.error(e);
-      const errorAlert = this.shadowRoot?.getElementById('create-error') as SlAlert;
-      errorAlert.toast();
+      notifyError(msg("Error creating the {{lower_case entry_type.name}}"));
     }
     this.committing = false;
   }
 
   render() {
     return html`
-      <sl-alert id="create-error" variant="danger" style="color: red">
-        <sl-icon slot="icon" .src=${wrapPathInSvg(mdiAlertCircleOutline)}></sl-icon>
-        <strong>${msg("Error creating the {{lower_case entry_type.name}}")}</strong><br />
-      </sl-alert>
-
-      <sl-card style="display: flex; flex: 1;">
+      <sl-card style="flex: 1;">
         <span slot="header">${msg("Create {{title_case entry_type.name}}")}</span>
 
         <form 
@@ -146,7 +138,7 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
             {{#if widget}}
           <div style="margin-bottom: 16px;">
               {{#if (not (eq cardinality "vector") )}}
-          {{> (concat field_type.type "/" widget "/edit/render") field_name=field_name required=(eq cardinality "single") }}
+          {{> (concat field_type.type "/" widget "/edit/render") label=(title_case field_name) field_name=field_name required=(eq cardinality "single") }}
               {{else}}
           {{> Vec/edit/render field_name=field_name field_type=field_type widget=widget }}
               {{/if}}
