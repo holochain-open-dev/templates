@@ -1,0 +1,21 @@
+import { html } from "lit-html";
+import "@holochain-open-dev/{{kebab_case app_name}}/elements/create-{{kebab_case entry_type.name}}.js";
+import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case app_name}}-context.js";
+import { {{pascal_case app_name}}ZomeMock } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
+import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
+
+// More on how to set up stories at: https://storybook.js.org/docs/7.0/web-components/writing-stories/introduction
+export default {
+  title: "Frontend/Elements/create-{{kebab_case app_name}}",
+  tags: ["autodocs"],
+  component: "create-{{kebab_case app_name}}",
+  render: (args) =>
+    html` <{{kebab_case app_name}}-context
+      .store=${new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(new {{pascal_case app_name}}ZomeMock()))}
+    >
+      <create-{{kebab_case app_name}}></create-{{kebab_case app_name}}>
+    </{{kebab_case app_name}}-context>`,
+};
+
+// More on writing stories with args: https://storybook.js.org/docs/7.0/web-components/writing-stories/args
+export const Demo = {};

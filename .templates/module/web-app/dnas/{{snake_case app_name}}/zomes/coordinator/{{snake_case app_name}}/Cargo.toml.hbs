@@ -1,0 +1,15 @@
+[package]
+name = "hc_zome_{{snake_case app_name}}_coordinator"
+version = "0.0.1"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "hc_zome_{{snake_case app_name}}_coordinator"
+
+[dependencies]
+hdk = { workspace = true }
+
+serde = { workspace = true }
+
+hc_zome_{{snake_case app_name}}_integrity = { workspace = true } 

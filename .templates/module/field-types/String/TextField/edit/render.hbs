@@ -1,6 +1,2 @@
-<md-outlined-text-field
-  .label=${msg("{{label}}")} 
-  .defaultValue=${ {{variable_to_read}} } 
-  {{#if required}}required{{/if}} 
-  @input=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as any).value; } }
-></md-outlined-text-field>
+<sl-input name="{{snake_case field_name}}" .label=${msg("{{label}}")} {{#if required}} required{{/if}}{{#if edit}} .defaultValue=${ {{default_value}} }{{/if}}></sl-input>
+

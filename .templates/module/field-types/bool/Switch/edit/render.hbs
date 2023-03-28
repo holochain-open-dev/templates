@@ -1,16 +1,1 @@
-<label
-  style="
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  "
->
-  <md-switch 
-    style="margin-right: 4px" 
-    .selected=${ {{variable_to_read}} } 
-    @change=${(e: CustomEvent) => { {{variable_to_change}} = (e.target as MdSwitch).selected;} }
-  ></md-switch>
-  ${msg("{{label}}")}
-</label>
-
+<sl-switch name="{{snake_case field_name}}" .label=${msg("{{label}}")} {{#if edit}} .defaultChecked=${ {{default_value}} }{{/if}}>${msg("{{title_case field_name}}")}</sl-switch>

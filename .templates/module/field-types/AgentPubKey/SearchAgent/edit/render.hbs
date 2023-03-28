@@ -1,8 +1,2 @@
-{{#if edit}}
-<div style="display: flex; flex-direction: row;">
-<agent-avatar .agentPubKey=${ {{variable_to_read}} }></agent-avatar>
-{{/if}}
-<search-agent .defaultValue=${ {{variable_to_read}} } .fieldLabel=${msg("{{label}}")} @agent-selected=${(e: CustomEvent) => { {{variable_to_change}} = e.detail.agentPubKey; } }></search-agent>
-{{#if edit}}
-</div>
-{{/if}}
+<search-agent name="{{snake_case field_name}}" .fieldLabel=${msg("{{label}}")}{{#if required}} required{{/if}}{{#if edit}} .defaultValue=${ {{default_value}} }{{/if}}></search-agent>
+

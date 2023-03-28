@@ -1,0 +1,27 @@
+import { html } from "lit-html";
+import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case entry_type.name}}-detail.js";
+import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case app_name}}-context.js";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
+import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
+
+const mock = new {{pascal_case app_name}}ZomeMock();
+
+const record = await mock.create_{{snake_case entry_type.name}}(sample{{pascal_case entry_type.name}}());
+
+const store = new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(mock));
+
+// More on how to set up stories at: https://storybook.js.org/docs/7.0/web-components/writing-stories/introduction
+export default {
+  title: "Frontend/Elements/{{kebab_case entry_type.name}}-detail",
+  tags: ["autodocs"],
+  component: "{{kebab_case entry_type.name}}-detail",
+  render: (args) =>
+    html` <{{kebab_case app_name}}-context
+      .store=${store}
+    >
+      <{{kebab_case entry_type.name}}-detail .{{camel_case entry_type.name}}Hash=${record.signed_action.hashed.hash}></{{kebab_case entry_type.name}}-detail>
+    </{{kebab_case app_name}}-context>`,
+};
+
+// More on writing stories with args: https://storybook.js.org/docs/7.0/web-components/writing-stories/args
+export const Demo = {};

@@ -1,0 +1,17 @@
+---
+manifest_version: "1"
+name: {{app_name}}_test
+description: ~
+roles:   
+  - name: {{app_name}}_test
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: "../dnas/{{app_name}}_test/workdir/{{app_name}}_test.dna"
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+      version: ~
+      clone_limit: 0

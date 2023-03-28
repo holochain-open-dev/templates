@@ -1,0 +1,15 @@
+
+{{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+  {{#if (eq collection_type.type "ByAuthor")}}
+  async get_{{snake_case collection_name}}(author: AgentPubKey): Promise<Array<Record>> {
+    const actionHashes = this.{{camel_case referenceable.name}}.authorMap.get(author);
+    return actionHashes.map(actionHash => this.{{camel_case referenceable.name}}.entryRecord(actionHash)).map(er => er.record);   
+  }
+
+  {{else}}
+  async get_{{snake_case collection_name}}(_): Promise<Array<Record>> {
+    return this.{{camel_case referenceable.name}}.entryRecords.map(er => er.record);   
+  }
+  {{/if}}
+
+{{/merge_scope}}

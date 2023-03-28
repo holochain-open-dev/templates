@@ -1,0 +1,17 @@
+Notice that because you are using the module template, this template only works with a single dna and zome, which are already scaffolded for you. It also comes with the profiles module pre-installed.
+
+So **don't run "hc scaffold dna" or "hc scaffold zome"**.
+
+Set up your development environment with:
+
+  cd {{kebab_case app_name}}
+  nix develop
+  npm install
+
+To continue scaffolding your module, add new entry types:
+
+  hc scaffold entry-type
+
+Then, at any point in time you can start the demo with:
+
+  npm start

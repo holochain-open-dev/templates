@@ -1,0 +1,145 @@
+import { {{pascal_case entry_type.name}} } from './types.js';
+
+export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_type.name}} {
+  return {
+{{#each entry_type.fields}}
+  {{#if linked_from}}
+    {{#if (ne linked_from.hash_type "AgentPubKey")}}
+      {{#if (eq cardinality "vector")}}
+        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
+          {{field_name}}: [],
+        {{else}}
+          {{#if (eq linked_from.hash_type "ActionHash")}}
+          {{field_name}}: [fakeActionHash()],
+          {{else}}
+          {{field_name}}: [fakeEntryHash()],
+          {{/if}}
+        {{/if}}
+      {{else}}
+        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
+          {{field_name}}: undefined,
+        {{else}}
+	  {{#if (eq linked_from.hash_type "ActionHash")}}
+          {{field_name}}: fakeActionHash(),
+          {{else}}
+          {{field_name}}: fakeEntryHash(),
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    {{else}}
+          {{field_name}}: fakeAgentPubKey(),
+    {{/if}}
+  {{else}}
+      {{#if (eq cardinality "vector")}}
+	  {{field_name}}: [{{> (concat field_type.type "/sample-js")}}],
+      {{else}}
+	  {{field_name}}: {{> (concat field_type.type "/sample-js")}},
+      {{/if}}
+  {{/if}}
+{{/each}}
+    }
+}
+
+
+{{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+  {{previous_scope_content}}
+  /** {{title_case entry_type.name}} */
+  {{camel_case entry_type.name}} = new RecordBag<{{title_case entry_type.name}}>();
+  {{#each entry_type.fields}}
+    {{#if linked_from}}
+  {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new HoloHashMap<ActionHash, ActionHash[]>();
+    {{/if}}
+  {{/each}}
+
+  async create_{{snake_case entry_type.name}}({{camel_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<Record> {
+    const record = fakeRecord(fakeCreateAction(hash({{camel_case entry_type.name}}, HashType.ENTRY)), fakeEntry({{camel_case entry_type.name}}));
+    
+    this.{{camel_case entry_type.name}}.add([record]);
+  
+    {{#each entry_type.fields}}
+      {{#if linked_from}}
+        {{#if (eq cardinality "single")}}
+    const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+    this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+        {{/if}}
+        {{#if (eq cardinality "option")}}
+    if ({{camel_case ../entry_type.name}}.{{field_name}}) {
+      const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+    }
+        {{/if}}
+        {{#if (eq cardinality "option")}}
+    for (const {{field_name}} of {{camel_case ../entry_type.name}}.{{field_name}}) {
+      const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+    }
+        {{/if}}
+      {{/if}}
+    {{/each}}
+
+    return record;
+  }
+  
+  async get_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record | undefined> {
+    const state = entryState(this.{{camel_case entry_type.name}}, {{camel_case entry_type.name}}Hash);
+    
+    if (!state || state.deleted) return undefined;
+    
+    return lastUpdate?.record;
+  }
+
+  {{#if crud.delete}}
+  delete_{{snake_case entry_type.name}}(original_{{snake_case entry_type.name}}_hash: ActionHash): Promise<ActionHash> {
+    const record = fakeRecord(fakeDeleteEntry(original_{{snake_case entry_type.name}}_hash));
+    
+    this.{{camel_case entry_type.name}}.add([record]);
+    
+    return record.signed_action.hashed.hash;
+  }
+  {{/if}}
+
+  {{#if crud.update}}
+  async update_{{snake_case entry_type.name}}(input: { {{#if link_from_original_to_each_update}}original_{{snake_case entry_type.name}}_hash: ActionHash; {{/if}}previous_{{snake_case entry_type.name}}_hash: ActionHash; updated_{{snake_case entry_type.name}}: {{pascal_case entry_type.name}}; }): Promise<Record> {
+    const record = fakeRecord(fakeUpdateEntry(input.original_{{snake_case entry_type.name}}_hash, input.updated_{{snake_case entry_type.name}}), input.updated_{{snake_case entry_type.name}});
+    
+    this.{{camel_case entry_type.name}}.add([record]);
+    
+    const {{camel_case ../entry_type.name}} = input.updated_{{snake_case entry_type.name}};
+    
+    {{#each entry_type.fields}}
+      {{#if linked_from}}
+        {{#if (eq cardinality "single")}}
+    const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+    this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+        {{/if}}
+        {{#if (eq cardinality "option")}}
+    if ({{camel_case ../entry_type.name}}.{{field_name}}) {
+      const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+    }
+        {{/if}}
+        {{#if (eq cardinality "option")}}
+    for (const {{field_name}} of {{camel_case ../entry_type.name}}.{{field_name}}) {
+      const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
+    }
+        {{/if}}
+      {{/if}}
+    {{/each}}
+    
+    return record;
+  }
+  {{/if}}
+  
+  {{#each entry_type.fields}}
+    {{#if linked_from}}
+  async get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<Record>> {
+    const actionHashes = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case linked_from.singular_arg}}) || [];
+    
+    return actionHashes.map(actionHash => this.{{camel_case entry_type.name}}.entryRecord(actionHash)?.record).filter(r => !!r);
+  }
+
+    {{/if}}
+  {{/each}}
+
+{{/merge_scope}}

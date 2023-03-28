@@ -59,7 +59,7 @@ You need to set the `store` property of it to your already instantiated `{{pasca
 
 ```html
 <!-- React -->
-<{{kebab_case app_name}}-context store="{{{camel_case app_name}}Store}"><!-- ... --></{{kebab_case app_name}}-context>
+<{{kebab_case app_name}}-context store={ {{camel_case app_name}}Store}><!-- ... --></{{kebab_case app_name}}-context>
 
 <!-- Angular -->
 <{{kebab_case app_name}}-context [store]="{{camel_case app_name}}Store"><!-- ... --></{{kebab_case app_name}}-context>
@@ -68,10 +68,10 @@ You need to set the `store` property of it to your already instantiated `{{pasca
 <{{kebab_case app_name}}-context :store="{{camel_case app_name}}Store"><!-- ... --></{{kebab_case app_name}}-context>
 
 <!-- Svelte -->
-<{{kebab_case app_name}}-context store="{{{camel_case app_name}}Store}"><!-- ... --></{{kebab_case app_name}}-context>
+<{{kebab_case app_name}}-context store={ {{camel_case app_name}}Store}><!-- ... --></{{kebab_case app_name}}-context>
 
 <!-- Lit -->
-<{{kebab_case app_name}}-context .store=${{{camel_case app_name}}Store}><!-- ... --></{{kebab_case app_name}}-context>
+<{{kebab_case app_name}}-context .store=${ {{camel_case app_name}}Store}><!-- ... --></{{kebab_case app_name}}-context>
 ```
 
 OR
