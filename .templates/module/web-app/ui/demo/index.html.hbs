@@ -43,6 +43,8 @@ import { LitElement, css, html } from 'lit';
 import { AppAgentWebsocket } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { sharedStyles } from '@holochain-open-dev/elements';
+import '../src/elements/{{kebab_case app_name}}-context.ts';
+import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from '../src/index.ts';
 import '@holochain-open-dev/elements/elements/display-error.js';
 import {
   ProfilesClient,
@@ -55,6 +57,7 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 export class DemoApp extends LitElement {
 
   constructor() {
+    super();
     this._loading = true;
     this._view = { view: 'main' };
   }

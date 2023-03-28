@@ -4,8 +4,8 @@
   "scripts": {
     "start": "vite --clearScreen false --port $UI_PORT",
     "build": "npm run lint && tsc && npm run analyze -- --exclude dist",
-    "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
-    "format": "eslint --fix --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "lint": "eslint --ext .ts,.html . && prettier \"**/*.ts\" --check --ignore-path .gitignore",
+    "format": "eslint --fix --ext .ts,.html . && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "localize:extract": "lit-localize extract",
     "localize:build": "lit-localize build",
     "analyze": "cem analyze --litelement"
