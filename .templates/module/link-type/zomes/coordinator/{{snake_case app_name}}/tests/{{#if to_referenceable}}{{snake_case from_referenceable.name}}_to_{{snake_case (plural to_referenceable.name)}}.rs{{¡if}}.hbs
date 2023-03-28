@@ -66,8 +66,8 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     // Alice creates a link from {{pascal_case from_referenceable.name}} to {{pascal_case to_referenceable.name}}
     let _result: () = conductors[0]
         .call(&alice_zome, "add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}", Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input {
-        {{snake_case from_referenceable.singular_arg}}: base_address.clone(),
-        {{snake_case to_referenceable.singular_arg}}: target_address.clone()
+        base_{{snake_case from_referenceable.singular_arg}}: base_address.clone(),
+        target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
         
     consistency_10s([&alice, &bobbo]).await;
@@ -94,8 +94,8 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
 {{#if delete}}
     let _result: () = conductors[0]
         .call(&alice_zome, "remove_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}", Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input {
-        {{snake_case from_referenceable.singular_arg}}: base_address.clone(),
-        {{snake_case to_referenceable.singular_arg}}: target_address.clone()
+        base_{{snake_case from_referenceable.singular_arg}}: base_address.clone(),
+        target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
 
     consistency_10s([&alice, &bobbo]).await;

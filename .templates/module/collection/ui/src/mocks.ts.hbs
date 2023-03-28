@@ -8,7 +8,7 @@
   }
 
   {{else}}
-  async get_{{snake_case collection_name}}(_): Promise<Array<Record>> {
+  async get_{{snake_case collection_name}}(_: any): Promise<Array<Record>> {
     return this.{{camel_case referenceable.name}}.entryRecords.map(er => er?.record).filter(r => !!r) as Record[];   
   }
   {{/if}}
