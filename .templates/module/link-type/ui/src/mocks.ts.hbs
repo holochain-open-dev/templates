@@ -1,5 +1,6 @@
-
 {{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+  {{previous_scope_content}}
+  
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
   {{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}} = new HoloHashMap<{{from_referenceable.hash_type}}, {{to_referenceable.hash_type}}[]>();
   {{#if birideccional}}

@@ -12,7 +12,7 @@ hdk = { workspace = true }
 
 serde = { workspace = true }
 
-hc_zome_{{snake_case app_name}}_integrity = { path = "../../integrity/{{snake_case app_name}}" }
+{{snake_case app_name}}_integrity = { path = "../../integrity/{{snake_case app_name}}", package = "hc_zome_{{snake_case app_name}}_integrity" }
 
 [dev-dependencies]
 fixt = "0.1.0"

@@ -2,7 +2,7 @@
   "name": "@holochain-open-dev/{{kebab_case app_name}}",
   "version": "0.1.0",
   "scripts": {
-    "start": "vite --open --clearScreen false --port $UI_PORT",
+    "start": "vite --clearScreen false --port $UI_PORT",
     "build": "npm run lint && tsc && npm run analyze -- --exclude dist",
     "lint": "eslint --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --fix --ext .ts,.html . --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
@@ -49,8 +49,7 @@
     "rimraf": "^3.0.2",
     "typescript": "^4.9.0",
     "vite": "^4.0.0",
-    "vite-plugin-checker": "^0.5.3",
-    "vite-plugin-dts": "^2.1.0"
+    "vite-plugin-checker": "^0.5.3"
   },
   "publishConfig": {
     "access": "public"

@@ -44,11 +44,11 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     
     if (!state || state.deleted) return undefined;
     
-    return lastUpdate?.record;
+    return state.lastUpdate?.record;
   }
 
   {{#if crud.delete}}
-  delete_{{snake_case entry_type.name}}(original_{{snake_case entry_type.name}}_hash: ActionHash): Promise<ActionHash> {
+  async delete_{{snake_case entry_type.name}}(original_{{snake_case entry_type.name}}_hash: ActionHash): Promise<ActionHash> {
     const record = fakeRecord(fakeDeleteEntry(original_{{snake_case entry_type.name}}_hash));
     
     this.{{camel_case entry_type.name}}.add([record]);
@@ -59,7 +59,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 
   {{#if crud.update}}
   async update_{{snake_case entry_type.name}}(input: { {{#if link_from_original_to_each_update}}original_{{snake_case entry_type.name}}_hash: ActionHash; {{/if}}previous_{{snake_case entry_type.name}}_hash: ActionHash; updated_{{snake_case entry_type.name}}: {{pascal_case entry_type.name}}; }): Promise<Record> {
-    const record = fakeRecord(fakeUpdateEntry(input.original_{{snake_case entry_type.name}}_hash, input.updated_{{snake_case entry_type.name}}), input.updated_{{snake_case entry_type.name}});
+    const record = fakeRecord(fakeUpdateEntry(input.previous_{{snake_case entry_type.name}}_hash, fakeEntry(input.updated_{{snake_case entry_type.name}})), fakeEntry(input.updated_{{snake_case entry_type.name}}));
     
     this.{{camel_case entry_type.name}}.add([record]);
     
@@ -77,7 +77,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
       this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
     }
         {{/if}}
-        {{#if (eq cardinality "option")}}
+        {{#if (eq cardinality "vector")}}
     for (const {{field_name}} of {{camel_case ../entry_type.name}}.{{field_name}}) {
       const existing = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
       this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing, record.signed_action.hashed.hash]);
@@ -95,7 +95,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   async get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<Record>> {
     const actionHashes = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case linked_from.singular_arg}}) || [];
     
-    return actionHashes.map(actionHash => this.{{camel_case ../entry_type.name}}.entryRecord(actionHash)?.record).filter(r => !!r);
+    return actionHashes.map(actionHash => this.{{camel_case ../entry_type.name}}.entryRecord(actionHash)?.record).filter(r => !!r) as Record[];
   }
 
     {{/if}}

@@ -67,7 +67,7 @@ export class DemoApp extends LitElement {
     this._loading = false;
   }
 
-  async initStores(appAgentClient: AppAgentClient) {
+  async initStores(appAgentClient) {
     const profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, '{{app_name}}_test'));
     new ContextProvider(this, profilesStoreContext, profilesStore);
     
