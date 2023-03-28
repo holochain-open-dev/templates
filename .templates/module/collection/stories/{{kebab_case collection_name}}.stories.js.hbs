@@ -1,14 +1,14 @@
 import { html } from "lit-html";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case collection_name}}.js";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case app_name}}-context.js";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
 
 const mock = new {{pascal_case app_name}}ZomeMock();
 
-const {{camel_case entry_type.name}} = sample{{pascal_case entry_type.name}}();
+const {{camel_case referenceable.name}} = sample{{pascal_case referenceable.name}}();
 
-const record = await mock.create_{{snake_case entry_type.name}}({{camel_case entry_type.name}});
+const record = await mock.create_{{snake_case referenceable.name}}({{camel_case referenceable.name}});
 
 const store = new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(mock));
 

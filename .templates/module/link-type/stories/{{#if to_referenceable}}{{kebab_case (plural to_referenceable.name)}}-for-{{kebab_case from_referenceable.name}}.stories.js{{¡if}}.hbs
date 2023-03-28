@@ -2,7 +2,7 @@ import { html } from "lit-html";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}.js";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case app_name}}-context.js";
 import { fakeActionHash } from "@holochain-open-dev/utils";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
 
 const mock = new {{pascal_case app_name}}ZomeMock();
@@ -37,7 +37,7 @@ export default {
     html` <{{kebab_case app_name}}-context
       .store=${store}
     >
-      <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} .{{{{camel_case from_referenceable.singular_arg}}}}=${fromActionHash}></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+      <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} .{{camel_case from_referenceable.singular_arg}}=${fromActionHash}></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
     </{{kebab_case app_name}}-context>`,
 };
 

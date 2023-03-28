@@ -8,21 +8,21 @@ integrity:
   zomes:
     - name: {{snake_case app_name}}_integrity
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/{{snake_case app_name}}_integrity.wasm"
+      bundled: "../target/wasm32-unknown-unknown/release/hc_zome_{{snake_case app_name}}_integrity.wasm"
       dependencies: ~    
     - name: profiles_integrity
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/profiles_integrity.wasm"
+      bundled: "../target/wasm32-unknown-unknown/release/profiles_integrity.wasm"
       dependencies: ~
 coordinator:
   zomes:
     - name: {{snake_case app_name}}
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/{{snake_case app_name}}.wasm"
+      bundled: "../target/wasm32-unknown-unknown/release/hc_zome_{{snake_case app_name}}_coordinator.wasm"
       dependencies:
-        - name: {{app_name}}_integrity    
+        - name: {{snake_case app_name}}_integrity    
     - name: profiles
       hash: ~
-      bundled: "../../../target/wasm32-unknown-unknown/release/profiles.wasm"
+      bundled: "../target/wasm32-unknown-unknown/release/profiles.wasm"
       dependencies:
         - name: profiles_integrity

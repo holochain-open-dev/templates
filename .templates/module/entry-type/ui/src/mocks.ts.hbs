@@ -1,46 +1,5 @@
 import { {{pascal_case entry_type.name}} } from './types.js';
 
-export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_type.name}} {
-  return {
-{{#each entry_type.fields}}
-  {{#if linked_from}}
-    {{#if (ne linked_from.hash_type "AgentPubKey")}}
-      {{#if (eq cardinality "vector")}}
-        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
-          {{field_name}}: [],
-        {{else}}
-          {{#if (eq linked_from.hash_type "ActionHash")}}
-          {{field_name}}: [fakeActionHash()],
-          {{else}}
-          {{field_name}}: [fakeEntryHash()],
-          {{/if}}
-        {{/if}}
-      {{else}}
-        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
-          {{field_name}}: undefined,
-        {{else}}
-	  {{#if (eq linked_from.hash_type "ActionHash")}}
-          {{field_name}}: fakeActionHash(),
-          {{else}}
-          {{field_name}}: fakeEntryHash(),
-          {{/if}}
-        {{/if}}
-      {{/if}}
-    {{else}}
-          {{field_name}}: fakeAgentPubKey(),
-    {{/if}}
-  {{else}}
-      {{#if (eq cardinality "vector")}}
-	  {{field_name}}: [{{> (concat field_type.type "/sample-js")}}],
-      {{else}}
-	  {{field_name}}: {{> (concat field_type.type "/sample-js")}},
-      {{/if}}
-  {{/if}}
-{{/each}}
-    }
-}
-
-
 {{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
   {{previous_scope_content}}
   /** {{title_case entry_type.name}} */
@@ -104,7 +63,7 @@ export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_typ
     
     this.{{camel_case entry_type.name}}.add([record]);
     
-    const {{camel_case ../entry_type.name}} = input.updated_{{snake_case entry_type.name}};
+    const {{camel_case entry_type.name}} = input.updated_{{snake_case entry_type.name}};
     
     {{#each entry_type.fields}}
       {{#if linked_from}}
@@ -136,10 +95,51 @@ export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_typ
   async get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<Record>> {
     const actionHashes = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case linked_from.singular_arg}}) || [];
     
-    return actionHashes.map(actionHash => this.{{camel_case entry_type.name}}.entryRecord(actionHash)?.record).filter(r => !!r);
+    return actionHashes.map(actionHash => this.{{camel_case ../entry_type.name}}.entryRecord(actionHash)?.record).filter(r => !!r);
   }
 
     {{/if}}
   {{/each}}
 
 {{/merge_scope}}
+
+export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_type.name}} {
+  return {
+{{#each entry_type.fields}}
+  {{#if linked_from}}
+    {{#if (ne linked_from.hash_type "AgentPubKey")}}
+      {{#if (eq cardinality "vector")}}
+        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
+          {{field_name}}: [],
+        {{else}}
+          {{#if (eq linked_from.hash_type "ActionHash")}}
+          {{field_name}}: [fakeActionHash()],
+          {{else}}
+          {{field_name}}: [fakeEntryHash()],
+          {{/if}}
+        {{/if}}
+      {{else}}
+        {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
+          {{field_name}}: undefined,
+        {{else}}
+	  {{#if (eq linked_from.hash_type "ActionHash")}}
+          {{field_name}}: fakeActionHash(),
+          {{else}}
+          {{field_name}}: fakeEntryHash(),
+          {{/if}}
+        {{/if}}
+      {{/if}}
+    {{else}}
+          {{field_name}}: fakeAgentPubKey(),
+    {{/if}}
+  {{else}}
+      {{#if (eq cardinality "vector")}}
+	  {{field_name}}: [{{> (concat field_type.type "/sample-js")}}],
+      {{else}}
+	  {{field_name}}: {{> (concat field_type.type "/sample-js")}},
+      {{/if}}
+  {{/if}}
+{{/each}}
+    }
+}
+
