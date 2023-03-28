@@ -3,7 +3,7 @@
   
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
   {{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}} = new HoloHashMap<{{from_referenceable.hash_type}}, {{to_referenceable.hash_type}}[]>();
-  {{#if birideccional}}
+  {{#if bidireccional}}
   {{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}} = new HoloHashMap<{{to_referenceable.hash_type}}, {{from_referenceable.hash_type}}[]>();
   {{/if}}
 
@@ -13,12 +13,12 @@
   }
   {{else}}
   async get_{{snake_case (plural to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}): Promise<Array<Record>> {
-    const actionHashes = this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.get({{camel_case from_referenceable.singular_arg}}) || [];
-    return actionHashes.map(actionHash => this.{{camel_case to_referenceable.name}}.entryRecord(actionHash)).map(er => er.record);
+    const actionHashes: {{to_referenceable.hash_type}}[] = this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.get({{camel_case from_referenceable.singular_arg}}) || [];
+    return actionHashes.map(actionHash => this.{{camel_case to_referenceable.name}}.entryRecord(actionHash)).map(er => er?.record).filter(r => !!r) as Record[];
   }
   {{/if}}
   
-  add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}(input: { {{snake_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}; {{snake_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}} }): Promise<void> {
+  async add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}(input: { {{snake_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}; {{snake_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}} }): Promise<void> {
     const existing = this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.get(input.{{snake_case from_referenceable.singular_arg}}) || [];
     this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.set(input.{{snake_case from_referenceable.singular_arg}}, [...existing, input.{{snake_case to_referenceable.singular_arg}}]);
     {{#if bidireccional}}
@@ -34,8 +34,8 @@
   }
     {{else}}
   async get_{{snake_case (plural from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<Array<Record>> {
-    const actionHashes = this.{{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}}.get({{camel_case to_referenceable.singular_arg}}) || [];
-    return actionHashes.map(actionHash => this.{{camel_case from_referenceable.name}}.entryRecord(actionHash)).map(er => er.record);
+    const actionHashes: {{from_referenceable.hash_type}}[] = this.{{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}}.get({{camel_case to_referenceable.singular_arg}}) || [];
+    return actionHashes.map(actionHash => this.{{camel_case from_referenceable.name}}.entryRecord(actionHash)).map(er => er?.record).filter(r => !!r) as Record[];;
   }
     {{/if}}
   {{/if}}

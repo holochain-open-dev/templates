@@ -6,7 +6,7 @@ use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
-use {{snake_case coordinator_zome_manifest.name}}::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
+use hc_zome_{{snake_case coordinator_zome_manifest.name}}_coordinator::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
 
 {{#if (or (ne from_referenceable.hash_type "AgentPubKey") (ne to_referenceable.hash_type "AgentPubKey"))}}
 mod common;

@@ -9,7 +9,7 @@ use holochain::{conductor::config::ConductorConfig, sweettest::*};
 use {{snake_case coordinator_zome_manifest.name}}_integrity::*;
 
 {{#if crud.update}}
-use {{snake_case coordinator_zome_manifest.name}}::{{snake_case entry_type.name}}::Update{{pascal_case entry_type.name}}Input;
+use hc_zome_{{snake_case coordinator_zome_manifest.name}}_coordinator::{{snake_case entry_type.name}}::Update{{pascal_case entry_type.name}}Input;
 {{/if}}
 
 mod common;
