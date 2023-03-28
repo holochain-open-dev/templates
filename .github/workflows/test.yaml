@@ -21,7 +21,11 @@ jobs:
         with:
           name: holochain-ci
 
-      - name: Install & Test
+      - name: Test app template
         run: |
-          nix develop --command bash -c "sh run_test.sh"
+          nix develop --command bash -c "sh run_test_app.sh"
+
+      - name: Test module template
+        run: |
+          nix develop --command bash -c "sh run_test_module.sh"
 

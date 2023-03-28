@@ -47,7 +47,6 @@ echo \"extern crate hc_zome_file_storage_integrity;\" > dnas/forum/zomes/integri
 npm i
 
 npm i -w ui @holochain-open-dev/file-storage
-npm start
 npm t
 
 npm run format -w ui
