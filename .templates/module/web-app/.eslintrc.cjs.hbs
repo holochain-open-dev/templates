@@ -8,6 +8,7 @@ module.exports = {
     "@typescript-eslint"
   ],
   "rules": {
+    "no-new": "off",
     "prefer-destructuring": "off",
     "no-useless-constructor": "off",
     "no-empty-function": "off",

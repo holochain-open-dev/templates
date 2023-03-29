@@ -3,7 +3,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 {{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
   {{previous_scope_content}}
   /** {{title_case entry_type.name}} */
-  {{camel_case entry_type.name}} = new RecordBag<{{title_case entry_type.name}}>();
+  {{camel_case entry_type.name}} = new RecordBag<{{pascal_case entry_type.name}}>();
   {{#each entry_type.fields}}
     {{#if linked_from}}
   {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new HoloHashMap<ActionHash, ActionHash[]>();
