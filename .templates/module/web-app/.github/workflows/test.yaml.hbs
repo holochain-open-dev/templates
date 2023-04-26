@@ -29,5 +29,5 @@ jobs:
 
       - name: Install and test
         run: |
-          nix develop --command bash -c "npm i && npm t && npm run package"
+          nix develop --command bash -c "npm i && npm t && npm run build -w {{kebab_case app_name}}-lib"
 

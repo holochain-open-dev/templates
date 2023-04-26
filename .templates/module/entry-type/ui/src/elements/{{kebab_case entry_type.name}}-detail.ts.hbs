@@ -101,7 +101,7 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
 	{{#each entry_type.fields}}
           {{#if widget}}	  
           <div style="display: flex; flex-direction: column; margin-bottom: 16px">
-	    <span style="margin-bottom: 8px"><strong>${msg("{{title_case field_name}}")}:</strong></span>
+	    <span style="margin-bottom: 8px"><strong>${msg("{{title_case field_name}}")}</strong></span>
             {{#if (not (eq cardinality "vector") )}}
  	    <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") field_name=field_name variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
             {{else}}
