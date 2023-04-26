@@ -30,7 +30,6 @@ hc-scaffold link-type --zome posts_integrity  agent:creator post:EntryHash --del
 
 npm i
 
-npm start
 npm t
 
 npm run format -w ui

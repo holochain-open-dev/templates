@@ -14,12 +14,8 @@ import { {{pascal_case entry_type.name}} } from './types';
   {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new LazyHoloHashMap(({{camel_case linked_from.singular_arg}}: {{#if ../entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}) =>
     lazyLoadAndPoll(
       async () => {
-      {{#if crud.delete}}
         const records = await this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}});
         return records.map(r => {{#if ../entry_type.reference_entry_hash}}r.entryHash{{else}}r.actionHash{{/if}});
-      {{else}}
-        return this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}});
-      {{/if}}
       },
       4000
     )
