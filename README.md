@@ -2,7 +2,10 @@
 
 Custom templates for the [scaffolding tool](https://github.com/holochain/scaffolding), to develop apps and modules using the holochain-open-dev style!
 
-For now, only the `app` template is available. Soonish we'll add the `module` template, to allow much easier building of holochain-open-dev modules.
+There are two templates available:
+
+- `app`: fully blown app, following the open-dev patterns and with the profiles module pre-installed.
+- `module`: template to build modules like the ones you can find in [open-dev](https://github.com/holochain-open-dev), with the profiles module already pre-installed.
 
 ## Using the templates
 
