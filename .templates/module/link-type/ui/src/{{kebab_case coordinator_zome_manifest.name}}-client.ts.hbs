@@ -19,7 +19,16 @@
       {{snake_case from_referenceable.singular_arg}}: {{camel_case from_referenceable.singular_arg}},
       {{snake_case to_referenceable.singular_arg}}: {{camel_case to_referenceable.singular_arg}},
     });
-  }  
+  }
+    
+  {{#if delete}}
+  remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}, {{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<void> {
+    return this.callZome('remove_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}', {
+      {{snake_case from_referenceable.singular_arg}}: {{camel_case from_referenceable.singular_arg}},
+      {{snake_case to_referenceable.singular_arg}}: {{camel_case to_referenceable.singular_arg}},
+    });
+  }
+  {{/if}}
 	
   {{#if bidireccional}}
     {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
@@ -33,4 +42,5 @@
   }
     {{/if}}
   {{/if}}
+
 {{/merge_scope}}

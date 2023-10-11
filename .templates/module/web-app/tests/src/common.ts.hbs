@@ -1,0 +1,49 @@
+import { CallableCell } from '@holochain/tryorama';
+import { NewEntryAction, ActionHash, Record, AppBundleSource, fakeActionHash, fakeAgentPubKey, fakeEntryHash, fakeDnaHash, AppAgentCallZomeRequest, AppAgentWebsocket } from '@holochain/client';
+import { encode } from '@msgpack/msgpack';
+import { Scenario } from '@holochain/tryorama';
+import { encodeHashToBase64, Record } from '@holochain/client';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { {{pascal_case app_name}}Client } from '../../ui/src/{{kebab_case app_name}}-client.js';
+import { {{pascal_case app_name}}Store } from '../../ui/src/{{kebab_case app_name}}-store.js';
+
+export async function setup(scenario: Scenario) {
+  const testHappUrl =
+    dirname(fileURLToPath(import.meta.url)) + '/../../workdir/{{app_name}}.happ';
+
+  // Add 2 players with the test hApp to the Scenario. The returned players
+  // can be destructured.
+  const [alice, bob] = await scenario.addPlayersWithApps([
+    { appBundleSource: { path: testHappUrl } },
+    { appBundleSource: { path: testHappUrl } },
+  ]);
+
+  // Shortcut peer discovery through gossip and register all agents in every
+  // conductor of the scenario.
+  await scenario.shareAllAgents();
+
+  const aliceStore = new {{pascal_case app_name}}Store(
+    new {{pascal_case app_name}}Client(alice.appAgentWs as any, '{{snake_case app_name}}_test', '{{snake_case app_name}}')
+  );
+
+  const bobStore = new {{pascal_case app_name}}Store(
+    new {{pascal_case app_name}}Client(bob.appAgentWs as any, '{{snake_case app_name}}_test', '{{snake_case app_name}}')
+  );
+
+  // Shortcut peer discovery through gossip and register all agents in every
+  // conductor of the scenario.
+  await scenario.shareAllAgents();
+
+  return {
+    alice: {
+      player: alice,
+      store: aliceStore,
+    },
+    bob: {
+      player: bob,
+      store: bobStore,
+    },
+  };
+}
+
