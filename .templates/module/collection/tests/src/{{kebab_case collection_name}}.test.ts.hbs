@@ -1,13 +1,14 @@
 import { assert, test } from "vitest";
 
-import { runScenario, pause, CallableCell } from '@holochain/tryorama';
+import { runScenario, dhtSync } from '@holochain/tryorama';
 import { NewEntryAction, ActionHash, Record, AppBundleSource,  fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
 
-import { sample{{pascal_case referenceable.name}} } from './common.js';
+import { {{pascal_case referenceable.name}} } from '../../ui/src/types.js';
+import { setup, sample{{pascal_case referenceable.name}} } from './common.js';
 
 test('create a {{pascal_case referenceable.name}} and get {{lower_case collection_name}}', async () => {
   await runScenario(async scenario => {
@@ -18,7 +19,7 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     assert.equal(collectionOutput.length, 0);
 
     // Alice creates a {{pascal_case referenceable.name}}
-    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await bob.store.create{{pascal_case referenceable.name}}(sample{{pascal_case referenceable.name}}());
+    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await bob.store.create{{pascal_case referenceable.name}}(await sample{{pascal_case referenceable.name}}(alice.store.client));
     assert.ok({{camel_case referenceable.name}});
     
     await dhtSync(

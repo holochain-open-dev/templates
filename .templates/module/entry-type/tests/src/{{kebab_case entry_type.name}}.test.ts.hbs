@@ -1,19 +1,20 @@
 import { assert, test } from "vitest";
 
-import { runScenario, pause, CallableCell } from '@holochain/tryorama';
+import { runScenario, dhtSync } from '@holochain/tryorama';
 import { NewEntryAction, ActionHash, Record, AppBundleSource, fakeDnaHash, fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
 
-import { sample{{pascal_case entry_type.name}} } from './common.js';
+import { {{pascal_case entry_type.name}} } from '../../ui/src/types.js';
+import { setup, sample{{pascal_case entry_type.name}} } from './common.js';
 
 test('create {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
     const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(sample{{pascal_case entry_type.name}}());
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
     assert.ok({{camel_case entry_type.name}});
   });
 });
@@ -22,10 +23,10 @@ test('create and read {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
     const { alice, bob } = await setup(scenario);
 
-    const sample = sample{{pascal_case entry_type.name}}();
+    const sample = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}();
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(sample);
     assert.ok({{camel_case entry_type.name}});
 
     // Wait for the created entry to be propagated to the other node.
@@ -46,22 +47,15 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(sample{{pascal_case entry_type.name}}());
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
     assert.ok({{camel_case entry_type.name}});
         
     const originalActionHash = {{camel_case entry_type.name}}.actionHash;
  
     // Alice updates the {{pascal_case entry_type.name}}
-    let contentUpdate = sample{{pascal_case entry_type.name}}();
-    let updateInput = {
-{{#if link_from_original_to_each_update}}
-      original_{{snake_case entry_type.name}}_hash: originalActionHash,
-{{/if}}
-      previous_{{snake_case entry_type.name}}_hash: originalActionHash,
-      updated_{{snake_case entry_type.name}}: contentUpdate,
-    };
+    let contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
-    let updated{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.update{{pascal_case entry_type.name}}(updateInput);
+    let updated{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}originalActionHash, {{/if}}originalActionHash, contentUpdate);
     assert.ok(updated{{pascal_case entry_type.name}});
 
     // Wait for the created entry to be propagated to the other node.
@@ -75,16 +69,9 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     assert.deepEqual(contentUpdate, readUpdatedOutput0.entry);
 
     // Alice updates the {{pascal_case entry_type.name}} again
-    contentUpdate = sample{{pascal_case entry_type.name}}();
-    updateInput = { 
-{{#if link_from_original_to_each_update}}
-      original_{{snake_case entry_type.name}}_hash: originalActionHash,
-{{/if}}
-      previous_{{snake_case entry_type.name}}_hash: updatedRecord.actionHash,
-      updated_{{snake_case entry_type.name}}: contentUpdate,
-    };
+    contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
-    updated{{pascal_case entry_type.name}} = await alice.store.client.update{{pascal_case entry_type.name}}(updateInput);
+    updated{{pascal_case entry_type.name}} = await alice.store.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}originalActionHash, {{/if}}updated{{pascal_case entry_type.name}}.actionHash, contentUpdate);
     assert.ok(updated{{pascal_case entry_type.name}});
 
     // Wait for the created entry to be propagated to the other node.
@@ -94,7 +81,7 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}(updatedRecord.entryHash{{else}}updatedRecord.actionHash{{/if}});
+    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}(updated{{pascal_case entry_type.name}}.entryHash{{else}}updated{{pascal_case entry_type.name}}.actionHash{{/if}});
     assert.deepEqual(contentUpdate, readUpdatedOutput1.entry);
   });
 });
@@ -106,11 +93,11 @@ test('create and delete {{pascal_case entry_type.name}}', async () => {
     const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(sample{{pascal_case entry_type.name}}());
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
     assert.ok({{camel_case entry_type.name}});
         
     // Alice deletes the {{pascal_case entry_type.name}}
-    const deleteActionHash = await alice.store.client.delete{{pascal_case entry_type.name}}({{camel_case entry_type.name}}.actionHash));
+    const deleteActionHash = await alice.store.client.delete{{pascal_case entry_type.name}}({{camel_case entry_type.name}}.actionHash);
     assert.ok(deleteActionHash);
 
     // Wait for the created entry to be propagated to the other node.

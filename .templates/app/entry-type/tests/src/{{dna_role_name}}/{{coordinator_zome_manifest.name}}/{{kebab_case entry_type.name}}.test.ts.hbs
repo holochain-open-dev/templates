@@ -1,149 +1,88 @@
 import { assert, test } from "vitest";
 
-import { runScenario, pause, CallableCell } from '@holochain/tryorama';
+import { runScenario, dhtSync } from '@holochain/tryorama';
 import { NewEntryAction, ActionHash, Record, AppBundleSource, fakeDnaHash, fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { toPromise } from '@holochain-open-dev/stores';
 
-import { create{{pascal_case entry_type.name}}, sample{{pascal_case entry_type.name}} } from './common.js';
+import { {{pascal_case entry_type.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/types.js';
+import { setup, sample{{pascal_case entry_type.name}} } from './common.js';
 
 test('create {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
-    // Construct proper paths for your app.
-    // This assumes app bundle created by the `hc app pack` command.
-    const testAppPath = process.cwd() + '/../workdir/{{app_name}}.happ';
-
-    // Set up the app to be installed 
-    const appSource = { appBundleSource: { path: testAppPath } };
-
-    // Add 2 players with the test app to the Scenario. The returned players
-    // can be destructured.
-    const [alice, bob] = await scenario.addPlayersWithApps([appSource, appSource]);
-
-    // Shortcut peer discovery through gossip and register all agents in every
-    // conductor of the scenario.
-    await scenario.shareAllAgents();
+    const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const record: Record = await create{{pascal_case entry_type.name}}(alice.cells[0]);
-    assert.ok(record);
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
+    assert.ok({{camel_case entry_type.name}});
   });
 });
 
 test('create and read {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
-    // Construct proper paths for your app.
-    // This assumes app bundle created by the `hc app pack` command.
-    const testAppPath = process.cwd() + '/../workdir/{{app_name}}.happ';
+    const { alice, bob } = await setup(scenario);
 
-    // Set up the app to be installed 
-    const appSource = { appBundleSource: { path: testAppPath } };
-
-    // Add 2 players with the test app to the Scenario. The returned players
-    // can be destructured.
-    const [alice, bob] = await scenario.addPlayersWithApps([appSource, appSource]);
-
-    // Shortcut peer discovery through gossip and register all agents in every
-    // conductor of the scenario.
-    await scenario.shareAllAgents();
-
-    const sample = await sample{{pascal_case entry_type.name}}(alice.cells[0]);
+    const sample = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const record: Record = await create{{pascal_case entry_type.name}}(alice.cells[0], sample);
-    assert.ok(record);
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(sample);
+    assert.ok({{camel_case entry_type.name}});
 
     // Wait for the created entry to be propagated to the other node.
-    await pause(1200);
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
 
     // Bob gets the created {{pascal_case entry_type.name}}
-    const createReadOutput: Record = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{snake_case entry_type.name}}",
-      payload: {{#if entry_type.reference_entry_hash}}(record.signed_action.hashed.content as NewEntryAction).entry_hash{{else}}record.signed_action.hashed.hash{{/if}},
-    });
-    assert.deepEqual(sample, decode((createReadOutput.entry as any).Present.entry) as any);
+    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}});
+    assert.deepEqual(sample, createReadOutput.entry);
   });
 });
 
 {{#if crud.update}}
 test('create and update {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
-    // Construct proper paths for your app.
-    // This assumes app bundle created by the `hc app pack` command.
-    const testAppPath = process.cwd() + '/../workdir/{{app_name}}.happ';
-
-    // Set up the app to be installed 
-    const appSource = { appBundleSource: { path: testAppPath } };
-
-    // Add 2 players with the test app to the Scenario. The returned players
-    // can be destructured.
-    const [alice, bob] = await scenario.addPlayersWithApps([appSource, appSource]);
-
-    // Shortcut peer discovery through gossip and register all agents in every
-    // conductor of the scenario.
-    await scenario.shareAllAgents();
+    const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const record: Record = await create{{pascal_case entry_type.name}}(alice.cells[0]);
-    assert.ok(record);
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
+    assert.ok({{camel_case entry_type.name}});
         
-    const originalActionHash = record.signed_action.hashed.hash;
+    const originalActionHash = {{camel_case entry_type.name}}.actionHash;
  
     // Alice updates the {{pascal_case entry_type.name}}
-    let contentUpdate: any = await sample{{pascal_case entry_type.name}}(alice.cells[0]);
-    let updateInput = {
-{{#if link_from_original_to_each_update}}
-      original_{{snake_case entry_type.name}}_hash: originalActionHash,
-{{/if}}
-      previous_{{snake_case entry_type.name}}_hash: originalActionHash,
-      updated_{{snake_case entry_type.name}}: contentUpdate,
-    };
+    let contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
-    let updatedRecord: Record = await alice.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "update_{{snake_case entry_type.name}}",
-      payload: updateInput,
-    });
-    assert.ok(updatedRecord);
+    let updated{{pascal_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}originalActionHash, {{/if}}originalActionHash, contentUpdate);
+    assert.ok(updated{{pascal_case entry_type.name}});
 
-    // Wait for the updated entry to be propagated to the other node.
-    await pause(1200);
-        
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
+
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput0: Record = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{snake_case entry_type.name}}",
-      payload: updatedRecord.signed_action.hashed.hash,
-    });
-    assert.deepEqual(contentUpdate, decode((readUpdatedOutput0.entry as any).Present.entry) as any);
+    const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}});
+    assert.deepEqual(contentUpdate, readUpdatedOutput0.entry);
 
     // Alice updates the {{pascal_case entry_type.name}} again
-    contentUpdate = await sample{{pascal_case entry_type.name}}(alice.cells[0]);
-    updateInput = { 
-{{#if link_from_original_to_each_update}}
-      original_{{snake_case entry_type.name}}_hash: originalActionHash,
-{{/if}}
-      previous_{{snake_case entry_type.name}}_hash: updatedRecord.signed_action.hashed.hash,
-      updated_{{snake_case entry_type.name}}: contentUpdate,
-    };
+    contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
 
-    updatedRecord = await alice.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "update_{{snake_case entry_type.name}}",
-      payload: updateInput,
-    });
-    assert.ok(updatedRecord);
+    updated{{pascal_case entry_type.name}} = await alice.store.client.update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}originalActionHash, {{/if}}updated{{pascal_case entry_type.name}}.actionHash, contentUpdate);
+    assert.ok(updated{{pascal_case entry_type.name}});
 
-    // Wait for the updated entry to be propagated to the other node.
-    await pause(1200);
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
         
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput1: Record = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{snake_case entry_type.name}}",
-      payload: updatedRecord.signed_action.hashed.hash,
-    });
-    assert.deepEqual(contentUpdate, decode((readUpdatedOutput1.entry as any).Present.entry) as any);
+    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}(updated{{pascal_case entry_type.name}}.entryHash{{else}}updated{{pascal_case entry_type.name}}.actionHash{{/if}});
+    assert.deepEqual(contentUpdate, readUpdatedOutput1.entry);
   });
 });
 {{/if}}
@@ -151,43 +90,29 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
 {{#if crud.delete}}
 test('create and delete {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
-    // Construct proper paths for your app.
-    // This assumes app bundle created by the `hc app pack` command.
-    const testAppPath = process.cwd() + '/../workdir/{{app_name}}.happ';
-
-    // Set up the app to be installed 
-    const appSource = { appBundleSource: { path: testAppPath } };
-
-    // Add 2 players with the test app to the Scenario. The returned players
-    // can be destructured.
-    const [alice, bob] = await scenario.addPlayersWithApps([appSource, appSource]);
-
-    // Shortcut peer discovery through gossip and register all agents in every
-    // conductor of the scenario.
-    await scenario.shareAllAgents();
+    const { alice, bob } = await setup(scenario);
 
     // Alice creates a {{pascal_case entry_type.name}}
-    const record: Record = await create{{pascal_case entry_type.name}}(alice.cells[0]);
-    assert.ok(record);
+    const {{camel_case entry_type.name}}: EntryRecord<{{pascal_case entry_type.name}}> = await alice.store.client.create{{pascal_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(alice.store.client));
+    assert.ok({{camel_case entry_type.name}});
         
     // Alice deletes the {{pascal_case entry_type.name}}
-    const deleteActionHash = await alice.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "delete_{{snake_case entry_type.name}}",
-      payload: record.signed_action.hashed.hash,
-    });
+    const deleteActionHash = await alice.store.client.delete{{pascal_case entry_type.name}}({{camel_case entry_type.name}}.actionHash);
     assert.ok(deleteActionHash);
 
-    // Wait for the entry deletion to be propagated to the other node.
-    await pause(1200);
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
         
     // Bob tries to get the deleted {{pascal_case entry_type.name}}
-    const readDeletedOutput = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{snake_case entry_type.name}}",
-      payload: record.signed_action.hashed.hash,
-    });
-    assert.notOk(readDeletedOutput);
+    try {
+      const readDeletedOutput: EntryRecord<{{pascal_case entry_type.name}}> = await bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}});
+      assert.ok(false);
+    } catch (e) {
+      assert.ok(true);
+    }
   });
 });
 {{/if}}

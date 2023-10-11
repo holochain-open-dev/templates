@@ -1,3 +1,59 @@
-import { CallableCell } from '@holochain/tryorama';
-import { NewEntryAction, ActionHash, Record, AppBundleSource, fakeActionHash, fakeAgentPubKey, fakeEntryHash, fakeDnaHash } from '@holochain/client';
+import { 
+  NewEntryAction, 
+  encodeHashToBase64, 
+  ActionHash,
+  Record,
+  AppBundleSource,
+  fakeActionHash,
+  fakeAgentPubKey,
+  fakeEntryHash,
+  fakeDnaHash,
+  AppAgentCallZomeRequest,
+  AppAgentWebsocket 
+} from '@holochain/client';
+import { encode } from '@msgpack/msgpack';
+import { Scenario, dhtSync } from '@holochain/tryorama';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { {{pascal_case app_name}}Client } from '../../ui/src/{{kebab_case zome_manifest.name}}-client.js';
+import { {{pascal_case app_name}}Store } from '../../ui/src/{{kebab_case zome_manifest.name}}-store.js';
+
+export async function setup(scenario: Scenario) {
+  const testHappUrl =
+    dirname(fileURLToPath(import.meta.url)) + '/../../../../workdir/{{app_name}}.happ';
+
+  // Add 2 players with the test hApp to the Scenario. The returned players
+  // can be destructured.
+  const [alice, bob] = await scenario.addPlayersWithApps([
+    { appBundleSource: { path: testHappUrl } },
+    { appBundleSource: { path: testHappUrl } },
+  ]);
+
+  // Shortcut peer discovery through gossip and register all agents in every
+  // conductor of the scenario.
+  await scenario.shareAllAgents();
+
+  const aliceStore = new {{pascal_case zome_manifest.name}}Store(
+    new {{pascal_case zome_manifest.name}}Client(alice.appAgentWs as any, '{{dna_role_name}}', '{{snake_case zome_manifest.name}}')
+  );
+
+  const bobStore = new {{pascal_case zome_manifest.name}}Store(
+    new {{pascal_case zome_manifest.name}}Client(bob.appAgentWs as any, '{{dna_role_name}}', '{{snake_case zome_manifest.name}}')
+  );
+
+  // Shortcut peer discovery through gossip and register all agents in every
+  // conductor of the scenario.
+  await scenario.shareAllAgents();
+
+  return {
+    alice: {
+      player: alice,
+      store: aliceStore,
+    },
+    bob: {
+      player: bob,
+      store: bobStore,
+    },
+  };
+}
 

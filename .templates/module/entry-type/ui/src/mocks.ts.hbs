@@ -103,7 +103,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 
 {{/merge_scope}}
 
-export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_type.name}} {
+export async function sample{{pascal_case entry_type.name}}(): Promise<{{pascal_case entry_type.name}}> {
   return {
 {{#each entry_type.fields}}
   {{#if linked_from}}
@@ -113,9 +113,9 @@ export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_typ
           {{field_name}}: [],
         {{else}}
           {{#if (eq linked_from.hash_type "ActionHash")}}
-          {{field_name}}: [fakeActionHash()],
+          {{field_name}}: [await fakeActionHash()],
           {{else}}
-          {{field_name}}: [fakeEntryHash()],
+          {{field_name}}: [await fakeEntryHash()],
           {{/if}}
         {{/if}}
       {{else}}
@@ -123,14 +123,14 @@ export function sample{{pascal_case entry_type.name}}(): {{pascal_case entry_typ
           {{field_name}}: undefined,
         {{else}}
 	  {{#if (eq linked_from.hash_type "ActionHash")}}
-          {{field_name}}: fakeActionHash(),
+          {{field_name}}: await fakeActionHash(),
           {{else}}
-          {{field_name}}: fakeEntryHash(),
+          {{field_name}}: await fakeEntryHash(),
           {{/if}}
         {{/if}}
       {{/if}}
     {{else}}
-          {{field_name}}: fakeAgentPubKey(),
+          {{field_name}}: await fakeAgentPubKey(),
     {{/if}}
   {{else}}
       {{#if (eq cardinality "vector")}}

@@ -1,126 +1,92 @@
 import { assert, test } from "vitest";
 
-import { runScenario, pause, CallableCell } from '@holochain/tryorama';
+import { runScenario, dhtSync } from '@holochain/tryorama';
 import { NewEntryAction, ActionHash, Record, AppBundleSource,  fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
+import { EntryRecord } from '@holochain-open-dev/utils';
+import { toPromise } from '@holochain-open-dev/stores';
+
+import { setup } from './common.js';
 
 {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-import { create{{pascal_case from_referenceable.name}} } from './common.js';
+import { {{pascal_case from_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}types.js';
+import { sample{{pascal_case from_referenceable.name}} } from './common.js';
 {{/if}}
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-import { create{{pascal_case to_referenceable.name}} } from './common.js';
+import { {{pascal_case to_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}types.js';
+import { sample{{pascal_case to_referenceable.name}} } from './common.js';
 {{/if}}
 
 test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_referenceable.name}}', async () => {
   await runScenario(async scenario => {
-    // Construct proper paths for your app.
-    // This assumes app bundle created by the `hc app pack` command.
-    const testAppPath = process.cwd() + '/../workdir/{{app_name}}.happ';
-
-    // Set up the app to be installed 
-    const appSource = { appBundleSource: { path: testAppPath } };
-
-    // Add 2 players with the test app to the Scenario. The returned players
-    // can be destructured.
-    const [alice, bob] = await scenario.addPlayersWithApps([appSource, appSource]);
-
-    // Shortcut peer discovery through gossip and register all agents in every
-    // conductor of the scenario.
-    await scenario.shareAllAgents();
+    const { alice, bob } = await setup(scenario);
 
 {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
-    const baseAddress = alice.agentPubKey;
+    const baseAddress = alice.player.agentPubKey;
 {{else}}
-    const baseRecord = await create{{pascal_case from_referenceable.name}}(alice.cells[0]);
+    const baseRecord: EntryRecord<{{pascal_case from_referenceable.name}}> = await alice.store.client.create{{pascal_case from_referenceable.name}}(await sample{{pascal_case from_referenceable.name}}(alice.store.client));
   {{#if (eq from_referenceable.hash_type "EntryHash")}}
-    const baseAddress = (baseRecord.signed_action.hashed.content as NewEntryAction).entry_hash;
+    const baseAddress = baseRecord.entryHash;
   {{else}}
-    const baseAddress = baseRecord.signed_action.hashed.hash;
+    const baseAddress = baseRecord.actionHash;
   {{/if}}
 {{/if}}
 {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-    const targetAddress = alice.agentPubKey;
+    const targetAddress = alice.player.agentPubKey;
 {{else}}
-    const targetRecord = await create{{pascal_case to_referenceable.name}}(alice.cells[0]);
+    const targetRecord: EntryRecord<{{pascal_case to_referenceable.name}}> = await alice.store.client.create{{pascal_case to_referenceable.name}}(await sample{{pascal_case to_referenceable.name}}(alice.store.client));
   {{#if (eq to_referenceable.hash_type "EntryHash")}}
-    const targetAddress = (targetRecord.signed_action.hashed.content as NewEntryAction).entry_hash;
+    const targetAddress = targetRecord.entryHash;
   {{else}}
-    const targetAddress = targetRecord.signed_action.hashed.hash;
+    const targetAddress = targetRecord.actionHash;
   {{/if}}
 {{/if}}
 
     // Bob gets the links, should be empty
-    let linksOutput: Record[] = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}",
-      payload: baseAddress
-    });
+    let linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
     assert.equal(linksOutput.length, 0);
 
     // Alice creates a link from {{pascal_case from_referenceable.name}} to {{pascal_case to_referenceable.name}}
-    await alice.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}",
-      payload: {
-        base_{{snake_case from_referenceable.singular_arg}}: baseAddress,
-        target_{{snake_case to_referenceable.singular_arg}}: targetAddress
-      }
-    });
+    await alice.store.client.add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}(baseAddress, targetAddress);
     
-    await pause(1200);
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
     
     // Bob gets the links again
-    linksOutput = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}",
-      payload: baseAddress
-    });
+    linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
     assert.equal(linksOutput.length, 1);
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-    assert.deepEqual(targetRecord, linksOutput[0]);
+    assert.deepEqual(targetRecord.{{#if (eq to_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, linksOutput[0]);
 {{/if}}
 
 {{#if bidireccional}}
-
     // Bob gets the links in the inverse direction
-    linksOutput = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{plural (snake_case from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}",
-      payload: targetAddress
-    });
+    linksOutput = await toPromise(bob.store.{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress));
     assert.equal(linksOutput.length, 1);
   {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-    assert.deepEqual(baseRecord, linksOutput[0]);
+    assert.deepEqual(baseRecord.{{#if (eq to_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, linksOutput[0]);
   {{/if}}
 {{/if}}
 
 {{#if delete}}
-    await alice.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "remove_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}",
-      payload: {
-        base_{{snake_case from_referenceable.singular_arg}}: baseAddress,
-        target_{{snake_case to_referenceable.singular_arg}}: targetAddress
-      }
-    });
+    await alice.store.client.remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}(baseAddress, targetAddress);
     
-    await pause(1200);
+    // Wait for the created entry to be propagated to the other node.
+    await dhtSync(
+      [alice.player, bob.player],
+      alice.player.cells[0].cell_id[0]
+    );
 
     // Bob gets the links again
-    linksOutput = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}",
-      payload: baseAddress
-    });
+    linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
     assert.equal(linksOutput.length, 0);
 
   {{#if bidireccional}}
     // Bob gets the links in the inverse direction
-    linksOutput = await bob.cells[0].callZome({
-      zome_name: "{{coordinator_zome_manifest.name}}",
-      fn_name: "get_{{plural (snake_case from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}",
-      payload: targetAddress
-    });
+    linksOutput = await toPromise(bob.store.{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress));
     assert.equal(linksOutput.length, 0);
   {{/if}}
 

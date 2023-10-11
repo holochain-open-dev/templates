@@ -1,8 +1,21 @@
-import { CallableCell } from '@holochain/tryorama';
-import { NewEntryAction, ActionHash, Record, AppBundleSource, fakeActionHash, fakeAgentPubKey, fakeEntryHash, fakeDnaHash, AppAgentCallZomeRequest, AppAgentWebsocket } from '@holochain/client';
+import { 
+  AgentPubKey,
+  EntryHash,
+  NewEntryAction,
+  ActionHash,
+  Record,
+  AppBundleSource,
+  fakeActionHash,
+  fakeAgentPubKey,
+  fakeEntryHash,
+  fakeDnaHash,
+  AppAgentCallZomeRequest,
+  AppAgentWebsocket,
+  encodeHashToBase64 
+} from '@holochain/client';
 import { encode } from '@msgpack/msgpack';
 import { Scenario } from '@holochain/tryorama';
-import { encodeHashToBase64, Record } from '@holochain/client';
+import { EntryRecord } from '@holochain-open-dev/utils';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { {{pascal_case app_name}}Client } from '../../ui/src/{{kebab_case app_name}}-client.js';

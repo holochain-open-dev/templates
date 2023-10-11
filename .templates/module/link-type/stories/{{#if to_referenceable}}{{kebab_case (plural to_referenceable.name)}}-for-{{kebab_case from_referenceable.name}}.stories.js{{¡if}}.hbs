@@ -2,12 +2,12 @@ import { html } from "lit-html";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}.js";
 import "@holochain-open-dev/{{kebab_case app_name}}/elements/{{kebab_case app_name}}-context.js";
 import { fakeActionHash } from "@holochain-open-dev/utils";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/mocks";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
 
 const mock = new {{pascal_case app_name}}ZomeMock();
 
-const {{camel_case to_referenceable.name}} = sample{{pascal_case to_referenceable.name}}();
+const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}();
 
 const record = await mock.create_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.name}});
 
