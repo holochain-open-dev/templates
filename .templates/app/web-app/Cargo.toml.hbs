@@ -9,6 +9,8 @@ members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*"]
 resolver = "2"
 
 [workspace.dependencies]
-holochain = "{{holochain_version}}"
+holochain = { version = "{{holochain_version}}", default-features = false, features = [
+  "test_utils",
+] }
 hdk = "0.2"
 hdi = "0.3"

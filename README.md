@@ -9,9 +9,11 @@ There are two templates available:
 
 ## Using the templates
 
+> WARNING: these templates are only compatible with holochain v0.2.x.
+
 1a. If you are scaffolding a new project, run this:
 
-`nix run github:holochain/holochain#hc-scaffold -- web-app --templates-url https://github.com/holochain-open-dev/templates`
+`nix run --override-input versions 'github:holochain/holochain?dir=versions/0_2' github:holochain/holochain#hc-scaffold -- web-app --templates-url https://github.com/holochain-open-dev/templates`
 
 1b. If you already have an existing project, run this inside a `nix develop` shell:
 

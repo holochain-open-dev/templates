@@ -8,7 +8,8 @@ import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
 
 import { {{pascal_case referenceable.name}} } from '../../ui/src/types.js';
-import { setup, sample{{pascal_case referenceable.name}} } from './common.js';
+import { sample{{pascal_case referenceable.name}} } from '../../ui/src/mocks.js';
+import { setup } from './common.js';
 
 test('create a {{pascal_case referenceable.name}} and get {{lower_case collection_name}}', async () => {
   await runScenario(async scenario => {

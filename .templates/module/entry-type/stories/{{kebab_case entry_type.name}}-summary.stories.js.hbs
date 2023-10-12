@@ -5,10 +5,11 @@ import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}}
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
 
 const mock = new {{pascal_case app_name}}ZomeMock();
+const client = new {{pascal_case app_name}}Client(mock);
 
-const record = await mock.create_{{snake_case entry_type.name}}(await sample{{pascal_case entry_type.name}}());
+const record = await mock.create_{{snake_case entry_type.name}}(await sample{{pascal_case entry_type.name}}(client));
 
-const store = new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(mock));
+const store = new {{pascal_case app_name}}Store(client);
 
 // More on how to set up stories at: https://storybook.js.org/docs/7.0/web-components/writing-stories/introduction
 export default {

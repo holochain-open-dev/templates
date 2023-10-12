@@ -9,12 +9,12 @@ import { toPromise } from '@holochain-open-dev/stores';
 import { setup } from './common.js';
 
 {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-import { {{pascal_case from_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}types.js';
-import { sample{{pascal_case from_referenceable.name}} } from './common.js';
+import { {{pascal_case from_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/types.js';
+import { sample{{pascal_case from_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/mocks.js';
 {{/if}}
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-import { {{pascal_case to_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}types.js';
-import { sample{{pascal_case to_referenceable.name}} } from './common.js';
+import { {{pascal_case to_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/types.js';
+import { {{pascal_case to_referenceable.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/mocks.js';
 {{/if}}
 
 test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_referenceable.name}}', async () => {
