@@ -4,6 +4,7 @@ import { runScenario, dhtSync } from '@holochain/tryorama';
 import { ActionHash, Record } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
+import { cleanNodeDecoding } from '@holochain-open-dev/utils/dist/clean-node-decoding.js';
 import { toPromise } from '@holochain-open-dev/stores';
 
 import { {{pascal_case entry_type.name}} } from '../../ui/src/types.js';
@@ -37,8 +38,8 @@ test('create and read {{pascal_case entry_type.name}}', async () => {
     );
 
     // Bob gets the created {{pascal_case entry_type.name}}
-    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(sample, createReadOutput.entry);
+    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}{{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
+    assert.deepEqual(sample, cleanNodeDecoding(createReadOutput.entry));
   });
 });
 
@@ -67,7 +68,7 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
         
     // Bob gets the updated {{pascal_case entry_type.name}}
     const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(contentUpdate, readUpdatedOutput0.entry);
+    assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput0.entry));
 
     // Alice updates the {{pascal_case entry_type.name}} again
     contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
@@ -83,7 +84,7 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
         
     // Bob gets the updated {{pascal_case entry_type.name}}
     const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}(updated{{pascal_case entry_type.name}}.entryHash{{else}}updated{{pascal_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(contentUpdate, readUpdatedOutput1.entry);
+    assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput1.entry));
   });
 });
 {{/if}}

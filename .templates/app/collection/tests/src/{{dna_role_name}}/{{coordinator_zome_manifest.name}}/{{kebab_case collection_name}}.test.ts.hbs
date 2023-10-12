@@ -19,7 +19,7 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     assert.equal(collectionOutput.length, 0);
 
     // Alice creates a {{pascal_case referenceable.name}}
-    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await bob.store.create{{pascal_case referenceable.name}}(sample{{pascal_case referenceable.name}}());
+    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await bob.store.client.create{{pascal_case referenceable.name}}(sample{{pascal_case referenceable.name}}());
     assert.ok({{camel_case referenceable.name}});
     
     await dhtSync(
