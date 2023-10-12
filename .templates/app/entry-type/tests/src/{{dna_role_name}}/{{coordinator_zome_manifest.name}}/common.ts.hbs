@@ -2,7 +2,7 @@ import { {{pascal_case entry_type.name}} } from '../../../ui/src/{{dna_role_name
 
 {{previous_file_content}}
 
-export async function sample{{pascal_case entry_type.name}}(client: {{pascal_case app_name}}Client, partial{{pascal_case entry_type.name}}: Partial<{{pascal_case entry_type.name}}> = {}): Promise<{{ pascal_case entry_type.name }}> {
+export async function sample{{pascal_case entry_type.name}}(client: {{pascal_case coordinator_zome_manifest.name}}Client, partial{{pascal_case entry_type.name}}: Partial<{{pascal_case entry_type.name}}> = {}): Promise<{{ pascal_case entry_type.name }}> {
     return {
         ...{
 {{#each entry_type.fields}}
@@ -45,7 +45,7 @@ export async function sample{{pascal_case entry_type.name}}(client: {{pascal_cas
     };
 }
 
-export async function create{{pascal_case entry_type.name}}(client: {{pascal_case app_name}}Client, {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} | undefined): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
+export async function create{{pascal_case entry_type.name}}(client: {{pascal_case coordinator_zome_manifest.name}}Client, {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} | undefined): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
   return client.create{{pascal_case entry_type.name}}({{camel_case entry_type.name}} || await sample{{pascal_case entry_type.name}}(client));
 }
 

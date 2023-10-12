@@ -1,6 +1,6 @@
 import { {{pascal_case entry_type.name}} } from './types.js';
 
-{{#merge_scope previous_file_content (concat "export class " (pascal_case app_name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+{{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
   {{previous_scope_content}}
   /** {{title_case entry_type.name}} */
   {{camel_case entry_type.name}} = new RecordBag<{{pascal_case entry_type.name}}>();
@@ -103,7 +103,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 
 {{/merge_scope}}
 
-export async function sample{{pascal_case entry_type.name}}(client: {{pascal_case app_name}}Client, partial{{pascal_case entry_type.name}}: Partial<{{pascal_case entry_type.name}}> = {}): Promise<{{ pascal_case entry_type.name }}> {
+export async function sample{{pascal_case entry_type.name}}(client: {{pascal_case coordinator_zome_manifest.name}}Client, partial{{pascal_case entry_type.name}}: Partial<{{pascal_case entry_type.name}}> = {}): Promise<{{ pascal_case entry_type.name }}> {
     return {
         ...{
 {{#each entry_type.fields}}
