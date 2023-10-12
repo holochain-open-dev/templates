@@ -1,8 +1,7 @@
 import { assert, test } from "vitest";
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { NewEntryAction, ActionHash, Record, AppBundleSource,  fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
-import { EntryRecord } from '@holochain-open-dev/utils';
+import { ActionHash, Record } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
@@ -31,7 +30,7 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     // Bob gets {{lower_case collection_name}} again
     collectionOutput = await toPromise(bob.store.{{camel_case collection_name}});
     assert.equal(collectionOutput.length, 1);
-    assert.deepEqual({{camel_case_case}}.actionHash, collectionOutput[0]);    
+    assert.deepEqual({{camel_case referenceable.name}}.actionHash, collectionOutput[0]);    
   });
 });
 

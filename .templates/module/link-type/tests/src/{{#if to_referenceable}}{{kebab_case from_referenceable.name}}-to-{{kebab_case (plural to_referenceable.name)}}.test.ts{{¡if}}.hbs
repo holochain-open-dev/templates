@@ -1,7 +1,7 @@
 import { assert, test } from "vitest";
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { NewEntryAction, ActionHash, Record, AppBundleSource,  fakeActionHash, fakeAgentPubKey, fakeEntryHash } from '@holochain/client';
+import { ActionHash, Record } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
