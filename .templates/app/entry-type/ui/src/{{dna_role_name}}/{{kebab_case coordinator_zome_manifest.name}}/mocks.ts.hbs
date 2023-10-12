@@ -121,7 +121,7 @@ export async function sample{{pascal_case entry_type.name}}(client: {{pascal_cas
         {{/if}}
       {{else}}
         {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
-          {{field_name}}: null,
+          {{field_name}}: undefined,
         {{else}}
 	  {{#if (eq linked_from.hash_type "ActionHash")}}
           {{field_name}}: partial{{pascal_case ../entry_type.name}}.{{field_name}} || (await client.create{{pascal_case linked_from.name}}(await sample{{pascal_case linked_from.name}}(client))).actionHash,

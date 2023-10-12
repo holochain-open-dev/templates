@@ -4,7 +4,7 @@
   /** {{title_case collection_name}} */
 
   async get{{pascal_case collection_name}}({{#if (eq collection_type.type "ByAuthor")}}author: AgentPubKey{{else}}{{/if}}): Promise<Array<EntryRecord<{{pascal_case referenceable.name}}>>> {
-    const records: Record[] = await this.callZome('get_{{snake_case collection_name}}', {{#if (eq collection_type.type "ByAuthor")}}author{{else}}null{{/if}});
+    const records: Record[] = await this.callZome('get_{{snake_case collection_name}}', {{#if (eq collection_type.type "ByAuthor")}}author{{else}}undefined{{/if}});
     return records.map(r => new EntryRecord(r));
   }
 

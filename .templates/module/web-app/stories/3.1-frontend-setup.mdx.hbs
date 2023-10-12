@@ -27,7 +27,7 @@ import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@
 import { AppAgentWebsocket } from "@holochain/client";
 
 async function setup{{pascal_case app_name}}Store() {
-  const client = await AppAgentWebsocket.connect('', '')
+  const client = await AppAgentWebsocket.connect(new URL('ws://localhost'), '')
 
   // TODO: change "MY_CELL_ROLE" for the roleId that you can find in your "happ.yaml"
   return new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(client, '<MY_CELL_ROLE>'));
