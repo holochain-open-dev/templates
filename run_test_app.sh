@@ -34,6 +34,8 @@ hc-scaffold link-type agent:creator post:EntryHash --delete false --bidirecciona
 hc-scaffold zome profiles --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 hc-scaffold zome file_storage --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 
+sed -i \"s/holochain_integrity_types = \\\"=0.1.2\\\"/holochain_integrity_types = \\\"=0.2.2\\\"/g\" Cargo.toml
+cargo clean
 
 cargo add -p profiles hc_zome_profiles_coordinator
 echo \"extern crate hc_zome_profiles_coordinator;\" > dnas/forum/zomes/coordinator/profiles/src/lib.rs

@@ -1,7 +1,7 @@
 import { assert, test } from "vitest";
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { ActionHash, Record } from '@holochain/client';
+import { ActionHash, Record, EntryHash } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
@@ -15,11 +15,11 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     const { alice, bob } = await setup(scenario);
 
     // Bob gets {{lower_case collection_name}}
-    let collectionOutput: ActionHash[] = await toPromise(bob.store.{{camel_case collection_name}});
+    let collectionOutput: {{#if (eq referenceable.hash_type "ActionHash")}}ActionHash{{else}}EntryHash{{/if}}[] = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "Global")}}.get(alice.player.agentPubKey{{/if}});
     assert.equal(collectionOutput.length, 0);
 
     // Alice creates a {{pascal_case referenceable.name}}
-    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await bob.store.client.create{{pascal_case referenceable.name}}(sample{{pascal_case referenceable.name}}());
+    const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await alice.store.client.create{{pascal_case referenceable.name}}(await sample{{pascal_case referenceable.name}}(alice.store.client));
     assert.ok({{camel_case referenceable.name}});
     
     await dhtSync(
@@ -28,9 +28,9 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     );
     
     // Bob gets {{lower_case collection_name}} again
-    collectionOutput = await toPromise(bob.store.{{camel_case collection_name}});
+    collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "Global")}}.get(alice.player.agentPubKey{{/if}});
     assert.equal(collectionOutput.length, 1);
-    assert.deepEqual({{camel_case referenceable.name}}.actionHash, collectionOutput[0]);    
+    assert.deepEqual({{camel_case referenceable.name}}.{{#if (eq referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, collectionOutput[0]);    
   });
 });
 

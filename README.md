@@ -18,3 +18,5 @@ There are two templates available:
 1b. If you already have an existing project, run this inside a `nix develop` shell:
 
 `hc scaffold template get https://github.com/holochain-open-dev/templates`
+
+WARNING! If you use the app template, you will encounter [this issue](https://github.com/holochain/scaffolding/issues/135). The quick fix is to upgrade the version of `holochain_integrity_types` in the workspace's Cargo.toml.
