@@ -84,25 +84,25 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
 
   renderDetail(entryRecord: EntryRecord<{{pascal_case entry_type.name}}>) {
     return html`<sl-card>
-      	<div slot="header" style="display: flex; flex-direction: row">
+      	<div slot="header" class="row" style="gap: 8px;">
           <span style="font-size: 18px; flex: 1;">${msg("{{title_case entry_type.name}}")}</span>
 
           {{#if crud.update}}
-          <sl-icon-button style="margin-left: 8px" .src=${wrapPathInSvg(mdiPencil)} @click=${() => { this._editing = true; } }></sl-icon-button>
+          <sl-icon-button .src=${wrapPathInSvg(mdiPencil)} @click=${() => { this._editing = true; } }></sl-icon-button>
           {{/if}}
           {{#if crud.delete}}
-          <sl-icon-button style="margin-left: 8px" .src=${wrapPathInSvg(mdiDelete)} @click=${() => this.delete{{pascal_case entry_type.name}}()}></sl-icon-button>
+          <sl-icon-button .src=${wrapPathInSvg(mdiDelete)} @click=${() => this.delete{{pascal_case entry_type.name}}()}></sl-icon-button>
           {{/if}}
         </div>
 
-        <div style="display: flex; flex-direction: column">
+        <div class="column" style="gap: 16px;">
   
 	{{#each entry_type.fields}}
           {{#if widget}}	  
-          <div style="display: flex; flex-direction: column; margin-bottom: 16px">
-	    <span style="margin-bottom: 8px"><strong>${msg("{{title_case field_name}}")}</strong></span>
+          <div class="column" style="gap: 8px;">
+	        <span><strong>${msg("{{title_case field_name}}")}</strong></span>
             {{#if (not (eq cardinality "vector") )}}
- 	    <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") field_name=field_name variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
+ 	        <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") field_name=field_name variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
             {{else}}
               {{> Vec/detail/render variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
             {{/if}}

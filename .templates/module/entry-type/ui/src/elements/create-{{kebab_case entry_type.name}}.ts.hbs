@@ -131,12 +131,13 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
 
         <form 
           id="create-form"
-          style="display: flex; flex: 1; flex-direction: column;"
+          class="column"
+          style="flex: 1; gap: 16px;"
           ${onSubmit(fields => this.create{{pascal_case entry_type.name}}(fields))}
         >  
           {{#each entry_type.fields}}
             {{#if widget}}
-          <div style="margin-bottom: 16px;">
+          <div>
               {{#if (not (eq cardinality "vector") )}}
           {{> (concat field_type.type "/" widget "/edit/render") label=(title_case field_name) field_name=field_name required=(eq cardinality "single") }}
               {{else}}

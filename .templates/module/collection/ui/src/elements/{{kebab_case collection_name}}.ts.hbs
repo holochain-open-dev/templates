@@ -53,19 +53,19 @@ export class {{pascal_case collection_name}} extends LitElement {
 
   renderList(hashes: Array<{{referenceable.hash_type}}>) {
     if (hashes.length === 0) 
-      return html` <div class="column center-content">
+      return html` <div class="column center-content" style="gap: 16px;">
         <sl-icon
           .src=${wrapPathInSvg(mdiInformationOutline)}
-          style="color: grey; height: 64px; width: 64px; margin-bottom: 16px"
+          style="color: grey; height: 64px; width: 64px;"
           ></sl-icon
         >
         <span class="placeholder">${msg("No {{lower_case (plural referenceable.name)}} found")}</span>
       </div>`;
 
     return html`
-      <div style="display: flex; flex-direction: column; flex: 1">
+      <div class="column" style="gap: 16px; flex: 1">
         ${hashes.map(hash => 
-          html`<{{kebab_case referenceable.name}}-summary .{{camel_case referenceable.name}}Hash=${hash} style="margin-bottom: 16px;"></{{kebab_case referenceable.name}}-summary>`
+          html`<{{kebab_case referenceable.name}}-summary .{{camel_case referenceable.name}}Hash=${hash}></{{kebab_case referenceable.name}}-summary>`
         )}
       </div>
     `;
