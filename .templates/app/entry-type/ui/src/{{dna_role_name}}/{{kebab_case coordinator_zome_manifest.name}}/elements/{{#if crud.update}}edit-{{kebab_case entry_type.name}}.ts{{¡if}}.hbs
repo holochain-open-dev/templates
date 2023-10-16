@@ -140,7 +140,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
         {{/each}}
 
 
-          <div style="display: flex; flex-direction: row">
+          <div class="row" style="gap: 8px;">
             <sl-button
               @click=${() => this.dispatchEvent(new CustomEvent('edit-canceled', {
                 bubbles: true,
