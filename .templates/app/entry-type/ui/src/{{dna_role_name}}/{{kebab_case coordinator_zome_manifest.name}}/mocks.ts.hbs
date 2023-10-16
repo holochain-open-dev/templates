@@ -11,7 +11,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   {{/each}}
 
   async create_{{snake_case entry_type.name}}({{camel_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<Record> {
-    const record = fakeRecord(fakeCreateAction(hash({{camel_case entry_type.name}}, HashType.ENTRY)), fakeEntry({{camel_case entry_type.name}}));
+    const record = await fakeRecord(await fakeCreateAction(hash({{camel_case entry_type.name}}, HashType.ENTRY)), fakeEntry({{camel_case entry_type.name}}));
     
     this.{{camel_case entry_type.name}}.add([record]);
   
@@ -49,7 +49,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 
   {{#if crud.delete}}
   async delete_{{snake_case entry_type.name}}(original_{{snake_case entry_type.name}}_hash: ActionHash): Promise<ActionHash> {
-    const record = fakeRecord(fakeDeleteEntry(original_{{snake_case entry_type.name}}_hash));
+    const record = await fakeRecord(await fakeDeleteEntry(original_{{snake_case entry_type.name}}_hash));
     
     this.{{camel_case entry_type.name}}.add([record]);
     
@@ -59,7 +59,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
 
   {{#if crud.update}}
   async update_{{snake_case entry_type.name}}(input: { {{#if link_from_original_to_each_update}}original_{{snake_case entry_type.name}}_hash: ActionHash; {{/if}}previous_{{snake_case entry_type.name}}_hash: ActionHash; updated_{{snake_case entry_type.name}}: {{pascal_case entry_type.name}}; }): Promise<Record> {
-    const record = fakeRecord(fakeUpdateEntry(input.previous_{{snake_case entry_type.name}}_hash, fakeEntry(input.updated_{{snake_case entry_type.name}})), fakeEntry(input.updated_{{snake_case entry_type.name}}));
+    const record = await fakeRecord(await fakeUpdateEntry(input.previous_{{snake_case entry_type.name}}_hash, undefined, undefined, fakeEntry(input.updated_{{snake_case entry_type.name}})), fakeEntry(input.updated_{{snake_case entry_type.name}}));
     
     this.{{camel_case entry_type.name}}.add([record]);
     
