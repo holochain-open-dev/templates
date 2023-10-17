@@ -7,9 +7,9 @@
   {{/merge_scope}}
 {{/merge_scope}}
 {{else}}
-import { {{camel_case zome_manifest.name}}StoreContext } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/context';
-import { {{pascal_case zome_manifest.name}}Client } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-client';
-import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store';
+import { {{camel_case zome_manifest.name}}StoreContext } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/context.js';
+import { {{pascal_case zome_manifest.name}}Client } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-client.js';
+import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store.js';
 
 {{#merge_scope previous_file_content "export class DemoApp extends LitElement {"}}
 

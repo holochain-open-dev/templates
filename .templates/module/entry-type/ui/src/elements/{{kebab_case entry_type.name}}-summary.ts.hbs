@@ -20,9 +20,9 @@ import '@holochain-open-dev/elements/dist/elements/display-error.js';
   {{/each}}
 {{/uniq_lines}}
 
-import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store';
-import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context';
-import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types';
+import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
+import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
+import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
 
 /**
  * @element {{kebab_case entry_type.name}}-summary

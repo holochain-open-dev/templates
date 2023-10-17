@@ -1,4 +1,4 @@
-import { {{pascal_case entry_type.name}} } from './types';
+import { {{pascal_case entry_type.name}} } from './types.js';
 
 {{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
   {{previous_scope_content}}
