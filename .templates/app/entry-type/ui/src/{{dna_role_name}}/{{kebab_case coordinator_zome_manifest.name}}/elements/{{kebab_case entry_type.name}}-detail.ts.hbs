@@ -4,7 +4,7 @@ import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
 import { sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiPencil, mdiDelete } from '@mdi/js';
 
@@ -149,7 +149,7 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
         return html`<sl-card>
           <display-error
             .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-            .error=${this._{{camel_case entry_type.name}}.value.error.data.data}
+            .error=${this._{{camel_case entry_type.name}}.value.error}
           ></display-error>
         </sl-card>`;
     }

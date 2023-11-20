@@ -1,10 +1,10 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
-import { StoreSubscriber } from '@holochain-open-dev/stores';
-import { consume } from '@lit-labs/context';
+import { subscribe } from '@holochain-open-dev/stores';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
-import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles, wrapPathInSvg, withSpinnerAndDisplayError } from '@holochain-open-dev/elements';
 import { mdiInformationOutline } from '@mdi/js';
 
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
@@ -33,15 +33,6 @@ export class {{pascal_case collection_name}} extends LitElement {
    */
   @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
-
-  /**
-   * @internal
-   */
-  _{{camel_case collection_name}} = new StoreSubscriber(this, 
-    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author),
-    () => [this.author]
-    {{/if}}
-  );
 
   {{#if (eq collection_type.type "ByAuthor")}}
   firstUpdated() {
@@ -72,21 +63,15 @@ export class {{pascal_case collection_name}} extends LitElement {
   }
 
   render() {
-    switch (this._{{camel_case collection_name}}.value.status) {
-      case "pending":
-        return html`<div
-          style="display: flex; flex: 1; align-items: center; justify-content: center"
-        >
-          <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`;
-      case "complete":
-        return this.renderList(this._{{camel_case collection_name}}.value.value);
-      case "error":
-        return html`<display-error
-          .headline=${msg("Error fetching the {{lower_case (plural referenceable.name)}}")}
-          .error=${this._{{camel_case collection_name}}.value.error.data.data}
-        ></display-error>`;
-    }
+    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}},
+      withSpinnerAndDisplayError({
+        complete: map => this.renderList(Array.from(map.keys())),
+        error: {
+          tooltip: false,
+          label: msg("Error fetching the {{lower_case (plural referenceable.name)}}")
+        } 
+      })
+    )}`;
   }
   
   static styles = [sharedStyles];

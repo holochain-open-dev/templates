@@ -2,9 +2,9 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { StoreSubscriber } from '@holochain-open-dev/stores';
+import { subscribe } from '@holochain-open-dev/stores';
 import { sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiPencil, mdiDelete } from '@mdi/js';
 
@@ -49,11 +49,6 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
    */
   @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
-
-  /**
-   * @internal
-   */
-   _{{camel_case entry_type.name}} = new StoreSubscriber(this, () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash));
 
   {{#if crud.update}}
   /**
@@ -117,43 +112,31 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
   }
   
   render() {
-    switch (this._{{camel_case entry_type.name}}.value.status) {
-      case "pending":
-        return html`<sl-card>
-          <div
-            style="display: flex; flex: 1; align-items: center; justify-content: center"
-          >
-            <sl-spinner style="font-size: 2rem;"></sl-spinner>
-          </div>
-        </sl-card>`;
-      case "complete":
-        const {{camel_case entry_type.name}} = this._{{camel_case entry_type.name}}.value.value;
-        
-        if (!{{camel_case entry_type.name}}) return html`<span>${msg("The requested {{lower_case entry_type.name}} doesn't exist")}</span>`;
-    
-{{#if crud.update}}
-        if (this._editing) {
-    	  return html`<edit-{{kebab_case entry_type.name}}
-  {{#if link_from_original_to_each_update}}
-    	    .original{{pascal_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
-  {{/if}}
-    	    .currentRecord=${ {{camel_case entry_type.name}} }
-            @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
-      	    @edit-canceled=${() => { this._editing = false; } }
-    	    style="display: flex; flex: 1;"
-    	  ></edit-{{kebab_case entry_type.name}}>`;
-      }
+    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).latestVersion,
+      withSpinnerAndDisplayError({
+        complete: {{camel_case entry_type.name}} => {
+  {{#if crud.update}}
+          if (this._editing) {
+      	  return html`<edit-{{kebab_case entry_type.name}}
+    {{#if link_from_original_to_each_update}}
+      	    .original{{pascal_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
+    {{/if}}
+      	    .currentRecord=${ {{camel_case entry_type.name}} }
+              @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
+        	    @edit-canceled=${() => { this._editing = false; } }
+      	    style="display: flex; flex: 1;"
+      	  ></edit-{{kebab_case entry_type.name}}>`;
+        }
 
-{{/if}}
-        return this.renderDetail({{camel_case entry_type.name}});
-      case "error":
-        return html`<sl-card>
-          <display-error
-            .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-            .error=${this._{{camel_case entry_type.name}}.value.error.data.data}
-          ></display-error>
-        </sl-card>`;
-    }
+  {{/if}}
+          return this.renderDetail({{camel_case entry_type.name}});
+        },
+        error: {
+          label: msg("Error fetching the {{lower_case entry_type.name}}"),
+          tooltip: false
+        }
+      })
+    )}`;
   }
   
   static styles = [sharedStyles];

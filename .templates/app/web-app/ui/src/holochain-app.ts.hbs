@@ -6,7 +6,7 @@ import { property, state, customElement } from 'lit/decorators.js';
 import { AppAgentWebsocket, AppAgentClient, ActionHash } from '@holochain/client';
 import { AsyncStatus, StoreSubscriber } from '@holochain-open-dev/stores';
 import { sharedStyles } from '@holochain-open-dev/elements';
-import { provide } from '@lit-labs/context';
+import { provide } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import {
   Profile,
@@ -72,7 +72,7 @@ export class HolochainApp extends LitElement {
       case 'error':
         return html`<display-error 
             .headline=${msg("Error fetching the profile")}
-            .error=${this._myProfile.value.error.data.data} 
+            .error=${this._myProfile.value.error} 
             tooltip
           ></display-error>`;
     }

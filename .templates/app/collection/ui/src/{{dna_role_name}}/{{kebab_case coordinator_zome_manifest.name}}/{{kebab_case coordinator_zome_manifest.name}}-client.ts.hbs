@@ -3,9 +3,8 @@
 
   /** {{title_case collection_name}} */
 
-  async get{{pascal_case collection_name}}({{#if (eq collection_type.type "ByAuthor")}}author: AgentPubKey{{else}}{{/if}}): Promise<Array<EntryRecord<{{pascal_case referenceable.name}}>>> {
-    const records: Record[] = await this.callZome('get_{{snake_case collection_name}}', {{#if (eq collection_type.type "ByAuthor")}}author{{else}}undefined{{/if}});
-    return records.map(r => new EntryRecord(r));
+  async get{{pascal_case collection_name}}({{#if (eq collection_type.type "ByAuthor")}}author: AgentPubKey{{else}}{{/if}}): Promise<Array<Link>> {
+    return this.callZome('get_{{snake_case collection_name}}', {{#if (eq collection_type.type "ByAuthor")}}author{{else}}undefined{{/if}});
   }
 
 {{/merge_scope}}

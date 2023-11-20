@@ -44,7 +44,7 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
 
     // Bob gets the links, should be empty
     let linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
-    assert.equal(linksOutput.length, 0);
+    assert.equal(linksOutput.size, 0);
 
     // Alice creates a link from {{pascal_case from_referenceable.name}} to {{pascal_case to_referenceable.name}}
     await alice.store.client.add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}(baseAddress, targetAddress);
@@ -57,17 +57,17 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
     
     // Bob gets the links again
     linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
-    assert.equal(linksOutput.length, 1);
+    assert.equal(linksOutput.size, 1);
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-    assert.deepEqual(targetRecord.{{#if (eq to_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, linksOutput[0]);
+    assert.deepEqual(targetRecord.{{#if (eq to_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, Array.from(linksOutput.keys())[0]);
 {{/if}}
 
 {{#if bidireccional}}
     // Bob gets the links in the inverse direction
     linksOutput = await toPromise(bob.store.{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress));
-    assert.equal(linksOutput.length, 1);
+    assert.equal(linksOutput.size, 1);
   {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-    assert.deepEqual(baseRecord.{{#if (eq from_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, linksOutput[0]);
+    assert.deepEqual(baseRecord.{{#if (eq from_referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, Array.from(linksOutput.keys())[0]);
   {{/if}}
 {{/if}}
 
@@ -82,15 +82,14 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
 
     // Bob gets the links again
     linksOutput = await toPromise(bob.store.{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress));
-    assert.equal(linksOutput.length, 0);
+    assert.equal(linksOutput.size, 0);
 
   {{#if bidireccional}}
     // Bob gets the links in the inverse direction
     linksOutput = await toPromise(bob.store.{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress));
-    assert.equal(linksOutput.length, 0);
+    assert.equal(linksOutput.size, 0);
   {{/if}}
 
 {{/if}}
   });
 });
-

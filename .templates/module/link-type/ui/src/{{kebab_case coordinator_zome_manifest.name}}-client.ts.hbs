@@ -1,18 +1,18 @@
-{{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
+{{#merge previous_file_content}}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
   {{previous_scope_content}}
 
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
 
-  {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-  async get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}): Promise<Array<AgentPubKey>> {
+  async get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}): Promise<Array<Link>> {
     return this.callZome('get_{{snake_case (plural to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}', {{camel_case from_referenceable.singular_arg}});
   }
-  {{else}}
-  async get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}): Promise<Array<EntryRecord<{{pascal_case to_referenceable.name}}>>> {
-    const records: Record[] = await this.callZome('get_{{snake_case (plural to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}', {{camel_case from_referenceable.singular_arg}});
-    return records.map(r => new EntryRecord(r));
+    {{#if delete}}
+
+  async getDeleted{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}): Promise<Array<[SignedActionHashed<CreateLink>, SignedActionHashed<DeleteLink>[]]>> {
+    return this.callZome('get_deleted_{{snake_case (plural to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}', {{camel_case from_referenceable.singular_arg}});
   }
-  {{/if}}
+    {{/if}}
   
   add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}, {{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<void> {
     return this.callZome('add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}', {
@@ -20,27 +20,26 @@
       target_{{snake_case to_referenceable.singular_arg}}: {{camel_case to_referenceable.singular_arg}},
     });
   }
-    
-  {{#if delete}}
+
+    {{#if delete}}
   remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}, {{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<void> {
     return this.callZome('remove_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}', {
       base_{{snake_case from_referenceable.singular_arg}}: {{camel_case from_referenceable.singular_arg}},
       target_{{snake_case to_referenceable.singular_arg}}: {{camel_case to_referenceable.singular_arg}},
     });
   }
-  {{/if}}
-	
-  {{#if bidireccional}}
-    {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
-  async get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<Array<AgentPubKey>> {
+
+    {{/if}}
+    {{#if bidireccional}}
+  async get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<Array<Link>> {
     return this.callZome('get_{{snake_case (plural from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}', {{camel_case to_referenceable.singular_arg}});
   }
-    {{else}}
-  async get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<Array<EntryRecord<{{pascal_case from_referenceable.name}}>>> {
-    const records: Record[] = await this.callZome('get_{{snake_case (plural from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}', {{camel_case to_referenceable.singular_arg}});
-    return records.map(r => new EntryRecord(r));
-  }
-    {{/if}}
-  {{/if}}
+      {{#if delete}}
 
-{{/merge_scope}}
+  async getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}): Promise<Array<[SignedActionHashed<CreateLink>, SignedActionHashed<DeleteLink>[]]>> {
+    return this.callZome('get_deleted_{{snake_case (plural from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}', {{camel_case to_referenceable.singular_arg}});
+  }
+      {{/if}}
+    {{/if}}
+  {{/match_scope}}
+{{/merge}}

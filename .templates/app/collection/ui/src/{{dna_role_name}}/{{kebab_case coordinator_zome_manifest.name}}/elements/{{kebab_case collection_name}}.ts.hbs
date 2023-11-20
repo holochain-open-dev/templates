@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { StoreSubscriber } from '@holochain-open-dev/stores';
-import { consume } from '@lit-labs/context';
+import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { mdiInformationOutline } from '@mdi/js';
@@ -84,7 +84,7 @@ export class {{pascal_case collection_name}} extends LitElement {
       case "error":
         return html`<display-error
           .headline=${msg("Error fetching the {{lower_case (plural referenceable.name)}}")}
-          .error=${this._{{camel_case collection_name}}.value.error.data.data}
+          .error=${this._{{camel_case collection_name}}.value.error}
         ></display-error>`;
     }
   }

@@ -15,8 +15,8 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     const { alice, bob } = await setup(scenario);
 
     // Bob gets {{lower_case collection_name}}
-    let collectionOutput: {{#if (eq referenceable.hash_type "ActionHash")}}ActionHash{{else}}EntryHash{{/if}}[] = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "Global")}}.get(alice.player.agentPubKey{{/if}});
-    assert.equal(collectionOutput.length, 0);
+    let collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "Global")}}.get(alice.player.agentPubKey{{/if}});
+    assert.equal(collectionOutput.size, 0);
 
     // Alice creates a {{pascal_case referenceable.name}}
     const {{camel_case referenceable.name}}: EntryRecord<{{pascal_case referenceable.name}}> = await alice.store.client.create{{pascal_case referenceable.name}}(await sample{{pascal_case referenceable.name}}(alice.store.client));
@@ -29,8 +29,8 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     
     // Bob gets {{lower_case collection_name}} again
     collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "Global")}}.get(alice.player.agentPubKey{{/if}});
-    assert.equal(collectionOutput.length, 1);
-    assert.deepEqual({{camel_case referenceable.name}}.{{#if (eq referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, collectionOutput[0]);    
+    assert.equal(collectionOutput.size, 1);
+    assert.deepEqual({{camel_case referenceable.name}}.{{#if (eq referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, Array.from(collectionOutput.keys())[0]);    
   });
 });
 

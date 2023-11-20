@@ -9,18 +9,22 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     return new EntryRecord(record);
   }
   
-  async get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
-    const record: Record = await this.callZome('get_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+  {{#if crud.update}}
+  async getLatest{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
+    const record: Record = await this.callZome('get_latest_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
     return record ? new EntryRecord(record) : undefined;
   }
 
-  {{#if crud.delete}}
-  delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<ActionHash> {
-    return this.callZome('delete_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
+  async getOriginal{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
+    const record: Record = await this.callZome('get_original_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+    return record ? new EntryRecord(record) : undefined;
   }
-  {{/if}}
 
-  {{#if crud.update}}
+  async getAllRevisionsFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<EntryRecord<{{pascal_case entry_type.name}}>>> {
+    const record: Record = await this.callZome('get_all_revisions_for_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+    return record ? new EntryRecord(record) : undefined;
+  }
+
   async update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash: ActionHash, {{/if}}previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
     const record: Record = await this.callZome('update_{{snake_case entry_type.name}}', {
       {{#if link_from_original_to_each_update}}
@@ -31,13 +35,31 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     });
     return new EntryRecord(record);
   }
+  {{else}}
+  async get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
+    const record: Record = await this.callZome('get_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+    return record ? new EntryRecord(record) : undefined;
+  }
+  {{/if}}
+
+  {{#if crud.delete}}
+  delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<ActionHash> {
+    return this.callZome('delete_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
+  }
+
+  getDeletesFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<Array<SignedActionHashed<Delete>>> {
+    return this.callZome('get_deletes_for_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
+  }
+
+  getOldestDeleteFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<SignedActionHashed<Delete> | undefined> {
+    return this.callZome('get_oldest_delete_for_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
+  }
   {{/if}}
   
   {{#each entry_type.fields}}
     {{#if linked_from}}
-  async get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<EntryRecord<{{pascal_case ../entry_type.name}}>>> {
-    const records: Record[] = await this.callZome('get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}', {{camel_case linked_from.singular_arg}});
-    return records.map(r => new EntryRecord(r));
+  async get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<Link>> {
+    return this.callZome('get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}', {{camel_case linked_from.singular_arg}});
   }
 
     {{/if}}

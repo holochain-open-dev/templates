@@ -5,24 +5,30 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   
   /** {{title_case entry_type.name}} */
 
-  {{camel_case (plural entry_type.name)}} = new LazyHoloHashMap(({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}) =>
-    lazyLoadAndPoll(async () => this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash), 4000)
+  {{camel_case (plural entry_type.name)}} = new LazyHoloHashMap(({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}) => ({
+      {{#if crud.update}}
+      latestVersion: latestVersionOfEntryStore(this.client, () => this.client.getLatest{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
+      {{else}}
+      entry: imutableEntryStore(this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
+      {{/if}}
+      {{#if crud.delete}}
+      deletes: deletesForEntryStore(this.client, {{camel_case entry_type.name}}Hash, () => this.client.getDeletesFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
+      {{/if}}
+    })
   );
 
   {{#each entry_type.fields}}
     {{#if linked_from}}
   {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new LazyHoloHashMap(({{camel_case linked_from.singular_arg}}: {{#if ../entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}) =>
-    lazyLoadAndPoll(
-      async () => {
-        const records = await this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}});
-        return records.map(r => {{#if ../entry_type.reference_entry_hash}}r.entryHash{{else}}r.actionHash{{/if}});
-      },
-      4000
+    liveLinksTargetsStore(
+      this.client,
+      {{camel_case linked_from.singular_arg}},
+      () => this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}),
+      '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
     )
   );
 
     {{/if}}
   {{/each}}
-
   
 {{/merge_scope}}

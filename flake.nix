@@ -9,6 +9,7 @@
     holochain = {
       url = "github:holochain/holochain";
       inputs.versions.follows = "versions";
+      inputs.scaffolding.url = "github:holochain/scaffolding/refactor-merge-scope";
     };
   };
 
@@ -34,11 +35,6 @@
                 # more packages go here
                 pkgs.cargo-nextest
               ];
-
-              shellHook = ''
-                unset CARGO_TARGET_DIR
-                unset CARGO_HOME
-              '';
 
             };
           };
