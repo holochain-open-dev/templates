@@ -22,8 +22,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   }
 
   async getAllRevisionsFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<EntryRecord<{{pascal_case entry_type.name}}>>> {
-    const record: Record = await this.callZome('get_all_revisions_for_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
-    return record ? new EntryRecord(record) : undefined;
+    const records: Record[] = await this.callZome('get_all_revisions_for_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+    return records.map(r => new EntryRecord(r));
   }
 
   async update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash: ActionHash, {{/if}}previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
