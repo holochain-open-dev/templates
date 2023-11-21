@@ -76,10 +76,16 @@ async fn create_and_read_{{snake_case entry_type.name}}() {
     
     consistency_10s([&alice, &bobbo]).await;
     
+    {{#if crud.update}}
     let get_record: Option<Record> = conductors[1]
-        .call(&bob_zome, "get_original_{{snake_case entry_type.name}}", {{#if entry_type.reference_entry_hash}}record.action().entry_hash().unwrap().clone(){{else}}record.signed_action.action_address().clone(){{/if}})
+        .call(&bob_zome, "get_original_{{snake_case entry_type.name}}", record.signed_action.action_address().clone())
         .await;
-        
+    {{else}}
+    let get_record: Option<Record> = conductors[1]
+        .call(&bob_zome, "get_{{snake_case entry_type.name}}", {{#if entry_type.reference_entry_hash}}record.action().entry_hash().unwrap().clone(){{else}}record.signed_action.action_address().clone(){{/if}})
+        .await;
+    {{/if}}        
+
     assert_eq!(record, get_record.unwrap());    
 }
 
@@ -192,16 +198,17 @@ async fn create_and_delete_{{snake_case entry_type.name}}() {
     let original_action_hash = record.signed_action.hashed.hash;
     
     // Alice deletes the {{pascal_case entry_type.name}}
-    let _delete_action_hash: ActionHash = conductors[0]
+    let delete_action_hash: ActionHash = conductors[0]
         .call(&alice_zome, "delete_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
 
     consistency_10s([&alice, &bobbo]).await;
 
-    let deletes: Vec<Record> = conductors[1]
-        .call(&bob_zome, "get_deletes_for_{{snake_case entry_type.name}}", original_action_hash.clone())
+    let deletes: Vec<SignedActionHashed> = conductors[1]
+        .call(&bob_zome, "get_all_deletes_for_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
         
     assert_eq!(deletes.len(), 1);
+    assert_eq!(deletes[0].hashed.hash, delete_action_hash);
 }
 {{/if}}

@@ -39,7 +39,9 @@ async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collect
         .await;
         
     assert_eq!(links.len(), 1);    
-    assert_eq!(links[0].target, record.signed_action.hashed.hash);    
+    {{#if (eq referenceable.hash_type "EntryHash")}}
+    assert_eq!(links[0].target.clone().into_entry_hash().unwrap(), record.action().entry_hash().unwrap().clone());
+    {{else}}
+    assert_eq!(links[0].target.clone().into_action_hash().unwrap(), record.signed_action.hashed.hash);
+    {{/if}}
 }
-
-

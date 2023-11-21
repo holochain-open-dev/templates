@@ -85,7 +85,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.revisions[0] : undefined;
   }
   
-  async get_deletes_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<Record> | undefined> {
+  async get_all_deletes_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<Record> | undefined> {
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.deletes : undefined;
   }

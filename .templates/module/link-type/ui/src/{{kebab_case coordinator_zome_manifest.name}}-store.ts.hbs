@@ -1,31 +1,114 @@
 {{#merge previous_file_content}}
   {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
-    {{#merge previous_scope_content}}
-      {{#if (includes previous_file_content (concat (camel_case (plural from_referenceable.name)) " = new LazyHoloHashMap((" (camel_case from_referenceable.name) "Hash: " from_referenceable.hash_type ") => ({" ) ) }}
+    {{#if (includes previous_file_content (concat (camel_case (plural from_referenceable.name)) " = new LazyHoloHashMap((" (camel_case from_referenceable.name) "Hash: " from_referenceable.hash_type ") => ({" ) ) }}
+      {{#merge previous_scope_content}}
         {{#match_scope (concat (camel_case (plural from_referenceable.name)) " = new LazyHoloHashMap((" (camel_case from_referenceable.name) "Hash: " from_referenceable.hash_type ") => ({" ) }}
-  {{previous_scope_content}}
+      {{previous_scope_content}}
+          {{#if delete}}
       {{camel_case (plural to_referenceable.name)}}: {
-        live: pipe(liveLinksStore(
+        live: pipe(
+          liveLinksStore(
+            this.client,
+            {{camel_case from_referenceable.singular_arg}},
+            () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
+            '{{link_type_name}}'
+          ), 
+        {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
+        {{/if}}
+        ),
+        deleted: pipe(
+          deletedLinksStore(
+            this.client,
+            {{camel_case from_referenceable.singular_arg}},
+            () => this.client.getDeleted{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
+            '{{link_type_name}}'
+          ),
+        {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
+        {{/if}}
+        ),
+      },
+          {{else}}
+      {{camel_case (plural to_referenceable.name)}}: pipe(
+        liveLinksStore(
           this.client,
           {{camel_case from_referenceable.singular_arg}},
           () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
           '{{link_type_name}}'
-        ), links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))),
-          {{#if delete}}
-        deleted: pipe(deletedLinksStore(
-          this.client,
-          {{camel_case from_referenceable.singular_arg}},
-          () => this.client.getDeleted{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
-          '{{link_type_name}}'
-        ), links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))),
+        ), 
+        {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
+        {{/if}}
+      ),
           {{/if}}
-      },
         {{/match_scope}}
-      {{else}}
+        {{#if bidireccional}}
+          {{#if (includes previous_file_content (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" ) ) }}
+            {{#match_scope (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" )}}
+      {{previous_scope_content}}
+              {{#if delete}}
+      {{camel_case (plural from_referenceable.name)}}: {
+        live: pipe(
+          liveLinksStore(
+            this.client,
+            {{camel_case to_referenceable.singular_arg}},
+            () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
+            '{{link_type_name}}'
+          ), 
+        {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
+        {{/if}}
+        ),
+        deleted: pipe(
+          deletedLinksStore(
+            this.client,
+            {{camel_case to_referenceable.singular_arg}},
+            () => this.client.getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
+            '{{link_type_name}}'
+          ), 
+        {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
+        {{/if}}
+        ),
+      },
+              {{else}}
+      {{camel_case (plural from_referenceable.name)}}: pipe(
+        liveLinksStore(
+          this.client,
+          {{camel_case to_referenceable.singular_arg}},
+          () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
+          '{{link_type_name}}'
+        ), 
+        {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
+          links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
+        {{/if}}
+      ),
+              {{/if}}
+            {{/match_scope}}
+          {{/if}}
+        {{/if}}
+      {{/merge}}
+    {{else}}
+  {{#if (or (not bidireccional) (not (and (not (includes previous_file_content (concat (camel_case (plural from_referenceable.name)) " = new LazyHoloHashMap((" (camel_case from_referenceable.name) "Hash: " from_referenceable.hash_type ") => ({" ) )) (includes previous_file_content (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" ) ))))}}
+  {{previous_scope_content}}
+  {{/if}}
 
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
 
-  {{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} = new LazyHoloHashMap(({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}) => ({
+  {{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} = new LazyHoloHashMap(({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}) => {{#if delete}}({
     live: pipe(
       liveLinksStore(
         this.client,
@@ -39,7 +122,6 @@
       links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
     {{/if}}
     ),
-        {{#if delete}}
     deleted: pipe(
       deletedLinksStore(
         this.client,
@@ -53,14 +135,27 @@
       links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
     {{/if}}
     ),
-        {{/if}}
-  });
-      {{/if}}
+  }{{else}}pipe(
+      liveLinksStore(
+        this.client,
+        {{camel_case from_referenceable.singular_arg}},
+        () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
+        '{{link_type_name}}'
+      ), 
+    {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+      links => links.map(l => retype(l.target, HashType.AGENT))
+    {{else}}
+      links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
+    {{/if}}
+    ){{/if}});
+    {{/if}}
 
-      {{#if bidireccional}}
-        {{#if (includes previous_file_content (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" ) ) }}
-          {{#match_scope (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" ) }}
-  {{previous_scope_content}}
+    {{#if bidireccional}}
+      {{#if (and (not (includes previous_file_content (concat (camel_case (plural from_referenceable.name)) " = new LazyHoloHashMap((" (camel_case from_referenceable.name) "Hash: " from_referenceable.hash_type ") => ({" ) )) (includes previous_file_content (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" ) )) }}
+      {{#merge previous_scope_content}}
+        {{#match_scope (concat (camel_case (plural to_referenceable.name)) " = new LazyHoloHashMap((" (camel_case to_referenceable.name) "Hash: " to_referenceable.hash_type ") => ({" )}}
+      {{previous_scope_content}}
+              {{#if delete}}
       {{camel_case (plural from_referenceable.name)}}: {
         live: pipe(
           liveLinksStore(
@@ -69,25 +164,47 @@
             () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
             '{{link_type_name}}'
           ), 
+        {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
+        {{else}}
           links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
+        {{/if}}
         ),
-            {{#if delete}}
         deleted: pipe(
           deletedLinksStore(
             this.client,
             {{camel_case to_referenceable.singular_arg}},
             () => this.client.getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
             '{{link_type_name}}'
-          ), links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
-        ),
-            {{/if}}
-      },
-          {{/match_scope}}
+          ), 
+        {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+          links => links.map(l => retype(l.target, HashType.AGENT))
         {{else}}
-
+          links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
+        {{/if}}
+        ),
+      },
+              {{else}}
+      {{camel_case (plural from_referenceable.name)}}: pipe(
+        liveLinksStore(
+          this.client,
+          {{camel_case to_referenceable.singular_arg}},
+          () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
+          '{{link_type_name}}'
+        ), 
+      {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+        links => links.map(l => retype(l.target, HashType.AGENT))
+      {{else}}
+        links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
+      {{/if}}
+      ),
+            {{/if}}
+          {{/match_scope}}
+        {{/merge}}
+      {{else}}
   /** {{title_case (plural from_referenceable.name)}} for {{title_case to_referenceable.name}} */
 
-  {{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} = new LazyHoloHashMap(({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}) => ({
+  {{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} = new LazyHoloHashMap(({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}) => {{#if delete}}({
     live: pipe(
       liveLinksStore(
         this.client,
@@ -101,7 +218,6 @@
       links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
     {{/if}}
     ),
-        {{#if delete}}
     deleted: pipe(
       deletedLinksStore(
         this.client,
@@ -115,10 +231,21 @@
       links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
     {{/if}}
     ),
-        {{/if}}
-  });
-        {{/if}}
+  }){{else}}pipe(
+      liveLinksStore(
+        this.client,
+        {{camel_case to_referenceable.singular_arg}},
+        () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
+        '{{link_type_name}}'
+      ), 
+    {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+      links => links.map(l => retype(l.target, HashType.AGENT))
+    {{else}}
+      links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
+    {{/if}}
+    ){{/if}});
+      
       {{/if}}
-    {{/merge}}
+    {{/if}}
   {{/match_scope}}
 {{/merge}}

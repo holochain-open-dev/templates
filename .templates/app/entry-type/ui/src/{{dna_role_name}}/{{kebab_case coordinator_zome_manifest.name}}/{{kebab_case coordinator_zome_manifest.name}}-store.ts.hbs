@@ -12,7 +12,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
       entry: imutableEntryStore(this.client.get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
       {{/if}}
       {{#if crud.delete}}
-      deletes: deletesForEntryStore(this.client, {{camel_case entry_type.name}}Hash, () => this.client.getDeletesFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
+      deletes: deletesForEntryStore(this.client, {{camel_case entry_type.name}}Hash, () => this.client.getAllDeletesFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash)),
       {{/if}}
     })
   );

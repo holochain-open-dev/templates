@@ -1,7 +1,7 @@
 import { assert, test } from "vitest";
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { ActionHash, SignedActionHash, Delete, Record } from '@holochain/client';
+import { ActionHash, SignedActionHashed, Delete, Record } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { cleanNodeDecoding } from '@holochain-open-dev/utils/dist/clean-node-decoding.js';
@@ -38,7 +38,7 @@ test('create and read {{pascal_case entry_type.name}}', async () => {
     );
 
     // Bob gets the created {{pascal_case entry_type.name}}
-    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}{{camel_case entry_type.name}}.entryHash).entry{{else}}{{camel_case entry_type.name}}.actionHash).original{{/if}});
+    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}{{#if entry_type.reference_entry_hash}}.entryHash{{else}}.actionHash{{/if}}){{#if crud.update}}.original{{else}}.entry{{/if}});
     assert.deepEqual(sample, cleanNodeDecoding(createReadOutput.entry));
   });
 });
@@ -109,8 +109,8 @@ test('create and delete {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob tries to get the deleted {{pascal_case entry_type.name}}
-    const deletes: Array<SignedActionHashed<Delete>> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).deletes));
-    assert.ok(false);
+    const deletes: Array<SignedActionHashed<Delete>> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).deletes);
+    assert.equal(deletes.length, 1);
   });
 });
 {{/if}}

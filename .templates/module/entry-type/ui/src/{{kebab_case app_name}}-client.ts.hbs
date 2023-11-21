@@ -48,8 +48,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     return this.callZome('delete_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
   }
 
-  getDeletesFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<Array<SignedActionHashed<Delete>>> {
-    return this.callZome('get_deletes_for_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
+  getAllDeletesFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<Array<SignedActionHashed<Delete>>> {
+    return this.callZome('get_all_deletes_for_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
   }
 
   getOldestDeleteFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<SignedActionHashed<Delete> | undefined> {
