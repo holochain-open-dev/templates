@@ -67,7 +67,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
               {{camel_case linked_from.singular_arg}},
               () => this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}),
               '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
-            ), links => slice(this.{{camel_case (plural ../entry_type.name)}}, links.map(l => l.target))
+            ), links => links.map(l => l.target)
           ),
           deleted: pipe(
             deletedLinksStore(
@@ -75,7 +75,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
               {{camel_case linked_from.singular_arg}},
               () => this.client.getDeleted{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}),
               '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
-            ), links=> slice(this.{{camel_case (plural ../entry_type.name)}}, links.map(l => l[0].hashed.content.target_address))
+            ), links=> links.map(l => l[0].hashed.content.target_address)
           ),
       },
             {{else}}
@@ -86,7 +86,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
             () => this.client.get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}),
             '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
           ), 
-          links => slice(this.{{camel_case (plural ../entry_type.name)}}, links.map(l => l.target))
+          links => links.map(l => l.target)
         ),
             {{/if}}
           {{/if}}

@@ -1,9 +1,9 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { Record, EntryHash, ActionHash, AgentPubKey } from '@holochain/client';
-import { subscribe } from '@holochain-open-dev/stores';
-import { EntryRecord } from '@holochain-open-dev/utils';
-import { withSpinnerAndDisplayError, hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { pipe, subscribe } from '@holochain-open-dev/stores';
+import { EntryRecord, slice} from '@holochain-open-dev/utils';
+import { renderAsyncStatus, hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
@@ -62,13 +62,22 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
   }
 
   render() {
-    return html`${subscribe(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{#if ../crud.delete}}.live{{/if}},
-      withSpinnerAndDisplayError({
-        completed: map => this.renderList(Array.from(map.keys())),
-        error: {
-          label: msg("Error fetching the {{lower_case (plural ../entry_type.name)}}"),
-          tooltip: false
-        }
+  {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
+    return html`${subscribe(pipe(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}, hashes => slice(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{camel_case (plural ../entry_type.name)}}, hashes)),
+  {{else}}
+    return html`${subscribe(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}},
+  {{/if}}
+      renderAsyncStatus({
+        complete: map => this.renderList(Array.from(map.keys())),
+        pending: () => html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`,
+        error: e => html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural ../entry_type.name)}}")}
+          .error=${e}
+        ></display-error>`
       })
     )}`;
   }

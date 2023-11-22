@@ -3,7 +3,7 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { subscribe } from '@holochain-open-dev/stores';
-import { withSpinnerAndDisplayError, sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
+import { renderAsyncStatus, sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiPencil, mdiDelete } from '@mdi/js';
@@ -112,8 +112,8 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
   }
   
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).latestVersion,
-      withSpinnerAndDisplayError({
+    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
+      renderAsyncStatus({
         complete: {{camel_case entry_type.name}} => {
   {{#if crud.update}}
           if (this._editing) {
@@ -131,10 +131,15 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
   {{/if}}
           return this.renderDetail({{camel_case entry_type.name}});
         },
-        error: {
-          label: msg("Error fetching the {{lower_case entry_type.name}}"),
-          tooltip: false
-        }
+        pending: () => html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`,
+        error: e => html`<display-error
+          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
+          .error=${e}
+        ></display-error>`
       })
     )}`;
   }

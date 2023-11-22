@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { consume } from '@lit/context';
-import { hashProperty, sharedStyles, wrapPathInSvg, withSpinnerAndDisplayError } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles, wrapPathInSvg, renderAsyncStatus } from '@holochain-open-dev/elements';
 import { subscribe } from '@holochain-open-dev/stores';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
@@ -67,17 +67,22 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   }
 
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{#if delete}}.live{{/if}},
-      withSpinnerAndDisplayError({
+    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{#if (eq from_referenceable.hash_type "AgentPubKey")}}{{plural (camel_case to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}){{else}}{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}},
+      renderAsyncStatus({
       {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-        completed: agents => this.renderList(agents),
+        complete: agents => this.renderList(agents),
       {{else}}
-        completed: map => this.renderList(Array.from(map.keys())),
+        complete: map => this.renderList(Array.from(map.keys())),
       {{/if}}
-        error: {
-          label: msg("Error fetching the {{lower_case (plural from_referenceable.name)}}"),
-          tooltip: false
-        }
+        pending: () => html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`,
+        error: e => html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural from_referenceable.name)}}")}
+          .error=${e}
+        ></display-error>`
       })
     )}`;
   }

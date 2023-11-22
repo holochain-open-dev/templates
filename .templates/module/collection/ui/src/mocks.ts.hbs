@@ -4,7 +4,7 @@
   
   {{#if (eq collection_type.type "ByAuthor")}}
   async get_{{snake_case collection_name}}(author: AgentPubKey): Promise<Array<Link>> {
-    const records: {{referenceable.hash_type}}[] = Array.from(this.{{camel_case (plural referenceable.name)}}.values()).map(r => r.revisions[r.revisions.length - 1]).filter(r => r.signed_action.hashed.content.author.toString() === author.toString());
+    const records: Record[] = Array.from(this.{{camel_case (plural referenceable.name)}}.values()).map(r => r.revisions[r.revisions.length - 1]).filter(r => r.signed_action.hashed.content.author.toString() === author.toString());
     return Promise.all(records.map(async record => ({ 
       target: {{#if (eq referenceable.hash_type "EntryHash")}}(record.signed_action.hashed.content as NewEntryAction).entry_hash{{else}}record.signed_action.hashed.hash{{/if}}, 
       author: record.signed_action.hashed.content.author,

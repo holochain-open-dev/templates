@@ -24,9 +24,9 @@ hc-scaffold collection --zome posts_integrity  global all_posts_entry_hash post:
 hc-scaffold collection --zome posts_integrity  by-author posts_by_author_entry_hash post:EntryHash
 
 hc-scaffold link-type --zome posts_integrity  post like --delete true --bidireccional false
-hc-scaffold link-type --zome posts_integrity  comment like:EntryHash --delete true --bidireccional true
-hc-scaffold link-type --zome posts_integrity  certificate:EntryHash like --delete false --bidireccional false
-hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false --bidireccional true
+hc-scaffold link-type --zome posts_integrity  comment like --delete true --bidireccional false
+hc-scaffold link-type --zome posts_integrity  certificate like --delete false --bidireccional false
+hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false --bidireccional false
 
 npm i
 
