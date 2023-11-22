@@ -11,7 +11,7 @@ import '@holochain-open-dev/elements/dist/elements/display-error.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
-{{#if (not (eq to_referenceable.hash_type "AgentPubKey") )}}
+{{#if (ne to_referenceable.hash_type "AgentPubKey")}}
 import './{{kebab_case to_referenceable.name}}-summary.js';
 {{else}}
 import '@holochain-open-dev/profiles/dist/elements/agent-avatar.js';
@@ -69,8 +69,12 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   render() {
     return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{#if delete}}.live{{/if}},
       withSpinnerAndDisplayError({
+      {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+        completed: agents => this.renderList(agents),
+      {{else}}
         completed: map => this.renderList(Array.from(map.keys())),
-        {
+      {{/if}}
+        error: {
           label: msg("Error fetching the {{lower_case (plural from_referenceable.name)}}"),
           tooltip: false
         }

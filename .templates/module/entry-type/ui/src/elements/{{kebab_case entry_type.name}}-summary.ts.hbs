@@ -67,7 +67,7 @@ export class {{pascal_case entry_type.name}}Summary extends LitElement {
     return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
       withSpinnerAndDisplayError({
         completed: {{camel_case entry_type.name}} => this.renderSummary({{camel_case entry_type.name}}),
-        {
+        error: {
           label: msg("Error fetching the {{lower_case entry_type.name}}"),
           tooltip: false
         }

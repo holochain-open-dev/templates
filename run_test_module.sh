@@ -30,9 +30,9 @@ hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false 
 
 npm i
 
-npm t
-
 npm run format -w ui
 npm run lint -w ui
 npm run build -w ui
+
+npm t
 # "

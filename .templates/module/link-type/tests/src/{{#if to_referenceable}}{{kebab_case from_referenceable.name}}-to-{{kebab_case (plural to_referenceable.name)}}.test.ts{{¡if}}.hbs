@@ -57,14 +57,24 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
     
     // Bob gets the links again
     linksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(linksOutput.length, 1);
+    assert.deepEqual(targetAddress, linksOutput[0]);
+	{{else}}
     assert.equal(linksOutput.size, 1);
     assert.deepEqual(targetAddress, Array.from(linksOutput.keys())[0]);
+	{{/if}}
 
 {{#if bidireccional}}
     // Bob gets the links in the inverse direction
     let inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(inverseLinksOutput.length, 1);
+    assert.deepEqual(baseAddress, inverseLinksOutput[0]);
+	{{else}}
     assert.equal(inverseLinksOutput.size, 1);
     assert.deepEqual(baseAddress, Array.from(inverseLinksOutput.keys())[0]);
+	{{/if}}
 {{/if}}
 
 {{#if delete}}
@@ -78,19 +88,35 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
 
     // Bob gets the links again
     linksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(linksOutput.length, 0);
+	{{else}}
     assert.equal(linksOutput.size, 0);
+	{{/if}}
 
     // Bob gets the deleted links
 	let deletedLinksOutput = await toPromise(bob.store.{{#if (ne from_referenceable.hash_type "ActionHash")}}{{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(baseAddress){{else}}{{camel_case (plural from_referenceable.name)}}.get(baseAddress).{{camel_case (plural to_referenceable.name)}}{{/if}}.deleted);
+	{{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(deletedLinksOutput.length, 1);
+	{{else}}
     assert.equal(deletedLinksOutput.size, 1);
+	{{/if}}
 
   {{#if bidireccional}}
     // Bob gets the links in the inverse direction
     inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(inverseLinksOutput.length, 0);
+	{{else}}
     assert.equal(inverseLinksOutput.size, 0);
+	{{/if}}
 
 	deletedLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}.deleted);
+	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+    assert.equal(deletedLinksOutput.length, 1);
+	{{else}}
     assert.equal(deletedLinksOutput.size, 1);
+	{{/if}}
   {{/if}}
 
 {{/if}}
