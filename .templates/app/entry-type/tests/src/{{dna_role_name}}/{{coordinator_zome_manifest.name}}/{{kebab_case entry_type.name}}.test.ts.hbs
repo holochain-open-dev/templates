@@ -1,14 +1,15 @@
 import { assert, test } from "vitest";
 
 import { runScenario, dhtSync } from '@holochain/tryorama';
-import { ActionHash, Record } from '@holochain/client';
+import { ActionHash, SignedActionHashed, Delete, Record } from '@holochain/client';
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
+import { cleanNodeDecoding } from '@holochain-open-dev/utils/dist/clean-node-decoding.js';
 import { toPromise } from '@holochain-open-dev/stores';
 
-import { {{pascal_case entry_type.name}} } from '../../../../ui/src/{{dna_role_name}}/{{coordinator_zome_manifest.name}}/types.js';
-import { sample{{pascal_case entry_type.name}} } from  '../../../../ui/src/mocks.js';
-import { setup } from './common.js';
+import { {{pascal_case entry_type.name}} } from '../../../../ui/src/{{dna_role_name}}/{{snake_case coordinator_zome_manifest.name}}/types.js';
+import { sample{{pascal_case entry_type.name}} } from '../../../../ui/src/{{dna_role_name}}/{{snake_case coordinator_zome_manifest.name}}/mocks.js';
+import { setup } from './setup.js';
 
 test('create {{pascal_case entry_type.name}}', async () => {
   await runScenario(async scenario => {
@@ -37,8 +38,8 @@ test('create and read {{pascal_case entry_type.name}}', async () => {
     );
 
     // Bob gets the created {{pascal_case entry_type.name}}
-    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}{{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(sample, createReadOutput.entry);
+    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}{{#if entry_type.reference_entry_hash}}.entryHash{{else}}.actionHash{{/if}}){{#if crud.update}}.original{{else}}.entry{{/if}});
+    assert.deepEqual(sample, cleanNodeDecoding(createReadOutput.entry));
   });
 });
 
@@ -64,10 +65,10 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
       [alice.player, bob.player],
       alice.player.cells[0].cell_id[0]
     );
-
+        
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(contentUpdate, readUpdatedOutput0.entry);
+    const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).latestVersion);
+    assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput0.entry));
 
     // Alice updates the {{pascal_case entry_type.name}} again
     contentUpdate = await sample{{pascal_case entry_type.name}}(alice.store.client);
@@ -82,8 +83,8 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}(updated{{pascal_case entry_type.name}}.entryHash{{else}}updated{{pascal_case entry_type.name}}.actionHash{{/if}}));
-    assert.deepEqual(contentUpdate, readUpdatedOutput1.entry);
+    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get(originalActionHash).latestVersion);
+    assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput1.entry));
   });
 });
 {{/if}}
@@ -108,12 +109,8 @@ test('create and delete {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob tries to get the deleted {{pascal_case entry_type.name}}
-    try {
-      const readDeletedOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{#if entry_type.reference_entry_hash}}({{camel_case entry_type.name}}.entryHash{{else}}{{camel_case entry_type.name}}.actionHash{{/if}}));
-      assert.ok(false);
-    } catch (e) {
-      assert.ok(true);
-    }
+    const deletes: Array<SignedActionHashed<Delete>> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).deletes);
+    assert.equal(deletes.length, 1);
   });
 });
 {{/if}}

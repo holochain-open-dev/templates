@@ -6,7 +6,7 @@ use hdk::prelude::*;
 use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
-use {{snake_case coordinator_zome_manifest.name}}::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
+use hc_zome_{{snake_case coordinator_zome_manifest.name}}_coordinator::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
 
 {{#if (or (ne from_referenceable.hash_type "AgentPubKey") (ne to_referenceable.hash_type "AgentPubKey"))}}
 mod common;
@@ -59,7 +59,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
 {{/if}}
 
     // Bob gets the links, should be empty
-    let links_output: Vec<{{#if (eq to_referenceable.hash_type "AgentPubKey")}}AgentPubKey{{else}}Record{{/if}}> = conductors[1]
+    let links_output: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}", base_address.clone()).await;
     assert_eq!(links_output.len(), 0);
 
@@ -73,21 +73,21 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     consistency_10s([&alice, &bobbo]).await;
 
     // Bob gets the links again
-    let links_output: Vec<{{#if (eq to_referenceable.hash_type "AgentPubKey")}}AgentPubKey{{else}}Record{{/if}}> = conductors[1]
+    let links_output: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}", base_address.clone()).await;
     assert_eq!(links_output.len(), 1);
 {{#if (ne to_referenceable.hash_type "AgentPubKey")}}
-    assert_eq!(target_record, links_output[0]);
+    assert_eq!(AnyLinkableHash::from(target_address.clone()), links_output[0].target);
 {{/if}}
 
 {{#if bidireccional}}
 
     // Bob gets the links in the inverse 
-    let links_output: Vec<{{#if (eq from_referenceable.hash_type "AgentPubKey")}}AgentPubKey{{else}}Record{{/if}}> = conductors[1]
+    let links_output: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{plural (snake_case from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}", target_address.clone()).await;
     assert_eq!(links_output.len(), 1);
   {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
-    assert_eq!(base_record, links_output[0]);
+    assert_eq!(AnyLinkableHash::from(base_address.clone()), links_output[0].target);
   {{/if}}
 {{/if}}
 
@@ -101,16 +101,24 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     consistency_10s([&alice, &bobbo]).await;
 
     // Bob gets the links again
-    let links_output: Vec<{{#if (eq to_referenceable.hash_type "AgentPubKey")}}AgentPubKey{{else}}Record{{/if}}> = conductors[1]
+    let links_output: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}", base_address.clone()).await;
     assert_eq!(links_output.len(), 0);
-
+    // Bob gets the deleted links
+    let deleted_links_output: Vec<(SignedActionHashed, Vec<SignedActionHashed>)> = conductors[1]
+        .call(&bob_zome, "get_deleted_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}", base_address.clone()).await;
+    assert_eq!(deleted_links_output.len(), 1);
   {{#if bidireccional}}
   
     // Bob gets the links in the inverse 
-    let links_output: Vec<{{#if (eq from_referenceable.hash_type "AgentPubKey")}}AgentPubKey{{else}}Record{{/if}}> = conductors[1]
+    let links_output: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{plural (snake_case from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}", target_address.clone()).await;
     assert_eq!(links_output.len(), 0);
+  
+    // Bob gets the deleted links in the inverse 
+    let deleted_links_output: Vec<(SignedActionHashed, Vec<SignedActionHashed>)> = conductors[1]
+        .call(&bob_zome, "get_deleted_{{plural (snake_case from_referenceable.name)}}_for_{{snake_case to_referenceable.name}}", target_address.clone()).await;
+    assert_eq!(deleted_links_output.len(), 1);
   {{/if}}
 
 {{/if}}

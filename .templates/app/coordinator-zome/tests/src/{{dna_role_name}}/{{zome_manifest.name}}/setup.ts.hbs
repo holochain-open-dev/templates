@@ -1,6 +1,7 @@
 import { 
-  NewEntryAction, 
-  encodeHashToBase64, 
+  AgentPubKey,
+  EntryHash,
+  NewEntryAction,
   ActionHash,
   Record,
   AppBundleSource,
@@ -9,24 +10,24 @@ import {
   fakeEntryHash,
   fakeDnaHash,
   AppAgentCallZomeRequest,
-  AppAgentWebsocket 
+  AppAgentWebsocket,
+  encodeHashToBase64 
 } from '@holochain/client';
 import { encode } from '@msgpack/msgpack';
-import { Scenario, dhtSync } from '@holochain/tryorama';
+import { Scenario } from '@holochain/tryorama';
+import { EntryRecord } from '@holochain-open-dev/utils';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { {{pascal_case zome_manifest.name}}Client } from '../../ui/src/{{kebab_case zome_manifest.name}}-client.js';
-import { {{pascal_case zome_manifest.name}}Store } from '../../ui/src/{{kebab_case zome_manifest.name}}-store.js';
+import { appPath } from '../../app-path.js';
+import { {{pascal_case zome_manifest.name}}Client } from '../../../../ui/src/{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-client.js';
+import { {{pascal_case zome_manifest.name}}Store } from '../../../../ui/src//{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store.js';
 
 export async function setup(scenario: Scenario) {
-  const testHappUrl =
-    dirname(fileURLToPath(import.meta.url)) + '/../../../../workdir/{{app_name}}.happ';
-
   // Add 2 players with the test hApp to the Scenario. The returned players
   // can be destructured.
   const [alice, bob] = await scenario.addPlayersWithApps([
-    { appBundleSource: { path: testHappUrl } },
-    { appBundleSource: { path: testHappUrl } },
+    { appBundleSource: { path: appPath } },
+    { appBundleSource: { path: appPath } },
   ]);
 
   // Shortcut peer discovery through gossip and register all agents in every
@@ -34,11 +35,11 @@ export async function setup(scenario: Scenario) {
   await scenario.shareAllAgents();
 
   const aliceStore = new {{pascal_case zome_manifest.name}}Store(
-    new {{pascal_case zome_manifest.name}}Client(alice.appAgentWs as any, '{{dna_role_name}}', '{{snake_case zome_manifest.name}}')
+    new {{pascal_case zome_manifest.name}}Client(alice.appAgentWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
   );
 
   const bobStore = new {{pascal_case zome_manifest.name}}Store(
-    new {{pascal_case zome_manifest.name}}Client(bob.appAgentWs as any, '{{dna_role_name}}', '{{snake_case zome_manifest.name}}')
+    new {{pascal_case zome_manifest.name}}Client(bob.appAgentWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
   );
 
   // Shortcut peer discovery through gossip and register all agents in every

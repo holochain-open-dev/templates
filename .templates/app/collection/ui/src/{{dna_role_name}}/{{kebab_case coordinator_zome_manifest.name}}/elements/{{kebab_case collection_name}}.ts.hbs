@@ -1,10 +1,10 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
-import { StoreSubscriber } from '@holochain-open-dev/stores';
+import { subscribe } from '@holochain-open-dev/stores';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
-import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles, wrapPathInSvg, renderAsyncStatus } from '@holochain-open-dev/elements';
 import { mdiInformationOutline } from '@mdi/js';
 
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
@@ -34,15 +34,6 @@ export class {{pascal_case collection_name}} extends LitElement {
   @consume({ context: {{camel_case coordinator_zome_manifest.name}}StoreContext, subscribe: true })
   {{camel_case coordinator_zome_manifest.name}}Store!: {{pascal_case coordinator_zome_manifest.name}}Store;
 
-  /**
-   * @internal
-   */
-  _{{camel_case collection_name}} = new StoreSubscriber(this, 
-    () => this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author),
-    () => [this.author]
-    {{/if}}
-  );
-
   {{#if (eq collection_type.type "ByAuthor")}}
   firstUpdated() {
     if (this.author === undefined) {
@@ -63,7 +54,7 @@ export class {{pascal_case collection_name}} extends LitElement {
       </div>`;
 
     return html`
-      <div class="column" style="flex: 1; gap: 16px;">
+      <div class="column" style="gap: 16px; flex: 1">
         ${hashes.map(hash => 
           html`<{{kebab_case referenceable.name}}-summary .{{camel_case referenceable.name}}Hash=${hash}></{{kebab_case referenceable.name}}-summary>`
         )}
@@ -72,21 +63,20 @@ export class {{pascal_case collection_name}} extends LitElement {
   }
 
   render() {
-    switch (this._{{camel_case collection_name}}.value.status) {
-      case "pending":
-        return html`<div
-          style="display: flex; flex: 1; align-items: center; justify-content: center"
+    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}},
+      renderAsyncStatus({
+        complete: map => this.renderList(Array.from(map.keys())),
+        pending: () => html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`;
-      case "complete":
-        return this.renderList(this._{{camel_case collection_name}}.value.value);
-      case "error":
-        return html`<display-error
+        </div>`,
+        error: e => html`<display-error
           .headline=${msg("Error fetching the {{lower_case (plural referenceable.name)}}")}
-          .error=${this._{{camel_case collection_name}}.value.error}
-        ></display-error>`;
-    }
+          .error=${e}
+        ></display-error>`
+      })
+    )}`;
   }
   
   static styles = [sharedStyles];

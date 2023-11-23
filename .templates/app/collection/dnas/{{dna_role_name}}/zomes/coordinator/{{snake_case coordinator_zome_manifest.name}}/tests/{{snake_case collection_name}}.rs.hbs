@@ -34,12 +34,14 @@ async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collect
     
     consistency_10s([&alice, &bobbo]).await;
     
-    let get_records: Vec<Record> = conductors[1]
+    let links: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{snake_case collection_name}}", {{#if (eq collection_type.type "Global")}}(){{else}}alice_zome.cell_id().agent_pubkey().clone(){{/if}})
         .await;
         
-    assert_eq!(get_records.len(), 1);    
-    assert_eq!(get_records[0], record);    
+    assert_eq!(links.len(), 1);    
+    {{#if (eq referenceable.hash_type "EntryHash")}}
+    assert_eq!(links[0].target.clone().into_entry_hash().unwrap(), record.action().entry_hash().unwrap().clone());
+    {{else}}
+    assert_eq!(links[0].target.clone().into_action_hash().unwrap(), record.signed_action.hashed.hash);
+    {{/if}}
 }
-
-

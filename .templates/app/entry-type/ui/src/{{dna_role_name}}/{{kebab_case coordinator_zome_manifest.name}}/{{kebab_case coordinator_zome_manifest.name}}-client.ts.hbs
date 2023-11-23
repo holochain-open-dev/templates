@@ -1,6 +1,7 @@
 import { {{pascal_case entry_type.name}} } from './types.js';
 
-{{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
+{{#merge previous_file_content}}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Client extends ZomeClient<" (pascal_case coordinator_zome_manifest.name) "Signal> {" ) }}
   {{previous_scope_content}}
   /** {{title_case entry_type.name}} */
 
@@ -9,7 +10,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     return new EntryRecord(record);
   }
   
-  {{#if crud.update}}
+    {{#if crud.update}}
   async getLatest{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
     const record: Record = await this.callZome('get_latest_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
     return record ? new EntryRecord(record) : undefined;
@@ -21,8 +22,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   }
 
   async getAllRevisionsFor{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<EntryRecord<{{pascal_case entry_type.name}}>>> {
-    const record: Record = await this.callZome('get_all_revisions_for_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
-    return record ? new EntryRecord(record) : undefined;
+    const records: Record[] = await this.callZome('get_all_revisions_for_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
+    return records.map(r => new EntryRecord(r));
   }
 
   async update{{pascal_case entry_type.name}}({{#if link_from_original_to_each_update}}original{{pascal_case entry_type.name}}Hash: ActionHash, {{/if}}previous{{pascal_case entry_type.name}}Hash: ActionHash, updated{{pascal_case entry_type.name}}: {{pascal_case entry_type.name}}): Promise<EntryRecord<{{pascal_case entry_type.name}}>> {
@@ -35,14 +36,14 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     });
     return new EntryRecord(record);
   }
-  {{else}}
+    {{else}}
   async get{{pascal_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<EntryRecord<{{pascal_case entry_type.name}}> | undefined> {
     const record: Record = await this.callZome('get_{{snake_case entry_type.name}}', {{camel_case entry_type.name}}Hash);
     return record ? new EntryRecord(record) : undefined;
   }
-  {{/if}}
+    {{/if}}
 
-  {{#if crud.delete}}
+    {{#if crud.delete}}
   delete{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<ActionHash> {
     return this.callZome('delete_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
   }
@@ -54,15 +55,21 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   getOldestDeleteFor{{pascal_case entry_type.name}}(original{{pascal_case entry_type.name}}Hash: ActionHash): Promise<SignedActionHashed<Delete> | undefined> {
     return this.callZome('get_oldest_delete_for_{{snake_case entry_type.name}}', original{{pascal_case entry_type.name}}Hash);
   }
-  {{/if}}
+    {{/if}}
   
-  {{#each entry_type.fields}}
-    {{#if linked_from}}
+    {{#each entry_type.fields}}
+      {{#if linked_from}}
   async get{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<Link>> {
     return this.callZome('get_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}', {{camel_case linked_from.singular_arg}});
   }
+        {{#if ../crud.delete}}
 
-    {{/if}}
-  {{/each}}
+  async getDeleted{{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}): Promise<Array<[SignedActionHashed<CreateLink>, SignedActionHashed<DeleteLink>[]]>> {
+    return this.callZome('get_deleted_{{snake_case (plural ../entry_type.name)}}_for_{{snake_case linked_from.name}}', {{camel_case linked_from.singular_arg}});
+  }
+        {{/if}}
 
-{{/merge_scope}}
+      {{/if}}
+    {{/each}}
+  {{/match_scope}}
+{{/merge}}

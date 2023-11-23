@@ -1,6 +1,7 @@
 import { {{pascal_case entry_type.name}} } from './types.js';
 
-{{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+{{#merge previous_file_content}} 
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
   {{previous_scope_content}}
   /** {{title_case entry_type.name}} */
   {{camel_case (plural entry_type.name)}} = new HoloHashMap<{{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}, {
@@ -17,7 +18,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     const entryHash = hash({{camel_case entry_type.name}}, HashType.ENTRY);
     const record = await fakeRecord(await fakeCreateAction(entryHash), fakeEntry({{camel_case entry_type.name}}));
     
-    this.{{camel_case (plural entry_type.name)}}.set({{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}, {
+    this.{{camel_case (plural entry_type.name)}}.set({{#if entry_type.reference_entry_hash}}entryHash{{else}}record.signed_action.hashed.hash{{/if}}, {
       deletes: [],
       revisions: [record]
     });
@@ -51,7 +52,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     }
         {{/if}}
         {{#if (eq cardinality "vector")}}
-    for (const {{field_name}} of {{camel_case ../entry_type.name}}.{{field_name}}) {
+    await Promise.all({{camel_case ../entry_type.name}}.{{field_name}}.map(async {{field_name}} => {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{field_name}}) || [];
       this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, { 
         target: record.signed_action.hashed.hash, 
@@ -62,7 +63,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         tag: new Uint8Array(),
         create_link_hash: await fakeActionHash()
       }]);
-    }
+    }));
         {{/if}}
       {{/if}}
     {{/each}}
@@ -70,12 +71,13 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     return record;
   }
   
+  {{#if crud.update}}
   async get_latest_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record | undefined> {
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.revisions[{{camel_case entry_type.name}}.revisions.length - 1] : undefined;
   }
   
-  async get_all_revisions_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record | undefined> {
+  async get_all_revisions_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record[] | undefined> {
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.revisions : undefined;
   }
@@ -84,22 +86,27 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.revisions[0] : undefined;
   }
+  {{else}}
+  async get_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record | undefined> {
+    const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
+    return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.revisions[0] : undefined;
+  }
+  {{/if}}
   
-  async get_all_deletes_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<Record> | undefined> {
+  {{#if crud.delete}}
+  async get_all_deletes_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Array<SignedActionHashed<Delete>> | undefined> {
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.deletes : undefined;
   }
 
-  async get_oldest_delete_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<Record | undefined> {
+  async get_oldest_delete_for_{{snake_case entry_type.name}}({{camel_case entry_type.name}}Hash: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}}): Promise<SignedActionHashed<Delete> | undefined> {
     const {{camel_case entry_type.name}} = this.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}Hash);
     return {{camel_case entry_type.name}} ? {{camel_case entry_type.name}}.deletes[0] : undefined;
   }
-
-  {{#if crud.delete}}
   async delete_{{snake_case entry_type.name}}(original_{{snake_case entry_type.name}}_hash: ActionHash): Promise<ActionHash> {
     const record = await fakeRecord(await fakeDeleteEntry(original_{{snake_case entry_type.name}}_hash));
     
-    this.{{camel_case entry_type.name}}.add([record]);
+    this.{{camel_case (plural entry_type.name)}}.get(original_{{camel_case entry_type.name}}_hash).deletes.push(record.signed_action as SignedActionHashed<Delete>);
     
     return record.signed_action.hashed.hash;
   }
@@ -108,28 +115,60 @@ import { {{pascal_case entry_type.name}} } from './types.js';
   {{#if crud.update}}
   async update_{{snake_case entry_type.name}}(input: { {{#if link_from_original_to_each_update}}original_{{snake_case entry_type.name}}_hash: ActionHash; {{/if}}previous_{{snake_case entry_type.name}}_hash: ActionHash; updated_{{snake_case entry_type.name}}: {{pascal_case entry_type.name}}; }): Promise<Record> {
     const record = await fakeRecord(await fakeUpdateEntry(input.previous_{{snake_case entry_type.name}}_hash, undefined, undefined, fakeEntry(input.updated_{{snake_case entry_type.name}})), fakeEntry(input.updated_{{snake_case entry_type.name}}));
-    
-    this.{{camel_case entry_type.name}}.add([record]);
-    
+
+    {{#if link_from_original_to_each_update}}
+  this.{{camel_case (plural entry_type.name)}}.get(input.original_{{snake_case entry_type.name}}_hash).revisions.push(record);
+    {{else}}
+    for (const [originalHash, {{camel_case entry_type.name}}] of Array.from(this.{{camel_case (plural entry_type.name)}}.entries())) {
+      if ({{camel_case entry_type.name}}.revisions.find(r => r.signed_action.hashed.hash.toString() === input.previous_{{snake_case entry_type.name}}_hash.toString())) {
+        {{camel_case entry_type.name}}.revisions.push(record);
+      }
+    }
+    {{/if}}
+     
     const {{camel_case entry_type.name}} = input.updated_{{snake_case entry_type.name}};
     
     {{#each entry_type.fields}}
       {{#if linked_from}}
         {{#if (eq cardinality "single")}}
     const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
-    this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, record.signed_action.hashed.hash]);
+    this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, {
+      target: record.signed_action.hashed.hash, 
+      author: record.signed_action.hashed.content.author,
+      timestamp: record.signed_action.hashed.content.timestamp,
+      zome_index: 0,
+      link_type: 0,
+      tag: new Uint8Array(),
+      create_link_hash: await fakeActionHash()
+    }]);
         {{/if}}
         {{#if (eq cardinality "option")}}
     if ({{camel_case ../entry_type.name}}.{{field_name}}) {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
-      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, record.signed_action.hashed.hash]);
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, {
+        target: record.signed_action.hashed.hash, 
+        author: record.signed_action.hashed.content.author,
+        timestamp: record.signed_action.hashed.content.timestamp,
+        zome_index: 0,
+        link_type: 0,
+        tag: new Uint8Array(),
+        create_link_hash: await fakeActionHash()
+      }]);
     }
         {{/if}}
         {{#if (eq cardinality "vector")}}
-    for (const {{field_name}} of {{camel_case ../entry_type.name}}.{{field_name}}) {
+    await Promise.all({{camel_case ../entry_type.name}}.{{field_name}}.map(async {{field_name}} => {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{field_name}}) || [];
-      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, record.signed_action.hashed.hash]);
-    }
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, {
+        target: record.signed_action.hashed.hash, 
+        author: record.signed_action.hashed.content.author,
+        timestamp: record.signed_action.hashed.content.timestamp,
+        zome_index: 0,
+        link_type: 0,
+        tag: new Uint8Array(),
+        create_link_hash: await fakeActionHash()
+      }]);
+    }));
         {{/if}}
       {{/if}}
     {{/each}}
@@ -147,7 +186,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     {{/if}}
   {{/each}}
 
-{{/merge_scope}}
+  {{/match_scope}}
+{{/merge}}
 
 export async function sample{{pascal_case entry_type.name}}(client: {{pascal_case coordinator_zome_manifest.name}}Client, partial{{pascal_case entry_type.name}}: Partial<{{pascal_case entry_type.name}}> = {}): Promise<{{ pascal_case entry_type.name }}> {
     return {

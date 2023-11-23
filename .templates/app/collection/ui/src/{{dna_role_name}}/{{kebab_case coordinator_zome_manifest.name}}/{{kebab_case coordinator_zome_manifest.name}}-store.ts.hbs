@@ -1,4 +1,5 @@
-{{#merge_scope previous_file_content (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
+{{#merge previous_file_content}}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "Store {" ) }}
   {{previous_scope_content}}
   
   /** {{title_case collection_name}} */
@@ -11,7 +12,7 @@
         () => this.client.get{{pascal_case collection_name}}(author),
         '{{pascal_case collection_name}}'
       ),
-      {{camel_case collection_name}} => slice(this.{{referenceable.name}}, {{camel_case collection_name}})
+      {{camel_case collection_name}} => slice(this.{{camel_case (plural referenceable.name)}}, {{camel_case collection_name}}.map(l => l.target))
     )
   );
   {{else}}
@@ -21,7 +22,8 @@
       () => this.client.get{{pascal_case collection_name}}(),
       '{{pascal_case collection_name}}'
     ),
-    {{camel_case collection_name}} => slice(this.{{referenceable.name}}, {{camel_case collection_name}})
+    {{camel_case collection_name}} => slice(this.{{camel_case (plural referenceable.name)}}, {{camel_case collection_name}}.map(l => l.target))
   );
   {{/if}}
-{{/merge_scope}}
+  {{/match_scope}}
+{{/merge}}

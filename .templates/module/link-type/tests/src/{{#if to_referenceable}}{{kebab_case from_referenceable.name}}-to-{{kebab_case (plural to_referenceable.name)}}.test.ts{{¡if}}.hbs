@@ -6,7 +6,7 @@ import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { toPromise } from '@holochain-open-dev/stores';
 
-import { setup } from './common.js';
+import { setup } from './setup.js';
 
 {{#if (ne from_referenceable.hash_type "AgentPubKey")}}
 import { {{pascal_case from_referenceable.name}} } from '../../ui/src/types.js';
