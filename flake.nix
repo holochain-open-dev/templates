@@ -35,7 +35,7 @@
               ];
             };
 
-            packages.hc-scaffold = pkgs.runCommand "hc-scaffold" {
+            packages.hc-scaffold-template-app = pkgs.runCommand "hc-scaffold" {
               buildInputs = [ pkgs.makeWrapper ];
               src = ./.;
             } ''
@@ -51,29 +51,32 @@
               # Except the hello binary
               rm $out/bin/hc-scaffold
               cp $src/.templates/app -R $out/.templates
+              # Because we create this ourself, by creating a wrapper
+              makeWrapper ${holochain-flake.packages.${system}.hc-scaffold}/bin/hc-scaffold $out/bin/hc-scaffold \
+                --append-flags "--template app --templates-path $out/.templates"
+            '';
+
+            packages.hc-scaffold-template-module= pkgs.runCommand "hc-scaffold" {
+              buildInputs = [ pkgs.makeWrapper ];
+              src = ./.;
+            } ''
+              mkdir $out
+              mkdir $out/.templates
+              # Link every top-level folder from pkgs.hello to our new target
+              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/* $out
+              # Except the bin folder
+              rm $out/bin
+              mkdir $out/bin
+              # We create the bin folder ourselves and link every binary in it
+              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/bin/* $out/bin
+              # Except the hello binary
+              rm $out/bin/hc-scaffold
               cp $src/.templates/module -R $out/.templates
               # Because we create this ourself, by creating a wrapper
               makeWrapper ${holochain-flake.packages.${system}.hc-scaffold}/bin/hc-scaffold $out/bin/hc-scaffold \
-                --append-flags " --templates-path $out/.templates"
+                --append-flags "--template module --templates-path $out/.templates"
             '';
 
-            # packages.hc-scaffold = pkgs.symlinkJoin {
-            #   name = "hc-scaffold";
-            #   paths = [ holochain-flake.packages.${system}.hc-scaffold ];
-            #   buildInputs = [ pkgs.makeWrapper ];
-            #   installPhase = ''
-                
-            #   '';
-            #   postBuild = ''
-            #     wrapProgram $out/bin/hc-scaffold \
-            #       --append-flags "--template app"
-            #   '';
-            # };
-
-            # apps.hc-scaffold = {
-            #   type = "app";
-            #   program = "${pkgs.nodejs-18_x}/bin/npm";
-            # };
           };
       };
 }
