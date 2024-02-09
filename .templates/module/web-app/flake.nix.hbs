@@ -1,6 +1,6 @@
 {{#merge previous_file_content}}
   {{#match_scope "devShells.default = pkgs.mkShell {"}}
-              inputsFrom = [ inputs'.holochain-flake.devShells.holonix ];
+              inputsFrom = [ holochain-flake.devShells.${system}.holonix ];
 
               packages = with pkgs; [
                 nodejs-18_x
