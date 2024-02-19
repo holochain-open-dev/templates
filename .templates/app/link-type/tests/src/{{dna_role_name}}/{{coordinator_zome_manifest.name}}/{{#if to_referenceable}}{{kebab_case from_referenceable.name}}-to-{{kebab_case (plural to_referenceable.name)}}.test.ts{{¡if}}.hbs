@@ -65,7 +65,7 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
     assert.deepEqual(targetAddress, Array.from(linksOutput.keys())[0]);
 	{{/if}}
 
-{{#if bidireccional}}
+{{#if bidirectional}}
     // Bob gets the links in the inverse direction
     let inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
 	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}
@@ -102,7 +102,7 @@ test('link a {{pascal_case from_referenceable.name}} to a {{pascal_case to_refer
     assert.equal(deletedLinksOutput.size, 1);
 	{{/if}}
 
-  {{#if bidireccional}}
+  {{#if bidirectional}}
     // Bob gets the links in the inverse direction
     inverseLinksOutput = await toPromise(bob.store.{{#if (ne to_referenceable.hash_type "ActionHash")}}{{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}.get(targetAddress){{else}}{{camel_case (plural to_referenceable.name)}}.get(targetAddress).{{camel_case (plural from_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}});
 	{{#if (eq from_referenceable.hash_type "AgentPubKey")}}

@@ -26,10 +26,10 @@ hc-scaffold collection by-author posts_by_author post
 hc-scaffold collection global all_posts_entry_hash post:EntryHash
 hc-scaffold collection by-author posts_by_author_entry_hash post:EntryHash
 
-hc-scaffold link-type post like --delete true --bidireccional false
-hc-scaffold link-type comment like --delete true --bidireccional false
-hc-scaffold link-type certificate like --delete false --bidireccional false
-hc-scaffold link-type agent:creator post --delete false --bidireccional false
+hc-scaffold link-type post like --delete true --bidirectional false
+hc-scaffold link-type comment like --delete true --bidirectional false
+hc-scaffold link-type certificate like --delete false --bidirectional false
+hc-scaffold link-type agent:creator post --delete false --bidirectional false
 
 hc-scaffold zome profiles --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity
 hc-scaffold zome file_storage --coordinator dnas/forum/zomes/coordinator --integrity dnas/forum/zomes/integrity

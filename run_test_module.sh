@@ -23,10 +23,10 @@ hc-scaffold collection --zome posts_integrity  by-author posts_by_author post
 hc-scaffold collection --zome posts_integrity  global all_posts_entry_hash post:EntryHash
 hc-scaffold collection --zome posts_integrity  by-author posts_by_author_entry_hash post:EntryHash
 
-hc-scaffold link-type --zome posts_integrity  post like --delete true --bidireccional false
-hc-scaffold link-type --zome posts_integrity  comment like --delete true --bidireccional false
-hc-scaffold link-type --zome posts_integrity  certificate like --delete false --bidireccional false
-hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false --bidireccional false
+hc-scaffold link-type --zome posts_integrity  post like --delete true --bidirectional false
+hc-scaffold link-type --zome posts_integrity  comment like --delete true --bidirectional false
+hc-scaffold link-type --zome posts_integrity  certificate like --delete false --bidirectional false
+hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false --bidirectional false
 
 npm i
 

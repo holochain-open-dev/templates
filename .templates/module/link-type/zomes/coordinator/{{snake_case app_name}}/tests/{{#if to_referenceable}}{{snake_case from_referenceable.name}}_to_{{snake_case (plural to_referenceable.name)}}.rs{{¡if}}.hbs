@@ -80,7 +80,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     assert_eq!(AnyLinkableHash::from(target_address.clone()), links_output[0].target);
 {{/if}}
 
-{{#if bidireccional}}
+{{#if bidirectional}}
 
     // Bob gets the links in the inverse 
     let links_output: Vec<Link> = conductors[1]
@@ -108,7 +108,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
     let deleted_links_output: Vec<(SignedActionHashed, Vec<SignedActionHashed>)> = conductors[1]
         .call(&bob_zome, "get_deleted_{{plural (snake_case to_referenceable.name)}}_for_{{snake_case from_referenceable.name}}", base_address.clone()).await;
     assert_eq!(deleted_links_output.len(), 1);
-  {{#if bidireccional}}
+  {{#if bidirectional}}
   
     // Bob gets the links in the inverse 
     let links_output: Vec<Link> = conductors[1]
