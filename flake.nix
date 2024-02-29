@@ -2,7 +2,7 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    holochain-nix-versions.url  = "github:holochain/holochain?dir=versions/0_2";
+    holochain-nix-versions.url  = "github:holochain/holochain?dir=versions/weekly";
 
     holochain-flake = {
       url = "github:holochain/holochain";
@@ -11,6 +11,7 @@
 
     nixpkgs.follows = "holochain-flake/nixpkgs";
     flake-parts.follows = "holochain-flake/flake-parts";
+    scaffolding.url = "github:holochain/scaffolding/nixify";
   };
 
   outputs = inputs @ { flake-parts, holochain-flake, ... }:
@@ -24,6 +25,7 @@
           { config
           , pkgs
           , system
+          , inputs'
           , ...
           }: {
             devShells.default = pkgs.mkShell {
@@ -40,20 +42,19 @@
               src = ./.;
             } ''
               mkdir $out
-              mkdir $out/.templates
               # Link every top-level folder from pkgs.hello to our new target
-              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/* $out
+              ln -s ${inputs'.scaffolding.packages.default}/* $out
               # Except the bin folder
               rm $out/bin
               mkdir $out/bin
               # We create the bin folder ourselves and link every binary in it
-              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/bin/* $out/bin
+              ln -s ${inputs'.scaffolding.packages.default}/bin/* $out/bin
               # Except the hello binary
               rm $out/bin/hc-scaffold
-              cp $src/.templates/app -R $out/.templates
+              cp $src/.templates/app -R $out/.template
               # Because we create this ourself, by creating a wrapper
-              makeWrapper ${holochain-flake.packages.${system}.hc-scaffold}/bin/hc-scaffold $out/bin/hc-scaffold \
-                --append-flags "--template app --templates-path $out/.templates"
+              makeWrapper ${inputs'.scaffolding.packages.default}/bin/hc-scaffold $out/bin/hc-scaffold \
+                --add-flags "--template $out/.template"
             '';
 
             packages.hc-scaffold-template-module= pkgs.runCommand "hc-scaffold" {
@@ -61,20 +62,19 @@
               src = ./.;
             } ''
               mkdir $out
-              mkdir $out/.templates
               # Link every top-level folder from pkgs.hello to our new target
-              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/* $out
+              ln -s ${inputs'.scaffolding.packages.default}/* $out
               # Except the bin folder
               rm $out/bin
               mkdir $out/bin
               # We create the bin folder ourselves and link every binary in it
-              ln -s ${holochain-flake.packages.${system}.hc-scaffold}/bin/* $out/bin
+              ln -s ${inputs'.scaffolding.packages.default}/bin/* $out/bin
               # Except the hello binary
               rm $out/bin/hc-scaffold
-              cp $src/.templates/module -R $out/.templates
+              cp $src/.templates/module -R $out/template
               # Because we create this ourself, by creating a wrapper
-              makeWrapper ${holochain-flake.packages.${system}.hc-scaffold}/bin/hc-scaffold $out/bin/hc-scaffold \
-                --append-flags "--template module --templates-path $out/.templates"
+              makeWrapper ${inputs'.scaffolding.packages.default}/bin/hc-scaffold $out/bin/hc-scaffold \
+                --add-flags "--template $out/template"
             '';
 
           };
