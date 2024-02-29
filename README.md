@@ -65,3 +65,15 @@ There are two templates available:
       };
 }  
 ```
+
+---
+
+After this set up, you will be able to `nix develop` from inside your repository, and use the scaffolding tool as normal:
+
+```
+hc scaffold dna
+hc scaffold zome
+...
+```
+
+And all the `hc scaffold` commands will already be using this custom template.
