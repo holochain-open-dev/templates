@@ -9,14 +9,59 @@ There are two templates available:
 
 ## Using the templates
 
-> WARNING: these templates are only compatible with holochain v0.2.x.
+> WARNING: these templates are only compatible with holochain v0.3.x.
 
-1a. If you are scaffolding a new project, run this:
+1a. To scaffold a new **app** project, run this:
 
-`nix run --override-input versions 'github:holochain/holochain?dir=versions/0_2' github:holochain/holochain#hc-scaffold -- web-app --templates-url https://github.com/holochain-open-dev/templates`
+`nix run github:holochain-open-dev/templates#hc-scaffold-app-template -- web-app`
 
-1b. If you already have an existing project, run this inside a `nix develop` shell:
+1b. To scaffold a new **module** project, run this:
 
-`hc scaffold template get https://github.com/holochain-open-dev/templates`
+`nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-app`
 
-WARNING! If you use the app template, you will encounter [this issue](https://github.com/holochain/scaffolding/issues/135). The quick fix is to upgrade the version of `holochain_integrity_types` in the workspace's Cargo.toml.
+2. If you already have an existing project, add the `holochain-open-dev/templates` repository as input to your flake, and use it in the packages or your `devShell`:
+
+```diff
+{
+  description = "Template for Holochain app development";
+
+  inputs = {
+    versions.url  = "github:holochain/holochain?dir=versions/weekly";
+
+    holochain-flake.url = "github:holochain/holochain";
+    holochain-flake.inputs.versions.follows = "versions";
+
+    nixpkgs.follows = "holochain-flake/nixpkgs";
+    flake-parts.follows = "holochain-flake/flake-parts";
+
++   scaffolding.url = "github:holochain-open-dev/templates";
+  };
+
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+      }
+      {
+        systems = builtins.attrNames inputs.holochain-flake.devShells;
+        perSystem =
+          { inputs'
+          , config
+          , pkgs
+          , system
+          , ...
+          }: {
+            devShells.default = pkgs.mkShell {
+              inputsFrom = [ inputs'.holochain-flake.devShells.holonix ];
+              packages = [
+                pkgs.nodejs_20
+                # more packages go here
++             ] ++ [
++                # inputs'.scaffolding.packages.hc-scaffold-module-template # if your repository is a module
++                inputs'.scaffolding.packages.hc-scaffold-app-template      # if your repository is an app
+              ];
+            };
+          };
+      };
+}  
+```
