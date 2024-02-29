@@ -1,4 +1,4 @@
 .cargo
 target
 .direnv
-result/
+result*

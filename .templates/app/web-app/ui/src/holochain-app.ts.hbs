@@ -41,7 +41,7 @@ export class HolochainApp extends LitElement {
   _myProfile!: StoreSubscriber<AsyncStatus<EntryRecord<Profile> | undefined>>;
 
   async firstUpdated() {
-    this._client = await AppAgentWebsocket.connect(new URL('ws://localhost'), '{{app_name}}');
+    this._client = await AppAgentWebsocket.connect('{{app_name}}');
 
     await this.initStores(this._client);
 
