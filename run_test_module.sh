@@ -4,14 +4,18 @@ set -e
 
 DIR=$(pwd)
 
+
+nix shell .#hc-scaffold-app-template --command bash -c "
+
 cd /tmp
-rm -rf posts
+rm -rf posts-open-dev
 
-hc-scaffold web-app posts --setup-nix true --template module --templates-path ${DIR}/.templates
+hc-scaffold web-app posts-open-dev --setup-nix true 
+"
 
-cd posts
+cd /tmp/posts-open-dev
 
-nix develop --command bash -c "
+nix develop --override-input scaffolding "path:$DIR" --command bash -c "
 set -e
 hc-scaffold entry-type post --zome posts_integrity --reference-entry-hash false --crud crud --link-from-original-to-each-update true --fields title:String:TextField,needs:Vec\<String\>:TextField
 hc-scaffold entry-type comment --zome posts_integrity  --reference-entry-hash false --crud crud --link-from-original-to-each-update false --fields post_hash:ActionHash::Post
