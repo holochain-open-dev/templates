@@ -19,7 +19,7 @@
         dnas = inputs.hcUtils.outputs.lib.filterDnas (
             inputs.nixpkgs.lib.attrsets.mergeAttrsList (
               [ self'.packages ] 
-              ++ builtins.map (s: s.packages) holochainSources inputs'
+              ++ builtins.map (s: s.packages) (holochainSources inputs')
             ) # Merge all the holochain packages from this repository with the holochain sources repositories
           ) // {
             # Override specific dnas here, e.g.:
