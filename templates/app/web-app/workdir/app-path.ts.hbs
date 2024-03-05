@@ -1,0 +1,5 @@
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+export const appPath =
+    dirname(fileURLToPath(import.meta.url)) + '/../../workdir/{{snake_case app_name}}-debug.happ';

@@ -1,12 +1,48 @@
-{{#merge previous_file_content}}
-  {{#match_scope "inputs = {"}}
-      {{previous_scope_content}}
+{
+  description = "Template for Holochain app development";
 
-      scaffolding.url = "github:holochain-open-dev/templates";
-  {{/match_scope}}
-  {{#match_scope "devShells.default = pkgs.mkShell {"}}
+  inputs = {
+    versions.url  = "github:holochain/holochain?dir=versions/weekly";
 
-              inputsFrom = [ inputs'.holochain-flake.devShells.holonix ];
+    holochain.url = "github:holochain/holochain";
+    holochain.inputs.versions.follows = "versions";
+
+    nixpkgs.follows = "holochain/nixpkgs";
+    flake-parts.follows = "holochain/flake-parts";
+
+    scaffolding.url = "github:holochain-open-dev/templates";
+    hcUtils.url = "github:holochain-open-dev/common";
+
+    # hApp dependencies
+    profiles.url = "github:holochain-open-dev/profiles/nixify";
+  };
+
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+        specialArgs.rootPath = ./.;
+        # All the repositories that output zomes, dnas or happs packages
+        specialArgs.holochainSources = inputs': with inputs'; [ 
+          profiles
+          # Add more here
+        ];
+      }
+      {
+        imports = [
+          ./happ.nix
+        ];
+      
+        systems = builtins.attrNames inputs.holochain.devShells;
+        perSystem =
+          { inputs'
+          , config
+          , pkgs
+          , system
+          , ...
+          }: {
+            devShells.default = pkgs.mkShell {
+              inputsFrom = [ inputs'.holochain.devShells.holonix ];
 
               packages = with pkgs; [
                 nodejs_20
@@ -14,5 +50,7 @@
               ] ++ [
                 inputs'.scaffolding.packages.hc-scaffold-app-template
               ];
-  {{/match_scope}}
-{{/merge}}
+            };
+          };
+      };
+}

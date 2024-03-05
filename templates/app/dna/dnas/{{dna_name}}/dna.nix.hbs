@@ -1,0 +1,35 @@
+{ inputs, holochainSources, ... }:
+
+{
+  # Import all ./zomes/coordinator/*/zome.nix and ./zomes/integrity/*/zome.nix  
+  imports = (
+      map (m: "${./.}/zomes/coordinator/${m}/zome.nix")
+        (builtins.attrNames (builtins.readDir ./zomes/coordinator))
+    )
+    ++ 
+    (
+      map (m: "${./.}/zomes/integrity/${m}/zome.nix")
+        (builtins.attrNames (builtins.readDir ./zomes/integrity))
+    )
+  ;
+  perSystem =
+    { inputs'
+    , self'
+    , lib
+    , ...
+    }: {
+  	  packages.{{dna_name}} = inputs.hcUtils.outputs.lib.dna {
+        dnaManifestPath = ./workdir/dna.yaml;
+        holochain = inputs'.holochain;
+        zomes = inputs.hcUtils.outputs.lib.filterZomes (
+            inputs.nixpkgs.lib.attrsets.mergeAttrsList (
+              [ self'.packages ] 
+              ++ builtins.map (s: s.packages) holochainSources inputs'
+            ) # Merge all the holochain packages from this repository with the holochain sources repositories
+          ) // {
+            # Override specific zomes here, e.g.:
+            # profiles_integrity = inputs'.profiles.packages.profiles_integrity;
+          };
+      };
+  	};
+}

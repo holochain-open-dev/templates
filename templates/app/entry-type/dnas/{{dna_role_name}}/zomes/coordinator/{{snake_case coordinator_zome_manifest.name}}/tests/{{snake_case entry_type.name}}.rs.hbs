@@ -30,7 +30,7 @@ async fn create_{{snake_case entry_type.name}}_test() {
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../workdir/{{dna_role_name}}.dna");
+        .join(std::env::var("DNA_PATH").expect("DNA_PATH not set, must be run using nix flake check"));
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors
@@ -56,7 +56,7 @@ async fn create_and_read_{{snake_case entry_type.name}}() {
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../workdir/{{dna_role_name}}.dna");
+        .join(std::env::var("DNA_PATH").expect("DNA_PATH not set, must be run using nix flake check"));
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors
@@ -95,7 +95,7 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../workdir/{{dna_role_name}}.dna");
+        .join(std::env::var("DNA_PATH").expect("DNA_PATH not set, must be run using nix flake check"));
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors
@@ -173,7 +173,7 @@ async fn create_and_delete_{{snake_case entry_type.name}}() {
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../workdir/{{dna_role_name}}.dna");
+        .join(std::env::var("DNA_PATH").expect("DNA_PATH not set, must be run using nix flake check"));
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors

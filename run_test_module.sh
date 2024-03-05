@@ -32,6 +32,8 @@ hc-scaffold link-type --zome posts_integrity  comment like --delete true --bidir
 hc-scaffold link-type --zome posts_integrity  certificate like --delete false --bidirectional false
 hc-scaffold link-type --zome posts_integrity  agent:creator post --delete false --bidirectional false
 
+git add .
+
 npm i
 
 npm run format -w ui

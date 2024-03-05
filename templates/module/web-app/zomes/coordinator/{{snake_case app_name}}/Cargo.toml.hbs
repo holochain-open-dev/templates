@@ -15,7 +15,7 @@ serde = { workspace = true }
 {{snake_case app_name}}_integrity = { path = "../../integrity/{{snake_case app_name}}", package = "hc_zome_{{snake_case app_name}}_integrity" }
 
 [dev-dependencies]
-fixt = "*"
+fixt = "0.3.0-beta-dev"
 futures = { version = "0.3.1", default-features = false }
 hdk = { workspace = true, features = ["encoding", "test_utils"] }
 holochain = { workspace = true }

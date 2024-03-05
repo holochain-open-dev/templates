@@ -1,0 +1,15 @@
+{ inputs, rootPath, ... }:
+
+{
+  perSystem =
+    { inputs'
+    , ...
+    }: {
+      packages.{{zome_manifest.name}} = inputs.hcUtils.outputs.lib.rustZome {
+        workspacePath = rootPath;
+        holochain = inputs'.holochain;
+        crateCargoTomlPath = ./Cargo.toml;
+      };
+    };
+}
+

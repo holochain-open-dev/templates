@@ -14,7 +14,7 @@ async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collect
     // Use prebuilt dna file
     let dna_path = std::env::current_dir()
         .unwrap()
-        .join("../../../workdir/{{dna_role_name}}.dna");
+        .join(std::env::var("DNA_PATH").expect("DNA_PATH not set, must be run using nix flake check"));
     let dna = SweetDnaFile::from_bundle(&dna_path).await.unwrap();
 
     // Set up conductors

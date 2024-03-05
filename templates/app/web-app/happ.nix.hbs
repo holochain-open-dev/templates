@@ -1,0 +1,30 @@
+{ inputs, holochainSources, ... }:
+
+{
+  # Import all `dnas/*/dna.nix` files
+  imports = (
+    map (m: "${./.}/dnas/${m}/dna.nix")
+      (builtins.attrNames (if builtins.pathExists ./dnas then builtins.readDir ./dnas else {} ))
+  );
+
+  perSystem =
+    { inputs'
+    , lib
+    , self'
+    , ...
+    }: {
+  	  packages.{{snake_case app_name}} = inputs.hcUtils.outputs.lib.happ {
+        holochain = inputs'.holochain;
+        happManifestPath = ./workdir/happ.yaml;
+        dnas = inputs.hcUtils.outputs.lib.filterDnas (
+            inputs.nixpkgs.lib.attrsets.mergeAttrsList (
+              [ self'.packages ] 
+              ++ builtins.map (s: s.packages) holochainSources inputs'
+            ) # Merge all the holochain packages from this repository with the holochain sources repositories
+          ) // {
+            # Override specific dnas here, e.g.:
+            # my_dna = inputs'.some_input.packages.my_dna;
+          };
+      };
+  	};
+}

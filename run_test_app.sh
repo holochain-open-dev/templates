@@ -35,6 +35,8 @@ hc-scaffold link-type comment like --delete true --bidirectional false
 hc-scaffold link-type certificate like --delete false --bidirectional false
 hc-scaffold link-type agent:creator post --delete false --bidirectional false
 
+git add .
+
 npm i
 
 npm i -w ui @holochain-open-dev/file-storage
