@@ -19,7 +19,7 @@
     , ...
     }: {
   	  packages.{{dna_name}} = inputs.hcUtils.outputs.lib.dna {
-        dnaManifestPath = ./workdir/dna.yaml;
+        dnaManifest = ./workdir/dna.yaml;
         holochain = inputs'.holochain;
         zomes = inputs.hcUtils.outputs.lib.filterZomes (
             inputs.nixpkgs.lib.attrsets.mergeAttrsList (

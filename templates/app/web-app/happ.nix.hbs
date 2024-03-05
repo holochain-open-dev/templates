@@ -15,7 +15,7 @@
     }: {
   	  packages.{{snake_case app_name}} = inputs.hcUtils.outputs.lib.happ {
         holochain = inputs'.holochain;
-        happManifestPath = ./workdir/happ.yaml;
+        happManifest = ./workdir/happ.yaml;
         dnas = inputs.hcUtils.outputs.lib.filterDnas (
             inputs.nixpkgs.lib.attrsets.mergeAttrsList (
               [ self'.packages ] 

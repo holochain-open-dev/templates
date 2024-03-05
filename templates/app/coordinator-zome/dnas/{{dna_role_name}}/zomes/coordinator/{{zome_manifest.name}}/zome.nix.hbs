@@ -9,7 +9,7 @@
       packages.{{zome_manifest.name}} = inputs.hcUtils.outputs.lib.rustZome {
         workspacePath = rootPath;
         holochain = inputs'.holochain;
-        crateCargoTomlPath = ./Cargo.toml;
+        crateCargoToml = ./Cargo.toml;
       };
 
       # Test only this zome and its integrity in isolation
@@ -17,7 +17,7 @@
         workspacePath = rootPath;
         holochain = inputs'.holochain;
         dna = inputs.hcUtils.outputs.lib.dna {
-          dnaManifest = ''
+          dnaManifest = builtins.toFile "dna.yaml" ''
             ---
             manifest_version: "1"
             name: test_dna
@@ -38,7 +38,7 @@
           zomes = inputs.hcUtils.outputs.lib.filterZomes self'.packages;
           holochain = inputs'.holochain;
         };
-        crateCargoTomlPath = ./Cargo.toml;
+        crateCargoToml = ./Cargo.toml;
       };
 
     };
