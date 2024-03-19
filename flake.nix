@@ -2,8 +2,6 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    holochain-nix-versions.url  = "";
-
     holochain = {
       url = "github:holochain/holochain";
       inputs.versions.url = "github:holochain/holochain?dir=versions/weekly";
