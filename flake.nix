@@ -2,25 +2,36 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    holochain-nix-versions.url  = "github:holochain/holochain?dir=versions/weekly";
+    holochain-nix-versions.url  = "";
 
-    holochain-flake = {
+    holochain = {
       url = "github:holochain/holochain";
-      inputs.versions.follows = "holochain-nix-versions";
+      inputs.versions.url = "github:holochain/holochain?dir=versions/weekly";
     };
 
-    nixpkgs.follows = "holochain-flake/nixpkgs";
-    flake-parts.follows = "holochain-flake/flake-parts";
-    scaffolding.url = "github:holochain/scaffolding/nixify";
+    nixpkgs.follows = "holochain/nixpkgs";
+    flake-parts.follows = "holochain/flake-parts";
+    scaffolding = {
+      url = "github:holochain/scaffolding/nixify";
+    };
   };
 
-  outputs = inputs @ { flake-parts, holochain-flake, ... }:
+  nixConfig = {
+		extra-substituters = [
+	    "https://holochain-open-dev.cachix.org"
+	  ];	
+		extra-trusted-public-keys = [
+			"holochain-open-dev.cachix.org-1:3Tr+9in6uo44Ga7qiuRIfOTFXog+2+YbyhwI/Z6Cp4U="
+	  ];
+	};
+
+  outputs = inputs @ { flake-parts, holochain, ... }:
     flake-parts.lib.mkFlake
       {
         inherit inputs;
       }
       {
-        systems = builtins.attrNames holochain-flake.devShells;
+        systems = builtins.attrNames holochain.devShells;
         perSystem =
           { config
           , pkgs
@@ -29,11 +40,10 @@
           , ...
           }: {
             devShells.default = pkgs.mkShell {
-              inputsFrom = [ holochain-flake.devShells.${system}.holonix ];
+              inputsFrom = [ holochain.devShells.${system}.holonix ];
 
               packages = with pkgs; [
-                nodejs-18_x
-                cargo-nextest
+                nodejs_20
               ];
             };
 

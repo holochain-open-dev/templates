@@ -1,9 +1,10 @@
-If you want the UI to work, you must include the profiles zome in one of your DNAs.
+If you want the UI to work, you must include the profiles zome in one of your DNAs. Usually you want to include it in the DNA that everyone joins at first when installing the app. You only need to include it in *one* of the DNAs of the hApp.
 
-Scaffold the profiles zome in this DNA by running these commands, if you haven't already:
+Do you want the profiles zome to be installed in the DNA you just scaffolded?
+
+If you do, scaffold the profiles zome in this DNA by running these commands:
 
   hc-scaffold zome profiles --coordinator dnas/{{dna_name}}/zomes/coordinator --integrity dnas/{{dna_name}}/zomes/integrity
-  cargo add -p profiles hc_zome_profiles_coordinator
-  echo "extern crate hc_zome_profiles_coordinator;" > dnas/{{dna_name}}/zomes/coordinator/profiles/src/lib.rs
-  cargo add -p profiles_integrity hc_zome_profiles_integrity
-  echo "extern crate hc_zome_profiles_integrity;" > dnas/{{dna_name}}/zomes/integrity/profiles/src/lib.rs
+  rm -rf dnas/{{dna_name}}/zomes/coordinator/profiles
+  rm -rf dnas/{{dna_name}}/zomes/integrity/profiles
+  head -n -5 Cargo.toml > Cargo.tmp && mv Cargo.tmp Cargo.toml

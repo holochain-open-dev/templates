@@ -37,13 +37,16 @@ hc-scaffold link-type agent:creator post --delete false --bidirectional false
 
 git add .
 
-npm i
+hc-scaffold zome profiles --integrity dnas/forum/zomes/integrity/ --coordinator dnas/forum/zomes/coordinator/
+rm -rf dnas/forum/zomes/coordinator/profiles
+rm -rf dnas/forum/zomes/integrity/profiles
+head -n -5 Cargo.toml > Cargo.tmp && mv Cargo.tmp Cargo.toml
 
-npm i -w ui @holochain-open-dev/file-storage
+pnpm i
 
-npm run format -w ui
-npm run lint -w ui
-npm run build -w ui
+pnpm -F ui format
+pnpm -F ui lint
+pnpm -F ui build
 
-npm t
+pnpm t
 "

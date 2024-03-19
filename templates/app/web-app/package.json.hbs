@@ -1,21 +1,19 @@
 {
   "name": "{{app_name}}-dev",
   "private": true,
-  "workspaces": [
-    "ui",
-    "tests"
-  ],
   "scripts": {
-    "start": "AGENTS=2 npm run network",
-    "network": "hc s clean && npm run build:happ && UI_PORT=8888 concurrently -k \"npm start -w ui\" \"npm run launch:happ\" \"holochain-playground\"",
-    "test": "npm run build:happ && cargo nextest run -j 1 && npm test -w tests",
-    "launch:happ": "echo \"pass\" | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}.happ --ui-port $UI_PORT network -b https://bootstrap.holo.host webrtc wss://signal.holo.host",
-    "package": "nix build .#{{snake_case app_name}} -o workdir/{{snake_case app_name}}.happ && npm run package -w ui && hc web-app pack workdir --recursive",
-    "build:happ": "nix build .#{{snake_case app_name}}.meta.debug -o workdir/{{snake_case app_name}}-debug.happ"
+    "start": "AGENTS=2 pnpm network",
+    "network": "hc s clean && pnpm run build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently -k \"pnpm -F ui start\" \"pnpm run launch\" \"holochain-playground\" \"pnpm local-services\"",
+    "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}-debug.happ --ui-port $UI_PORT network --bootstrap-port http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
+    "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
+    "test": "pnpm run build:happ && nix flake check && pnpm -F tests test",
+    "build:happ": "nix build .#{{app_name}}.meta.debug -o workdir/{{app_name}}-debug.happ",
+    "package": "nix build .#{{app_name}} -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.0",
     "concurrently": "^6.2.1",
+    "new-port-cli": "^1.0.0",
     "rimraf": "^3.0.2"
   },
   "engines": {

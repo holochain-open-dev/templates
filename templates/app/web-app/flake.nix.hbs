@@ -11,22 +11,40 @@
     flake-parts.follows = "holochain/flake-parts";
 
     scaffolding.url = "github:holochain-open-dev/templates";
-    hcUtils.url = "github:holochain-open-dev/common";
+    hcInfra.url = "github:holochain-open-dev/infrastructure";
 
-    # hApp dependencies
+    # Holochain dependencies (zomes, DNAs and hApps)
     profiles.url = "github:holochain-open-dev/profiles/nixify";
+    file-storage.url = "github:holochain-open-dev/file-storage/for-hdk-0.3.0-beta-dev";
+    # Add more repositories here...
   };
 
   outputs = inputs:
     inputs.flake-parts.lib.mkFlake
       {
         inherit inputs;
-        specialArgs.rootPath = ./.;
-        # All the repositories that output zomes, dnas or happs packages
-        specialArgs.holochainSources = inputs': with inputs'; [ 
-          profiles
-          # Add more here
-        ];
+        specialArgs = rec {
+          # All the upstream repositories that output zomes, dnas or happs packages
+          holochainSources = inputs': with inputs'; [ 
+            profiles
+            file-storage
+            # ... and add the name of the repository here as well
+          ];
+
+          ## Special arguments for the flake parts of this repository
+          
+          rootPath = ./.;
+
+          # Aggregators: take all the packages from this repository and the upstream
+          # holochain sources and merge them
+          allHolochainPackages = { inputs', self' }: inputs.nixpkgs.lib.attrsets.mergeAttrsList (
+            [ self'.packages ] 
+            ++ builtins.map (s: s.packages) (holochainSources inputs')
+          );
+          allZomes = { inputs', self' }: inputs.hcInfra.outputs.lib.filterZomes (allHolochainPackages { inherit inputs' self'; });
+          allDnas = { inputs', self' }: inputs.hcInfra.outputs.lib.filterDnas (allHolochainPackages { inherit inputs' self'; });
+          allHapps = { inputs', self' }: inputs.hcInfra.outputs.lib.filterHapps (allHolochainPackages { inherit inputs' self'; });
+        };
       }
       {
         imports = [
@@ -49,7 +67,14 @@
                 cargo-nextest
               ] ++ [
                 inputs'.scaffolding.packages.hc-scaffold-app-template
+                inputs'.hcInfra.packages.pnpm
+                inputs'.hcInfra.packages.sync-npm-git-dependencies-with-nix
               ];
+              
+              shellHook = ''
+                sync-npm-git-dependencies-with-nix
+              '';
+
             };
           };
       };

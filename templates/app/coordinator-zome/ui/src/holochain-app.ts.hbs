@@ -6,7 +6,6 @@
       {{#match_scope "async initStores(appAgentClient: AppAgentClient) {"}}
     {{previous_scope_content}}
     this._profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, '{{dna_role_name}}'));
-    this._myProfile = new StoreSubscriber(this, () => this._profilesStore.myProfile);
       {{/match_scope}}
     {{/merge}}
   {{/match_scope}}
