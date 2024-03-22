@@ -13,11 +13,15 @@ There are two templates available:
 
 1a. To scaffold a new **app** project, run this:
 
-`nix run github:holochain-open-dev/templates#hc-scaffold-app-template -- web-app`
+```bash
+nix run github:holochain-open-dev/templates#hc-scaffold-app-template -- web-app
+```
 
 1b. To scaffold a new **module** project, run this:
 
-`nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-app`
+```bash
+nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-app
+```
 
 2. If you already have an existing project, add the `holochain-open-dev/templates` repository as input to your flake, and use it in the packages or your `devShell`:
 
