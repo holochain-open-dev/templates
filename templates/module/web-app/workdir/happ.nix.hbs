@@ -1,0 +1,20 @@
+{ inputs, allDnas, ... }:
+
+{
+  perSystem =
+    { inputs'
+    , lib
+    , self'
+    , ...
+    }: {
+  	  packages.{{app_name}}_test = inputs.hcInfra.outputs.lib.happ {
+        holochain = inputs'.holochain;
+        happManifest = ./happ.yaml;
+
+        dnas = (allDnas { inherit self' inputs'; }) // {
+          # Override specific dnas here, e.g.:
+          # my_dna = inputs'.some_input.packages.my_dna;
+        };
+      };
+  	};
+}

@@ -1,0 +1,15 @@
+{ inputs, rootPath, ... }:
+
+{
+  perSystem =
+    { inputs'
+    , ...
+    }: {
+      packages.{{snake_case app_name}}_integrity = inputs.hcInfra.outputs.lib.rustZome {
+        workspacePath = rootPath;
+        holochain = inputs'.holochain;
+        crateCargoToml = ./Cargo.toml;
+      };
+    };
+}
+

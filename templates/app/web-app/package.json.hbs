@@ -6,9 +6,9 @@
     "network": "hc s clean && pnpm run build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently -k \"pnpm -F ui start\" \"pnpm run launch\" \"holochain-playground\" \"pnpm local-services\"",
     "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}-debug.happ --ui-port $UI_PORT network --bootstrap-port http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
     "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
-    "test": "pnpm run build:happ && nix flake check && pnpm -F tests test",
-    "build:happ": "nix build .#{{app_name}}.meta.debug -o workdir/{{app_name}}-debug.happ",
-    "package": "nix build .#{{app_name}} -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
+    "test": "pnpm run build:happ && nix flake check -L && pnpm -F tests test",
+    "build:happ": "nix build -L .#{{app_name}}.meta.debug -o workdir/{{app_name}}-debug.happ",
+    "package": "nix build -L .#{{app_name}} -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.0",
@@ -17,6 +17,6 @@
     "rimraf": "^3.0.2"
   },
   "engines": {
-    "npm": ">=7.0.0"
+    "pnpm": ">=9.0.0"
   }
 }

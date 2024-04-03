@@ -1,0 +1,46 @@
+{ inputs, rootPath, ... }:
+
+{
+  perSystem =
+    { inputs'
+    , self'
+    , ...
+    }: {
+      packages.{{snake_case app_name}} = inputs.hcInfra.outputs.lib.rustZome {
+        workspacePath = rootPath;
+        holochain = inputs'.holochain;
+        crateCargoToml = ./Cargo.toml;
+      };
+
+      # Test only this zome and its integrity in isolation
+      checks.{{snake_case app_name}} = inputs.hcInfra.outputs.lib.sweettest {
+        workspacePath = rootPath;
+        holochain = inputs'.holochain;
+        dna = (inputs.hcInfra.outputs.lib.dna {
+          dnaManifest = builtins.toFile "dna.yaml" ''
+            ---
+            manifest_version: "1"
+            name: test_dna
+            integrity:
+              network_seed: ~
+              properties: ~
+              origin_time: 1709638576394039
+              zomes: 
+                - name: {{snake_case app_name}}_integrity
+            coordinator:
+              zomes:
+                - name: {{snake_case app_name}}
+                  hash: ~
+                  dependencies: 
+                    - name: {{snake_case app_name}}_integrity
+                  dylib: ~
+          '';
+          zomes = inputs.hcInfra.outputs.lib.filterZomes self'.packages;
+          holochain = inputs'.holochain;
+        }).meta.debug;
+        crateCargoToml = ./Cargo.toml;
+      };
+
+    };
+}
+

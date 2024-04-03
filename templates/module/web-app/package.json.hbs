@@ -1,33 +1,20 @@
 {
   "name": "{{app_name}}-dev",
   "private": true,
-  "workspaces": [
-    "ui",
-    "tests"
-  ],
   "scripts": {
-    "start": "AGENTS=2 npm run network",
-    "network": "hc s clean && npm run build:happ && UI_PORT=8888 concurrently -k \"npm start -w @holochain-open-dev/{{kebab_case app_name}}\" \"npm run launch:happ\" \"holochain-playground\"",
-    "test": "npm run build:happ && cargo nextest run -j 1 && npm test -w tests",
-    "launch:happ": "echo \"pass\" | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}.happ --ui-port $UI_PORT network -b https://bootstrap.holo.host webrtc wss://signal.holo.host",
-    "build:happ": "npm run build:zomes && hc app pack workdir --recursive",
-    "build:zomes": "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown"
+    "start": "AGENTS=2 pnpm network",
+    "network": "hc s clean && pnpm run build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently -k \"pnpm -F @holochain-open-dev/{{kebab_case app_name}} start\" \"pnpm run launch\" \"holochain-playground\" \"pnpm local-services\"",
+    "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}-debug.happ --ui-port $UI_PORT network --bootstrap-port http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
+    "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
+    "test": "pnpm run build:happ && nix flake check -L && pnpm -F tests test",
+    "build:happ": "nix build -L .#{{app_name}}_test.meta.debug -o workdir/{{app_name}}-debug.happ"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",
-    "@storybook/addon-essentials": "^7.5.3",
-    "@storybook/addon-links": "^7.5.3",
-    "@storybook/blocks": "^7.5.3",
-    "@storybook/web-components": "^7.5.3",
-    "@storybook/web-components-webpack5": "^7.5.3",
     "concurrently": "^6.2.1",
-    "gh-pages": "^3.2.3",
-    "lit-html": "^2.6.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "storybook": "^7.5.3"
+    "gh-pages": "^3.2.3"
   },
   "engines": {
-    "npm": ">=7.0.0"
+    "pnpm": ">=9.0.0"
   }
 }
