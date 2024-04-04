@@ -34,26 +34,9 @@
       {
         inherit inputs;
         specialArgs = rec {
-          # All the upstream repositories that output zomes, dnas or happs packages
-          holochainSources = inputs': with inputs'; [ 
-            profiles
-            file-storage
-            # ... and add the name of the repository here as well
-          ];
-
           ## Special arguments for the flake parts of this repository
           
           rootPath = ./.;
-
-          # Aggregators: take all the packages from this repository and the upstream
-          # holochain sources and merge them
-          allHolochainPackages = { inputs', self' }: inputs.nixpkgs.lib.attrsets.mergeAttrsList (
-            [ self'.packages ] 
-            ++ builtins.map (s: s.packages) (holochainSources inputs')
-          );
-          allZomes = { inputs', self' }: inputs.hc-infra.outputs.lib.filterZomes (allHolochainPackages { inherit inputs' self'; });
-          allDnas = { inputs', self' }: inputs.hc-infra.outputs.lib.filterDnas (allHolochainPackages { inherit inputs' self'; });
-          allHapps = { inputs', self' }: inputs.hc-infra.outputs.lib.filterHapps (allHolochainPackages { inherit inputs' self'; });
         };
       }
       {

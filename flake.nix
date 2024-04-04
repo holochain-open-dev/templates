@@ -52,7 +52,6 @@
               inherit pkgs system;
               customTemplatePath = ./templates/module;
             };
-
           };
       };
 }

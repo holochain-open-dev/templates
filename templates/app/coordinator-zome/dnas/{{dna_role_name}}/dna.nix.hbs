@@ -1,0 +1,6 @@
+{{#merge previous_file_content}}
+  {{#match_scope "zomes = {"}}
+    {{previous_scope_content}}
+    {{zome_manifest.name}} = self'.packages.{{zome_manifest.name}};
+  {{/match_scope}}
+{{/merge}}
