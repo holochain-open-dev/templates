@@ -7,7 +7,7 @@
     , self'
     , ...
     }: {
-  	  packages.{{app_name}}_test = inputs.hcInfra.outputs.lib.happ {
+  	  packages.{{app_name}}_test = inputs.hc-infra.outputs.lib.happ {
         holochain = inputs'.holochain;
         happManifest = ./happ.yaml;
 

@@ -13,7 +13,7 @@
     , self'
     , ...
     }: {
-  	  packages.{{app_name}} = inputs.hcInfra.outputs.lib.happ {
+  	  packages.{{app_name}} = inputs.hc-infra.outputs.lib.happ {
         holochain = inputs'.holochain;
         happManifest = ./workdir/happ.yaml;
         dnas = (allDnas { inherit self' inputs'; }) // {

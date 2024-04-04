@@ -41,9 +41,9 @@
             [ self'.packages ] 
             ++ builtins.map (s: s.packages) (holochainSources inputs')
           );
-          allZomes = { inputs', self' }: inputs.hcInfra.outputs.lib.filterZomes (allHolochainPackages { inherit inputs' self'; });
-          allDnas = { inputs', self' }: inputs.hcInfra.outputs.lib.filterDnas (allHolochainPackages { inherit inputs' self'; });
-          allHapps = { inputs', self' }: inputs.hcInfra.outputs.lib.filterHapps (allHolochainPackages { inherit inputs' self'; });
+          allZomes = { inputs', self' }: inputs.hc-infra.outputs.lib.filterZomes (allHolochainPackages { inherit inputs' self'; });
+          allDnas = { inputs', self' }: inputs.hc-infra.outputs.lib.filterDnas (allHolochainPackages { inherit inputs' self'; });
+          allHapps = { inputs', self' }: inputs.hc-infra.outputs.lib.filterHapps (allHolochainPackages { inherit inputs' self'; });
         };
       }
       {
@@ -63,6 +63,9 @@
               inputsFrom = [ 
                 inputs'.holochain.devShells.holonix
                 inputs'.hc-infra-synchronized-pnpm
+              ];
+              packages = [
+                inputs'.scaffolding.packages.hc-scaffold-app-template
               ];
             };
           };

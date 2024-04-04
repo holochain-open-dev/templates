@@ -7,7 +7,7 @@
     , lib
     , ...
     }: {
-  	  packages.{{dna_name}}_test = inputs.hcInfra.outputs.lib.dna {
+  	  packages.{{dna_name}}_test = inputs.hc-infra.outputs.lib.dna {
         dnaManifest = ./dna.yaml;
         holochain = inputs'.holochain;
         zomes = (allZomes { inherit inputs' self'; }) // {
