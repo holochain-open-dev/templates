@@ -1,16 +1,3 @@
-{{#if (eq (pascal_case zome_manifest.name) "FileStorage")}}
-{{#merge previous_file_content}}
-  {{#match_scope "export class DemoApp extends LitElement {"}}
-
-  {{#merge previous_scope_content}}
-    {{#match_scope "async initStores(appAgentClient) {"}}
-    {{previous_scope_content}}
-    this._fileStorageClient = new ContextProvider(this, fileStorageClientContext, new FileStorageClient(appAgentClient, '{{dna_role_name}}'));
-      {{/match_scope}}
-    {{/merge}}
-  {{/match_scope}}
-{{/merge}}
-{{else}}
 import { {{camel_case zome_manifest.name}}StoreContext } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/context.js';
 import { {{pascal_case zome_manifest.name}}Client } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-client.js';
 import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store.js';
@@ -26,4 +13,3 @@ import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_name}}/{{k
     {{/merge}}
   {{/match_scope}}
 {{/merge}}
-{{/if}}

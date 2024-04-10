@@ -2,8 +2,9 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+use std::time::Duration;
+
 use hdk::prelude::*;
-use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
 mod common;
@@ -31,9 +32,11 @@ async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collect
     
     // Alice creates a {{pascal_case referenceable.name}}
     let record: Record = create_{{snake_case referenceable.name}}(&conductors[0], &alice_zome, sample.clone()).await;
-    
-    consistency_10s([&alice, &bobbo]).await;
-    
+
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
+   
     let links: Vec<Link> = conductors[1]
         .call(&bob_zome, "get_{{snake_case collection_name}}", {{#if (eq collection_type.type "Global")}}(){{else}}alice_zome.cell_id().agent_pubkey().clone(){{/if}})
         .await;

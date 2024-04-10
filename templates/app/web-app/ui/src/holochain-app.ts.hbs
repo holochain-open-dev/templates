@@ -29,8 +29,8 @@ type View = { view: 'main' };
 @customElement('holochain-app')
 export class HolochainApp extends LitElement {
   @state() _loading = true;
-
   @state() _view = { view: 'main' };
+  @state() _error: any | undefined;
 
   @provide({ context: profilesStoreContext })
   @property()
@@ -39,15 +39,19 @@ export class HolochainApp extends LitElement {
   _client!: AppAgentClient;
 
   async firstUpdated() {
-    this._client = await AppAgentWebsocket.connect('{{app_name}}');
-
-    await this.initStores(this._client);
-
-    this._loading = false;
+    try {
+      this._client = await AppAgentWebsocket.connect('{{app_name}}');
+      await this.initStores(this._client);
+    } catch (e: any) {
+      this._error = e;
+    } finally {
+      this._loading = false;
+    }
   }
 
+  // Don't change this
   async initStores(appAgentClient: AppAgentClient) {
-    // Don't change this
+    this._profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, 'TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME'));
   }
 
   renderMyProfile() {
@@ -66,8 +70,7 @@ export class HolochainApp extends LitElement {
             tooltip
           ></display-error>`,
       pending: () => html`<profile-list-item-skeleton></profile-list-item-skeleton>`
-    })
-    )}`
+    }))}`
   }
 
   // TODO: add here the content of your application
@@ -92,8 +95,16 @@ export class HolochainApp extends LitElement {
         class="row"
         style="flex: 1; height: 100%; align-items: center; justify-content: center;"
       >
-	<sl-spinner style="font-size: 2rem"></sl-spinner>
+        <sl-spinner style="font-size: 2rem"></sl-spinner>
       </div>`;
+
+    if (this._error)
+      return html`
+        <div style="flex: 1; height: 100%; align-items: center; justify-content: center;">
+          <display-error .error=${this._error} .headline=${msg("Error connecting to holochain")}>
+          </display-error>
+        </div>
+      `;
 
     return html`
       <div class="column fill">

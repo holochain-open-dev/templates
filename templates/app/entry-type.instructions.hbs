@@ -1,13 +1,9 @@
 {{#each entry_type.fields}}
   {{#if (and widget (eq widget "Image"))}}
-You have scaffolded an entry type with an image field.
+You have scaffolded an entry type with an image field. The image must be stored in the "file-storage" zome, that you can find at https://github.com/holochain-open-dev/file-storage. You must include this zome at least once in your app to enable "Image" as a field type.
 
-Scaffold the file-storage zome in one of your DNAs by running these commands, if you haven't already:
+If you haven't already, scaffold the file-storage zome in one of your DNAs by running these commands:
 
-  pnpm add -F ui github:holochain-open-dev/file-storage#main&path:ui
-  hc-scaffold zome file_storage --coordinator dnas/{{../dna_role_name}}/zomes/coordinator --integrity dnas/{{../dna_role_name}}/zomes/integrity
-  rm -rf dnas/{{../dna_role_name}}/zomes/coordinator/file-storage
-  rm -rf dnas/{{../dna_role_name}}/zomes/integrity/file-storage
-  head -n -5 Cargo.toml > Cargo.tmp && mv Cargo.tmp Cargo.toml
+  nix run github:holochain-open-dev/file-storage/nixify#scaffold
   {{/if}}
 {{/each}}

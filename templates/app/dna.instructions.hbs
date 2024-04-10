@@ -2,9 +2,9 @@ If you want the UI to work, you must include the profiles zome in one of your DN
 
 Do you want the profiles zome to be installed in the DNA you just scaffolded?
 
-If you do, scaffold the profiles zome in this DNA by running these commands:
+If you do, scaffold the profiles zome in this DNA by running this command:
 
-  hc-scaffold zome profiles --coordinator dnas/{{dna_name}}/zomes/coordinator --integrity dnas/{{dna_name}}/zomes/integrity
-  rm -rf dnas/{{dna_name}}/zomes/coordinator/profiles
-  rm -rf dnas/{{dna_name}}/zomes/integrity/profiles
-  head -n -5 Cargo.toml > Cargo.tmp && mv Cargo.tmp Cargo.toml
+  nix run github:holochain-open-dev/profiles/nixify#scaffold
+  sed -i 's/TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME/{{dna_name}}/g' ui/src/holochain-app.ts  
+
+Note that the UI for this app won't work until the profiles zome is scaffolded.

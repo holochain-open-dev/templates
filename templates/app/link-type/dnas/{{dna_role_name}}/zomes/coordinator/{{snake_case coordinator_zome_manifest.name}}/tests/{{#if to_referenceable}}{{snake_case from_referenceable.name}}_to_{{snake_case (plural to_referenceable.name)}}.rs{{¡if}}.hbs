@@ -2,8 +2,8 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+use std::time::Duration;
 use hdk::prelude::*;
-use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
 use {{snake_case coordinator_zome_manifest.name}}::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
@@ -70,7 +70,9 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
         
-    consistency_10s([&alice, &bobbo]).await;
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
 
     // Bob gets the links again
     let links_output: Vec<Link> = conductors[1]
@@ -98,7 +100,9 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
 
-    consistency_10s([&alice, &bobbo]).await;
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
 
     // Bob gets the links again
     let links_output: Vec<Link> = conductors[1]

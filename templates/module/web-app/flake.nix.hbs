@@ -12,11 +12,6 @@
 
     scaffolding.url = "github:holochain-open-dev/templates";
     hc-infra.url = "github:holochain-open-dev/infrastructure";
-
-    # Holochain dependencies (zomes, DNAs and hApps)
-    profiles.url = "github:holochain-open-dev/profiles/nixify";
-    file-storage.url = "github:holochain-open-dev/file-storage/for-hdk-0.3.0-beta-dev";
-    # Add more repositories here...
   };
   
   nixConfig = {
@@ -33,7 +28,7 @@
     inputs.flake-parts.lib.mkFlake
       {
         inherit inputs;
-        specialArgs = rec {
+        specialArgs = {
           ## Special arguments for the flake parts of this repository
           
           rootPath = ./.;
@@ -65,6 +60,22 @@
               packages = [
                 inputs'.scaffolding.packages.hc-scaffold-module-template
               ];
+            };
+
+            packages.scaffold = pkgs.symlinkJoin {
+              name = "scaffold-remote-zome";
+              paths = [ inputs'.hc-infra.packages.scaffold-remote-zome ];
+              buildInputs = [ pkgs.makeWrapper ];
+              postBuild = ''
+                wrapProgram $out/bin/scaffold-remote-zome \
+                  --add-flags "{{kebab_case app_name}} \
+                    --integrity-zome-name {{snake_case app_name}}_integrity \
+                    --coordinator-zome-name {{snake_case app_name}} \
+                    --remote-zome-git-url github:holochain-open-dev/{{kebab_case app_name}} \
+                    --remote-npm-package-name {{kebab_case app_name}} \
+                    --remote-npm-package-path ui" \
+                    # --remote-zome-git-branch main 
+              '';
             };
           };
       };

@@ -2,8 +2,8 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 
+use std::time::Duration;
 use hdk::prelude::*;
-use holochain::test_utils::consistency_10s;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
 use {{snake_case coordinator_zome_manifest.name}}_integrity::*;
@@ -65,16 +65,18 @@ async fn create_and_read_{{snake_case entry_type.name}}() {
     conductors.exchange_peer_info().await;
 
     let ((alice,), (bobbo,)) = apps.into_tuples();
-    
+
     let alice_zome = alice.zome("{{snake_case coordinator_zome_manifest.name}}");
     let bob_zome = bobbo.zome("{{snake_case coordinator_zome_manifest.name}}");
-    
+
     let sample = sample_{{snake_case entry_type.name}}_1(&conductors[0], &alice_zome).await;
-    
+
     // Alice creates a {{pascal_case entry_type.name}}
     let record: Record = create_{{snake_case entry_type.name}}(&conductors[0], &alice_zome, sample.clone()).await;
-    
-    consistency_10s([&alice, &bobbo]).await;
+
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
     
     {{#if crud.update}}
     let get_record: Option<Record> = conductors[1]
@@ -104,17 +106,19 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     conductors.exchange_peer_info().await;
 
     let ((alice,), (bobbo,)) = apps.into_tuples();
-    
+
     let alice_zome = alice.zome("{{snake_case coordinator_zome_manifest.name}}");
     let bob_zome = bobbo.zome("{{snake_case coordinator_zome_manifest.name}}");
-    
+
     let sample_1 = sample_{{snake_case entry_type.name}}_1(&conductors[0], &alice_zome).await;
-    
+
     // Alice creates a {{pascal_case entry_type.name}}
     let record: Record = create_{{snake_case entry_type.name}}(&conductors[0], &alice_zome, sample_1.clone()).await;
     let original_action_hash = record.signed_action.hashed.hash.clone();
-        
-    consistency_10s([&alice, &bobbo]).await;
+
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
     
     let sample_2 = sample_{{snake_case entry_type.name}}_2(&conductors[0], &alice_zome).await;
     let input = Update{{pascal_case entry_type.name}}Input {
@@ -133,7 +137,9 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     let entry: {{pascal_case entry_type.name}} = update_record.entry().to_app_option().unwrap().unwrap();
     assert_eq!(sample_2, entry);
     
-    consistency_10s([&alice, &bobbo]).await;
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
     
     let get_record: Option<Record> = conductors[1]
         .call(&bob_zome, "get_latest_{{snake_case entry_type.name}}", original_action_hash.clone())
@@ -157,7 +163,9 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     let entry: {{pascal_case entry_type.name}} = update_record.entry().to_app_option().unwrap().unwrap();
     assert_eq!(sample_1, entry);
     
-    consistency_10s([&alice, &bobbo]).await;
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
     
     let get_record: Option<Record> = conductors[1]
         .call(&bob_zome, "get_latest_{{snake_case entry_type.name}}", original_action_hash.clone())
@@ -202,7 +210,9 @@ async fn create_and_delete_{{snake_case entry_type.name}}() {
         .call(&alice_zome, "delete_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
 
-    consistency_10s([&alice, &bobbo]).await;
+    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+        .await
+        .expect("Timed out waiting for consistency");
 
     let deletes: Vec<SignedActionHashed> = conductors[1]
         .call(&bob_zome, "get_all_deletes_for_{{snake_case entry_type.name}}", original_action_hash.clone())
