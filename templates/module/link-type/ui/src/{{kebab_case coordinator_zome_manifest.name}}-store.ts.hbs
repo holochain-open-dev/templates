@@ -27,7 +27,7 @@
             '{{link_type_name}}'
           ),
         {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-          links => links.map(l => retype(l.target, HashType.AGENT))
+          links => links.map(l => retype(l[0].hashed.content.target_address, HashType.AGENT))
         {{else}}
           links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
         {{/if}}
@@ -76,7 +76,7 @@
             '{{link_type_name}}'
           ), 
         {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
-          links => links.map(l => retype(l.target, HashType.AGENT))
+          links => links.map(l => retype(l[0].hashed.content.target_address, HashType.AGENT))
         {{else}}
           links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
         {{/if}}
@@ -178,7 +178,7 @@
             '{{link_type_name}}'
           ), 
         {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
-          links => links.map(l => retype(l.target, HashType.AGENT))
+          links => links.map(l => retype(l[0].hashed.content.target_address, HashType.AGENT))
         {{else}}
           links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
         {{/if}}

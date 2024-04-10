@@ -1,6 +1,6 @@
 {{#merge previous_file_content}}
   {{#match_scope "dnas = {"}}
-    {{previous_scope_content}}
-    {{dna_name}} = self'.packages.{{dna_name}};
+          {{previous_scope_content}}
+          {{dna_name}} = self'.packages.{{dna_name}};
   {{/match_scope}}
 {{/merge}}
