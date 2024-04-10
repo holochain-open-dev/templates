@@ -36,8 +36,8 @@ hc-scaffold link-type agent:creator post --delete false --bidirectional false
 
 git add .
 
-nix run github:holochain-open-dev/profiles/nixify#scaffold --refresh -- --local-dna-to-add-the-zome-to forum --local-npm-package-to-add-the-ui-to ui
 sed -i 's/TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME/forum/g' ui/src/holochain-app.ts  
+nix run github:holochain-open-dev/profiles/nixify#scaffold --refresh -- --local-dna-to-add-the-zome-to forum --local-npm-package-to-add-the-ui-to ui
 
 pnpm i
 

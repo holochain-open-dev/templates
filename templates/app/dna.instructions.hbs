@@ -4,7 +4,7 @@ Do you want the profiles zome to be installed in the DNA you just scaffolded?
 
 If you do, scaffold the profiles zome in this DNA by running this command:
 
-  nix run github:holochain-open-dev/profiles/nixify#scaffold
   sed -i 's/TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME/{{dna_name}}/g' ui/src/holochain-app.ts  
+  nix run github:holochain-open-dev/profiles/nixify#scaffold -- --local-dna-to-add-the-zome-to {{dna_name}} --local-npm-package-to-add-the-ui-to ui
 
 Note that the UI for this app won't work until the profiles zome is scaffolded.
