@@ -48,7 +48,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
   {{/if}}
 {{/if}}
 {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-    let target_address = alice.agentPubKey;
+    let target_address = alice.agent_pubkey();
 {{else}}
     let target_record = create_{{snake_case to_referenceable.name}}(&conductors[0], &alice_zome, sample_{{snake_case to_referenceable.name}}_1(&conductors[0], &alice_zome).await).await;
   {{#if (eq to_referenceable.hash_type "EntryHash")}}
