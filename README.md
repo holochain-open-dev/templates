@@ -11,6 +11,14 @@ There are two templates available:
 
 > WARNING: these templates are only compatible with holochain v0.3.x.
 
+0. If you haven't already, set up the holochain-open-dev binary cache:
+
+```bash
+nix run nixpkgs#cachix use holochain-open-dev
+```
+
+This is necessary to enable fetching of most dependencies from the cache, rather than rebuilding all of them from the scratch.
+
 1a. To scaffold a new **app** project, run this:
 
 ```bash
@@ -74,7 +82,7 @@ nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-a
 
 After this set up, you will be able to `nix develop` from inside your repository, and use the scaffolding tool as normal:
 
-```
+```bash
 hc scaffold dna
 hc scaffold zome
 ...
