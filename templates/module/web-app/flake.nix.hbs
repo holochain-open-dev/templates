@@ -10,8 +10,14 @@
     nixpkgs.follows = "holochain/nixpkgs";
     flake-parts.follows = "holochain/flake-parts";
 
-    scaffolding.url = "github:holochain-open-dev/templates";
-    hc-infra.url = "github:holochain-open-dev/infrastructure";
+    hc-infra = {
+      url = "github:holochain-open-dev/infrastructure";
+      inputs.holochain.follows = "holochain";
+    };
+    scaffolding = {
+      url = "github:holochain-open-dev/templates";
+      inputs.holochain.follows = "holochain";
+    };
   };
   
   nixConfig = {

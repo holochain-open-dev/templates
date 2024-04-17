@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "scripts": {
     "start": "vite --clearScreen false --port $UI_PORT",
-    "build": "npm run lint && tsc && npm run analyze -- --exclude dist",
+    "build": "pnpm lint && tsc && pnpm analyze -- --exclude dist",
     "lint": "eslint --ext .ts . && prettier \"**/*.ts\" --check --ignore-path .gitignore",
     "format": "eslint --fix --ext .ts . && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "localize:extract": "lit-localize extract",
     "localize:build": "lit-localize build",
-    "analyze": "cem analyze --litelement"
+    "analyze": "cem analyze --litelement",
+    "prepare": "pnpm build"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -24,7 +25,7 @@
     "./locales/*": "./locales/*"
   },
   "dependencies": {
-    "@holochain/client": "^0.17.0-dev.7",
+    "@holochain/client": "^0.17.0-dev.9",
     "@holochain-open-dev/elements": "^0.300.0-dev.0",
     "@holochain-open-dev/stores": "^0.300.0-dev.1",
     "@holochain-open-dev/utils": "^0.300.0-dev.0",
