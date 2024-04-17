@@ -70,7 +70,7 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
           {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
         }
       }));
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
       notifyError(msg("Error deleting the {{lower_case entry_type.name}}"));
     }

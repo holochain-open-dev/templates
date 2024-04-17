@@ -81,7 +81,7 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
   {{/if}}
 {{/each}}
 
-  async create{{pascal_case entry_type.name}}(fields: any) {
+  async create{{pascal_case entry_type.name}}(fields: Partial<{{pascal_case entry_type.name}}>) {
     {{#each entry_type.fields}}
       {{#if (not widget)}}
         {{#if (ne cardinality "option")}}
@@ -94,12 +94,12 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
     {{#each entry_type.fields}}
       {{#if widget}}
         {{#if (eq cardinality "vector")}}
-      {{snake_case field_name}}: (Array.isArray(fields.{{snake_case field_name}}) ? fields.{{snake_case field_name}} : [fields.{{snake_case field_name}}]).map((el: any) => {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read="el" }}),
+      {{snake_case field_name}}: (Array.isArray(fields.{{snake_case field_name}}!) ? fields.{{snake_case field_name}}! : [fields.{{snake_case field_name}}!]).map((el: any) => {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read="el" }}),
         {{else}}
-      {{snake_case field_name}}: {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read=(concat "fields." (snake_case field_name)) }},
+      {{snake_case field_name}}: {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read=(concat "fields." (snake_case field_name) "!" ) }},
         {{/if}}
       {{else}}
-      {{snake_case field_name}}: this.{{camel_case field_name}},
+      {{snake_case field_name}}: this.{{camel_case field_name}}!,
       {{/if}}
     {{/each}}
     };
@@ -117,7 +117,7 @@ export class Create{{pascal_case entry_type.name}} extends LitElement {
       }));
       
       this.form.reset();
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
       notifyError(msg("Error creating the {{lower_case entry_type.name}}"));
     }

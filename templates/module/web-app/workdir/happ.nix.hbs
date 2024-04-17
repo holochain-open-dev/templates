@@ -7,7 +7,7 @@
     , self'
     , ...
     }: {
-  	  packages.{{app_name}}_test = inputs.hc-infra.outputs.lib.happ {
+  	  packages.{{snake_case app_name}}_test_app = inputs.hc-infra.outputs.lib.happ {
         holochain = inputs'.holochain;
         happManifest = ./happ.yaml;
 
@@ -15,6 +15,7 @@
           # Include here the DNA packages for this hApp, e.g.:
           # my_dna = inputs'.some_input.packages.my_dna;
           # This overrides all the "bundled" properties for the hApp manifest 
+          {{snake_case app_name}}_test = self'.packages.{{snake_case app_name}}_test_dna;
         };
       };
   	};

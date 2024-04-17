@@ -1,18 +1,18 @@
 [package]
-name = "hc_zome_{{snake_case app_name}}_coordinator"
+name = "{{snake_case app_name}}"
 version = "0.0.1"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
-name = "hc_zome_{{snake_case app_name}}_coordinator"
+name = "{{snake_case app_name}}"
 
 [dependencies]
 hdk = { workspace = true }
 
 serde = { workspace = true }
 
-{{snake_case app_name}}_integrity = { path = "../../integrity/{{snake_case app_name}}", package = "hc_zome_{{snake_case app_name}}_integrity" }
+{{snake_case app_name}}_integrity = { path = "../../integrity/{{snake_case app_name}}", package = "{{snake_case app_name}}_integrity" }
 
 [dev-dependencies]
 fixt = "0.3.0-beta-dev"

@@ -23,7 +23,7 @@ import { {{pascal_case app_name}}Store } from '../../ui/src/{{kebab_case app_nam
 
 export async function setup(scenario: Scenario) {
   const testHappUrl =
-    dirname(fileURLToPath(import.meta.url)) + '/../../workdir/{{app_name}}_test.happ';
+    dirname(fileURLToPath(import.meta.url)) + '/../../workdir/{{app_name}}_test-debug.happ';
 
   // Add 2 players with the test hApp to the Scenario. The returned players
   // can be destructured.

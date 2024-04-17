@@ -6,7 +6,7 @@ use std::time::Duration;
 use hdk::prelude::*;
 use holochain::{conductor::config::ConductorConfig, sweettest::*};
 
-use hc_zome_{{snake_case coordinator_zome_manifest.name}}_coordinator::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
+use {{snake_case coordinator_zome_manifest.name}}::{{snake_case link_type_name}}::{{#if delete}}{Remove{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input, Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input }{{else}}Add{{pascal_case to_referenceable.name}}For{{pascal_case from_referenceable.name}}Input{{/if}};
 
 {{#if (or (ne from_referenceable.hash_type "AgentPubKey") (ne to_referenceable.hash_type "AgentPubKey"))}}
 mod common;
@@ -70,7 +70,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
         
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
 
@@ -100,7 +100,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
 
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
 

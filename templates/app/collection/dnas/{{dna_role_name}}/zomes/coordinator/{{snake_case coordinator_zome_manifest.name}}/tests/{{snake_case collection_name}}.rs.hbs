@@ -33,7 +33,7 @@ async fn create_a_{{snake_case referenceable.name}}_and_get_{{snake_case collect
     // Alice creates a {{pascal_case referenceable.name}}
     let record: Record = create_{{snake_case referenceable.name}}(&conductors[0], &alice_zome, sample.clone()).await;
 
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
    

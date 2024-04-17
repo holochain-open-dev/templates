@@ -7,13 +7,14 @@
     "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}-debug.happ --ui-port $UI_PORT network --bootstrap-port http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
     "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
     "test": "pnpm build:happ && nix flake check -L && pnpm -F tests test",
-    "build:happ": "nix build -L .#{{app_name}}_test.meta.debug -o workdir/{{app_name}}-debug.happ"
+    "build:happ": "nix build -L .#{{snake_case app_name}}_test_app.meta.debug -o workdir/{{app_name}}_test-debug.happ"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",
     "concurrently": "^6.2.1",
     "gh-pages": "^3.2.3"
   },
+  "type": "module",
   "engines": {
     "pnpm": ">=9.0.0"
   }

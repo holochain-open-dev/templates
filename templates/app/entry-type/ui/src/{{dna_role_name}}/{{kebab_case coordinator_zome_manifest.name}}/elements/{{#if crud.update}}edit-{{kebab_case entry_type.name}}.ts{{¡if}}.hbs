@@ -72,7 +72,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
     this.shadowRoot?.querySelector('form')!.reset();
   }
 
-  async update{{pascal_case entry_type.name}}(fields: any) {  
+  async update{{pascal_case entry_type.name}}(fields: unknown) {  
     const {{camel_case entry_type.name}}: {{pascal_case entry_type.name}} = { 
     {{#each entry_type.fields}}
       {{#if widget}}
@@ -108,7 +108,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
           updated{{pascal_case entry_type.name}}Hash: updateRecord.actionHash
         }
       }));
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
       notifyError(msg("Error updating the {{lower_case entry_type.name}}"));
     }

@@ -17,7 +17,7 @@
   }
 
   {{else}}
-  async get_{{snake_case collection_name}}(_: any): Promise<Array<Link>> {
+  async get_{{snake_case collection_name}}(): Promise<Array<Link>> {
     const records: Record[] = Array.from(this.{{camel_case (plural referenceable.name)}}.values()).map(r => r.revisions[r.revisions.length - 1]);
     return Promise.all(records.map(async record => ({ 
       target: {{#if (eq referenceable.hash_type "EntryHash")}}(record.signed_action.hashed.content as NewEntryAction).entry_hash{{else}}record.signed_action.hashed.hash{{/if}}, 

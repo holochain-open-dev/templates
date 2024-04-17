@@ -30,7 +30,7 @@ type View = { view: 'main' };
 export class HolochainApp extends LitElement {
   @state() _loading = true;
   @state() _view = { view: 'main' };
-  @state() _error: any | undefined;
+  @state() _error: unknown | undefined;
 
   @provide({ context: profilesStoreContext })
   @property()
@@ -42,7 +42,7 @@ export class HolochainApp extends LitElement {
     try {
       this._client = await AppAgentWebsocket.connect('{{app_name}}');
       await this.initStores(this._client);
-    } catch (e: any) {
+    } catch (e: unknown) {
       this._error = e;
     } finally {
       this._loading = false;

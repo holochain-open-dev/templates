@@ -6,11 +6,13 @@ DIR=$(pwd)
 nix shell .#hc-scaffold-module-template --command bash -c "
 cd /tmp
 rm -rf posts-open-dev
+mkdir posts-open-dev
+cd posts-open-dev
 
-hc-scaffold web-app posts-open-dev --setup-nix true 
+hc-scaffold web-app posts --setup-nix true 
 "
 
-cd /tmp/posts-open-dev
+cd /tmp/posts-open-dev/posts
 
 nix develop --override-input scaffolding "path:$DIR" --command bash -c "
 set -e

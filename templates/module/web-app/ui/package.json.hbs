@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "scripts": {
     "start": "vite --clearScreen false --port $UI_PORT",
-    "build": "pnpm lint && tsc && pnpm analyze -- --exclude dist",
-    "lint": "eslint --ext .ts . && prettier \"**/*.ts\" --check --ignore-path .gitignore",
-    "format": "eslint --fix --ext .ts . && prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "build": "pnpm lint && tsc && pnpm analyze",
+    "lint": "eslint src && prettier \"src/**/*.ts\" --check --ignore-path .gitignore",
+    "format": "eslint src --fix && prettier \"src/**/*.ts\" --write --ignore-path .gitignore",
     "localize:extract": "lit-localize extract",
     "localize:build": "lit-localize build",
-    "analyze": "cem analyze --litelement",
-    "prepare": "pnpm build"
+    "analyze": "cem analyze --litelement --exclude dist",
+    "prepare": "tsc && pnpm localize:build && pnpm analyze"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "locales"],
+  "files": ["dist", "locales", "src"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/holochain-open-dev/{{kebab_case app_name}}.git"
@@ -37,17 +37,15 @@
     "lit": "^3.0.0"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.5.7",
+    "@custom-elements-manifest/analyzer": "^0.9.4",
     "@lit/localize-tools": "^0.6.3",
-    "@open-wc/eslint-config": "^4.3.0",
-    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.43.0",
-    "@typescript-eslint/parser": "^5.43.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "prettier": "^2.3.2",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.9.0",
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.7.0",
+    "tslib": "^2.6.2",
     "vite": "^4.0.0",
     "vite-plugin-checker": "^0.5.3"
   },

@@ -75,7 +75,7 @@ async fn create_and_read_{{snake_case entry_type.name}}() {
     // Alice creates a {{pascal_case entry_type.name}}
     let record: Record = create_{{snake_case entry_type.name}}(&conductors[0], &alice_zome, sample.clone()).await;
     
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
     
@@ -117,7 +117,7 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     let record: Record = create_{{snake_case entry_type.name}}(&conductors[0], &alice_zome, sample_1.clone()).await;
     let original_action_hash = record.signed_action.hashed.hash.clone();
         
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
     
@@ -138,7 +138,7 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     let entry: {{pascal_case entry_type.name}} = update_record.entry().to_app_option().unwrap().unwrap();
     assert_eq!(sample_2, entry);
     
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
     
@@ -164,7 +164,7 @@ async fn create_and_update_{{snake_case entry_type.name}}() {
     let entry: {{pascal_case entry_type.name}} = update_record.entry().to_app_option().unwrap().unwrap();
     assert_eq!(sample_1, entry);
     
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
     
@@ -206,7 +206,7 @@ async fn create_and_delete_{{snake_case entry_type.name}}() {
         .call(&alice_zome, "delete_{{snake_case entry_type.name}}", original_action_hash.clone())
         .await;
 
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
 

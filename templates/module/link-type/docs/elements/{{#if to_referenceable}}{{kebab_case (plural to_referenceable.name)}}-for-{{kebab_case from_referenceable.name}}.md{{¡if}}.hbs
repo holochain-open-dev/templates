@@ -1,0 +1,86 @@
+# `<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>`
+
+## Usage
+
+0. If you haven't already, [go through the setup for the module](/setup).
+
+1. Import the `<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>` element somewhere in the javascript side of your web-app like this:
+
+```js
+import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}.js'
+```
+
+2. Use it in the html side of your web-app like this:
+
+```html
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+</{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+```
+
+> [!WARNING]
+> Like all the elements in this module, `<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>` needs to be placed inside an initialized `<{{kebab_case app_name}}-context>`.
+
+## Demo
+
+Here is an interactive demo of the element:
+
+<element-demo>
+</element-demo>
+
+<script setup>
+import { onMounted } from "vue";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
+import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
+import { decodeHashFromBase64 } from '@holochain/client';
+import { render, html } from "lit";
+
+onMounted(async () => {
+  // Elements need to be imported on the client side, not the SSR side
+  // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
+  await import('@api-viewer/docs/lib/api-docs.js');
+  await import('@api-viewer/demo/lib/api-demo.js');
+  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case app_name}}-context.js');
+  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}.js');
+
+  const mock = new {{pascal_case app_name}}ZomeMock();
+  const client = new {{pascal_case app_name}}Client(mock);
+
+  const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}(client);
+
+  const record = await mock.create_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.name}});
+
+  const fromActionHash = fakeActionHash();
+
+  {{#if (eq to_referenceable.hash_type "ActionHash")}}
+  await mock.add_{{snake_case from_referenceable.name}}_for_{{snake_case to_referenceable.name}}({
+    {{to_referenceable.singular_arg}}: record.signed_action.hashed.hash,
+    {{from_referenceable.singular_arg}}: fromActionHash
+  });
+  {{/if}}
+  {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+  await mock.add_{{snake_case from_referenceable.name}}_for_{{snake_case to_referenceable.name}}({
+    {{to_referenceable.singular_arg}}: record.signed_action.hashed.content.author,
+    {{from_referenceable.singular_arg}}: fromActionHash
+  });
+  {{/if}}
+
+  render(html`
+    <{{kebab_case app_name}}-context .store=${store}>
+      <api-demo src="custom-elements.json" only="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" exclude-knobs="store">
+        <template data-element="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" data-target="host">
+          <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} .{{camel_case from_referenceable.singular_arg}}=${fromActionHash}></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+        </template>
+      </api-demo>
+    </{{kebab_case app_name}}-context>
+  `, document.querySelector('element-demo'))
+  })
+
+
+</script>
+
+## API Reference
+
+`{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
+
+<api-docs src="custom-elements.json" only="{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}">
+</api-docs>

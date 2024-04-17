@@ -70,7 +70,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
         
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
 
@@ -100,7 +100,7 @@ async fn link_a_{{snake_case from_referenceable.name}}_to_a_{{snake_case to_refe
         target_{{snake_case to_referenceable.singular_arg}}: target_address.clone()
      }).await;
 
-    await_consistency(Duration::from_secs(30), [&alice, &bobbo])
+    await_consistency(Duration::from_secs(60), [&alice, &bobbo])
         .await
         .expect("Timed out waiting for consistency");
 

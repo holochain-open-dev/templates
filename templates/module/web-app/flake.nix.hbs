@@ -12,12 +12,12 @@
 
     hc-infra = {
       url = "github:holochain-open-dev/infrastructure";
-      inputs.holochain.follows = "holochain";
     };
     scaffolding = {
       url = "github:holochain-open-dev/templates";
-      inputs.holochain.follows = "holochain";
     };
+
+    profiles.url = "github:holochain-open-dev/profiles/nixify";
   };
   
   nixConfig = {
@@ -35,7 +35,7 @@
       {
         inherit inputs;
         specialArgs = {
-          ## Special arguments for the flake parts of this repository
+          # Special arguments for the flake parts of this repository
           
           rootPath = ./.;
         };
