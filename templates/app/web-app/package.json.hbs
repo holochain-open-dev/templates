@@ -11,10 +11,16 @@
     "package": "nix build -L .#{{app_name}} -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
   },
   "devDependencies": {
-    "@holochain-playground/cli": "^0.1.0",
+    "@holochain-playground/cli": "^0.1.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@eslint/js": "^9.0.0",
     "concurrently": "^6.2.1",
-    "new-port-cli": "^1.0.0",
-    "rimraf": "^3.0.2"
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "gh-pages": "^3.2.3",
+    "prettier": "^3.2.5",
+    "typescript-eslint": "^7.7.0",
+    "typescript": "^5.4.5"
   },
   "type": "module",
   "engines": {
