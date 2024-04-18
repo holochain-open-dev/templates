@@ -12,11 +12,6 @@ import '@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}/dis
 
 2. Use it in the html side of your web-app like this:
 
-```html
-<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
-</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
-```
-
 ::: code-group
 ```html [Lit]
 <{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} .{{camel_case linked_from.singular_arg}}=${ {{camel_case linked_from.singular_arg}} }>
@@ -83,7 +78,7 @@ onMounted(async () => {
     <{{kebab_case ../coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}" exclude-knobs="store">
         <template data-element="{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}" data-target="host">
-          <{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{#if (eq cardinality "vector")}}{{camel_case linked_from.name}}{{#if (ne linked_from.hash_type "AgentPubKey")}}-hash{{/if}}="${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}[0]))}"{{else}}{{camel_case linked_from.name}}{{#if (ne linked_from.hash_type "AgentPubKey")}}-hash{{/if}}=${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}))}" {{/if}}></{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+          <{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{#if (eq cardinality "vector")}}{{kebab_case linked_from.singular_arg}}="${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}[0]))}"{{else}}{{kebab_case linked_from.singular_arg}}=${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}))}" {{/if}}></{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
         </template>
       </api-demo>
     </{{kebab_case ../coordinator_zome_manifest.name}}-context>

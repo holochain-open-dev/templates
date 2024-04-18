@@ -7,7 +7,7 @@
     "start": "pnpm dev",
     "dev": "pnpm setup:docs && vitepress dev",
     "build": "pnpm setup:docs && vitepress build",
-    "setup:docs": "pnpm -F @holochain-open-dev/{{kebab_case app_name}} analyze && cp ../ui/custom-elements.json elements && npm run setup:cargo",
+    "setup:docs": "pnpm -F @holochain-open-dev/{{kebab_case app_name}} analyze && cp ../ui/custom-elements.json elements && pnpm setup:cargo",
     "setup:cargo": "cargo doc --release --no-deps --target-dir public/backend",
     "preview": "vitepress preview"
   },
