@@ -87,10 +87,12 @@ onMounted(async () => {
   });
   {{/if}}
 
+  const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
+
   render(html`
     <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
-      <api-demo src="custom-elements.json" only="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
-        <template data-element="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
+      <api-demo src="custom-elements.json" only="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
+        <template data-element="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
           <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} {{kebab_case to_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64((toActionHash))}"></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
         </template>
       </api-demo>

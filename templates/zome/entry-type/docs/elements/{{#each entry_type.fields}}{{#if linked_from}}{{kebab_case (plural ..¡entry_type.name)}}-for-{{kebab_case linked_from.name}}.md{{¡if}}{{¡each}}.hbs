@@ -68,7 +68,13 @@ onMounted(async () => {
   const mock = new {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock();
   const client = new {{pascal_case ../coordinator_zome_manifest.name}}Client(mock);
 
-  const {{camel_case ../entry_type.name}} = await sample{{pascal_case ../entry_type.name}}(client);
+  const {{camel_case linked_from.name}} = await sample{{pascal_case linked_from.name}}(client);
+
+  const record1 = await mock.create_{{snake_case linked_from.name}}({{camel_case linked_from.name}});
+
+  const {{camel_case ../entry_type.name}} = await sample{{pascal_case ../entry_type.name}}(client, {
+    {{field_name}}: {{#if (eq cardinality "vector")}}[record1.signed_action.hashed.hash]{{else}}record1.signed_action.hashed.hash{{/if}}
+  });
 
   const record = await mock.create_{{snake_case ../entry_type.name}}({{camel_case ../entry_type.name}});
 

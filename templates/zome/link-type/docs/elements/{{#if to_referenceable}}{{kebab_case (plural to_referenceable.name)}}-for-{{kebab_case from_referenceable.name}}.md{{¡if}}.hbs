@@ -87,6 +87,8 @@ onMounted(async () => {
   });
   {{/if}}
 
+  const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
+
   render(html`
     <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" exclude-knobs="store">
