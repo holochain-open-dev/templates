@@ -1,4 +1,4 @@
-name: "test"
+name: Test app custom template
 on:
   # Trigger the workflow on push or pull request,
   # but only for the main branch
@@ -29,8 +29,4 @@ jobs:
       - name: Test app template
         run: |
           nix develop --command bash -c "sh run_test_app.sh"
-
-      - name: Test module template
-        run: |
-          nix develop --command bash -c "sh run_test_module.sh"
 

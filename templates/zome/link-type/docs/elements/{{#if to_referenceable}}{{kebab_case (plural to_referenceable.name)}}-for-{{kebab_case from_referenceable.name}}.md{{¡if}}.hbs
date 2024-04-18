@@ -29,9 +29,9 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case from_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
-import { decodeHashFromBase64 } from '@holochain/client';
+import { decodeHashFromBase64, fakeActionHash } from '@holochain/client';
 import { render, html } from "lit";
 
 onMounted(async () => {
@@ -45,11 +45,11 @@ onMounted(async () => {
   const mock = new {{pascal_case app_name}}ZomeMock();
   const client = new {{pascal_case app_name}}Client(mock);
 
-  const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}(client);
+  const {{camel_case from_referenceable.name}} = await sample{{pascal_case from_referenceable.name}}(client);
 
-  const record = await mock.create_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.name}});
+  const record = await mock.create_{{snake_case from_referenceable.name}}({{camel_case from_referenceable.name}});
 
-  const fromActionHash = fakeActionHash();
+  const fromActionHash = await fakeActionHash();
 
   {{#if (eq to_referenceable.hash_type "ActionHash")}}
   await mock.add_{{snake_case from_referenceable.name}}_for_{{snake_case to_referenceable.name}}({

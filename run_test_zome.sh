@@ -3,7 +3,7 @@ set -e
 
 DIR=$(pwd)
 
-nix shell .#hc-scaffold-module-template --command bash -c "
+nix shell .#hc-scaffold-zome-template --command bash -c "
 cd /tmp
 rm -rf posts-open-dev
 mkdir posts-open-dev
@@ -37,9 +37,12 @@ git add .
 
 pnpm i
 
-pnpm -F ui format
-pnpm -F ui lint
-pnpm -F ui build
+pnpm -F @holochain-open-dev/posts format
+pnpm -F @holochain-open-dev/posts lint
+pnpm -F @holochain-open-dev/posts build
 
-pnpm t
+pnpm i
+
+pnpm build:happ
+pnpm -F tests test
 "

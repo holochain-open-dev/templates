@@ -29,9 +29,9 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
+import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
-import { decodeHashFromBase64 } from '@holochain/client';
+import { decodeHashFromBase64, fakeActionHash } from '@holochain/client';
 import { render, html } from "lit";
 
 onMounted(async () => {
@@ -50,7 +50,7 @@ onMounted(async () => {
 
   const record = await mock.create_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.name}});
 
-  const toActionHash = fakeActionHash();
+  const toActionHash = await fakeActionHash();
 
   {{#if (eq to_referenceable.hash_type "ActionHash")}}
   await mock.add_{{snake_case from_referenceable.name}}_for_{{snake_case to_referenceable.name}}({
@@ -69,7 +69,7 @@ onMounted(async () => {
     <{{kebab_case app_name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
         <template data-element="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
-          <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} .{{camel_case to_referenceable.singular_arg}}=${fromActionHash}></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
+          <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} .{{camel_case to_referenceable.singular_arg}}=${toActionHash}></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
         </template>
       </api-demo>
     </{{kebab_case app_name}}-context>

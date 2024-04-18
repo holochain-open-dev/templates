@@ -4,8 +4,8 @@ Custom templates for the [scaffolding tool](https://github.com/holochain/scaffol
 
 There are two templates available:
 
-- `app`: fully blown app, following the open-dev patterns and with the profiles module pre-installed.
-- `module`: template to build modules like the ones you can find in [open-dev](https://github.com/holochain-open-dev), with the profiles module already pre-installed.
+- `app`: fully blown app, following the open-dev patterns and with the profiles zome pre-installed.
+- `zome`: template to build zomes like the ones you can find in [open-dev](https://github.com/holochain-open-dev), with the profiles zome already pre-installed.
 
 ## Using the templates
 
@@ -25,10 +25,10 @@ This is necessary to enable fetching of most dependencies from the cache, rather
 nix run github:holochain-open-dev/templates#hc-scaffold-app-template -- web-app
 ```
 
-1b. To scaffold a new **module** project, run this:
+1b. To scaffold a new **zome** project, run this:
 
 ```bash
-nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-app
+nix run github:holochain-open-dev/templates#hc-scaffold-zome-template -- web-app
 ```
 
 2. If you already have an existing project, add the `holochain-open-dev/templates` repository as input to your flake, and use it in the packages or your `devShell`:
@@ -69,7 +69,7 @@ nix run github:holochain-open-dev/templates#hc-scaffold-module-template -- web-a
                 pkgs.nodejs_20
                 # more packages go here
 +             ] ++ [
-+                # inputs'.scaffolding.packages.hc-scaffold-module-template # if your repository is a module
++                # inputs'.scaffolding.packages.hc-scaffold-zome-template # if your repository is a zome
 +                inputs'.scaffolding.packages.hc-scaffold-app-template      # if your repository is an app
               ];
             };
