@@ -12,10 +12,32 @@ import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/e
 
 2. Use it in the html side of your web-app like this:
 
-```html
-<{{kebab_case entry_type.name}}-summary>
+::: code-group
+```html [Lit]
+<{{kebab_case entry_type.name}}-summary .{{camel_case entry_type.name}}Hash=${ {{camel_case entry_type.name}}Hash }>
 </{{kebab_case entry_type.name}}-summary>
 ```
+
+```html [React]
+<{{kebab_case entry_type.name}}-summary {{camel_case entry_type.name}}Hash={ {{camel_case entry_type.name}}Hash }>
+</{{kebab_case entry_type.name}}-summary>
+```
+
+```html [Angular]
+<{{kebab_case entry_type.name}}-summary :{{camel_case entry_type.name}}Hash=[{{camel_case entry_type.name}}Hash]>
+</{{kebab_case entry_type.name}}-summary>
+```
+
+```html [Vue]
+<{{kebab_case entry_type.name}}-summary :{{camel_case entry_type.name}}Hash="{{camel_case entry_type.name}}Hash">
+</{{kebab_case entry_type.name}}-summary>
+```
+
+```html [Svelte]
+<{{kebab_case entry_type.name}}-summary {{kebab_case entry_type.name}}-ash={encodeHashToBase64({{camel_case entry_type.name}}Hash)}>
+</{{kebab_case entry_type.name}}-summary>
+```
+:::
 
 > [!WARNING]
 > Like all the elements in this module, `<{{kebab_case entry_type.name}}-summary>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.

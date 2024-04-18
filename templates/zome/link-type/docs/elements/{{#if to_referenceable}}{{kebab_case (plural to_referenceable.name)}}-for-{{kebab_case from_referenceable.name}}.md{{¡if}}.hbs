@@ -12,10 +12,32 @@ import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/e
 
 2. Use it in the html side of your web-app like this:
 
-```html
-<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+::: code-group
+```html [Lit]
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} .{{camel_case from_referenceable.singular_arg}}=${ {{camel_case from_referenceable.singular_arg}} }>
 </{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
 ```
+
+```html [React]
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} {{camel_case from_referenceable.singular_arg}}={ {{camel_case from_referenceable.singular_arg}} }>
+</{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+```
+
+```html [Angular]
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} :{{camel_case from_referenceable.singular_arg}}=[{{camel_case from_referenceable.singular_arg}}]>
+</{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+```
+
+```html [Vue]
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} :{{camel_case from_referenceable.singular_arg}}="{{camel_case from_referenceable.singular_arg}}">
+</{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+```
+
+```html [Svelte]
+<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} {{kebab_case from_referenceable.singular_arg}}={encodeHashToBase64({{camel_case from_referenceable.singular_arg}})}>
+</{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+```
+:::
 
 > [!WARNING]
 > Like all the elements in this module, `<{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.

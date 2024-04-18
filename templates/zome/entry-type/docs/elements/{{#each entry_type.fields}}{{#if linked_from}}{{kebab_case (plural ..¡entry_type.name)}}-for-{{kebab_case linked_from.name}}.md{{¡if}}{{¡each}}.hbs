@@ -17,6 +17,33 @@ import '@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}/dis
 </{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
 ```
 
+::: code-group
+```html [Lit]
+<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} .{{camel_case linked_from.singular_arg}}=${ {{camel_case linked_from.singular_arg}} }>
+</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+```
+
+```html [React]
+<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{camel_case linked_from.singular_arg}}={ {{camel_case linked_from.singular_arg}} }>
+</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+```
+
+```html [Angular]
+<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} :{{camel_case linked_from.singular_arg}}=[{{camel_case linked_from.singular_arg}}]>
+</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+```
+
+```html [Vue]
+<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} :{{camel_case linked_from.singular_arg}}="{{camel_case linked_from.singular_arg}}">
+</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+```
+
+```html [Svelte]
+<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{kebab_case linked_from.singular_arg}}={encodeHashToBase64({{camel_case linked_from.singular_arg}})}>
+</{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+```
+:::
+
 > [!WARNING]
 > Like all the elements in this module, `<{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>` needs to be placed inside an initialized `<{{kebab_case ../coordinator_zome_manifest.name}}-context>`.
 
