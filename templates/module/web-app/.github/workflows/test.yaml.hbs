@@ -11,7 +11,7 @@ jobs:
   testbuild:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install nix
         uses: cachix/install-nix-action@v25
@@ -28,5 +28,4 @@ jobs:
 
       - name: Install and test
         run: |
-          nix develop --command bash -c "npm i && npm t && npm run build -w {{kebab_case app_name}}-lib"
-
+          nix develop --command bash -c "pnpm i && pnpm t && pnpm -F @holochain-open-dev/{{kebab_case app_name}} build"
