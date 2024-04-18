@@ -7,7 +7,7 @@
 1. Import the `<{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>` element somewhere in the javascript side of your web-app like this:
 
 ```js
-import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}.js'
+import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}.js'
 ```
 
 2. Use it in the html side of your web-app like this:
@@ -18,7 +18,7 @@ import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case (
 ```
 
 > [!WARNING]
-> Like all the elements in this module, `<{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>` needs to be placed inside an initialized `<{{kebab_case app_name}}-context>`.
+> Like all the elements in this module, `<{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.
 
 ## Demo
 
@@ -29,22 +29,22 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
-import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
-import { decodeHashFromBase64, fakeActionHash } from '@holochain/client';
-import { render, html } from "lit";
+import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/mocks.js";
+import { {{pascal_case coordinator_zome_manifest.name}}Store, {{pascal_case coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}";
+import { decodeHashFromBase64, encodeHashToBase64, fakeActionHash } from '@holochain/client';
+import { render } from "lit";
+import { unsafeStatic, html } from "lit/static-html.js";
 
 onMounted(async () => {
   // Elements need to be imported on the client side, not the SSR side
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case app_name}}-context.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case coordinator_zome_manifest.name}}-context.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}.js');
 
-  const mock = new {{pascal_case app_name}}ZomeMock();
-  const client = new {{pascal_case app_name}}Client(mock);
-
+  const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
+  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock);
 
   const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}(client);
 
@@ -66,13 +66,13 @@ onMounted(async () => {
   {{/if}}
 
   render(html`
-    <{{kebab_case app_name}}-context .store=${store}>
+    <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
         <template data-element="{{(plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
-          <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} .{{camel_case to_referenceable.singular_arg}}=${toActionHash}></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
+          <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} {{kebab_case to_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64((toActionHash))}"></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
         </template>
       </api-demo>
-    </{{kebab_case app_name}}-context>
+    </{{kebab_case coordinator_zome_manifest.name}}-context>
   `, document.querySelector('element-demo'))
   })
 
@@ -81,7 +81,7 @@ onMounted(async () => {
 
 ## API Reference
 
-`{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
+`<{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
 
 <api-docs src="custom-elements.json" only="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}">
 </api-docs>

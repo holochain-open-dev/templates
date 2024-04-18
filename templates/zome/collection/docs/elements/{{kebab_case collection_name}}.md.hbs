@@ -1,13 +1,13 @@
-# `{{kebab_case collection_name}}`
+# `<{{kebab_case collection_name}}>`
 
 ## Usage
 
 0. If you haven't already, [go through the setup for the module](/setup).
 
-1. Import the `{{kebab_case collection_name}}` element somewhere in the javascript side of your web-app like this:
+1. Import the `<{{kebab_case collection_name}}>` element somewhere in the javascript side of your web-app like this:
 
 ```js
-import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case collection_name}}.js'
+import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case collection_name}}.js'
 ```
 
 2. Use it in the html side of your web-app like this:
@@ -18,7 +18,7 @@ import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case c
 ```
 
 > [!WARNING]
-> Like all the elements in this module, `<{{kebab_case collection_name}}>` needs to be placed inside an initialized `<{{kebab_case app_name}}-context>`.
+> Like all the elements in this module, `<{{kebab_case collection_name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.
 
 ## Demo
 
@@ -29,36 +29,37 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
-import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
-import { decodeHashFromBase64 } from '@holochain/client';
-import { render, html } from "lit";
+import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case referenceable.name}} } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/mocks.js";
+import { {{pascal_case coordinator_zome_manifest.name}}Store, {{pascal_case coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}";
+import { decodeHashFromBase64, encodeHashToBase64 } from '@holochain/client';
+import { render } from "lit";
+import { html, unsafeStatic } from "lit/static-html.js";
 
 onMounted(async () => {
   // Elements need to be imported on the client side, not the SSR side
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case app_name}}-context.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case collection_name}}.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case coordinator_zome_manifest.name}}-context.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case collection_name}}.js');
 
-  const mock = new {{pascal_case app_name}}ZomeMock();
-  const client = new {{pascal_case app_name}}Client(mock);
+  const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
+  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock);
 
   const {{camel_case referenceable.name}} = await sample{{pascal_case referenceable.name}}(client);
 
   const record = await mock.create_{{snake_case referenceable.name}}({{camel_case referenceable.name}});
 
-  const store = new {{pascal_case app_name}}Store(client);
+  const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
   
   render(html`
-    <{{kebab_case app_name}}-context .store=${store}>
+    <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="{{kebab_case collection_name}}" exclude-knobs="store">
         <template data-element="{{kebab_case collection_name}}" data-target="host">
-          <{{kebab_case collection_name}} {{#if (eq collection_type.type "ByAuthor")}}.author=${record.signed_action.hashed.content.author}{{/if}}></{{kebab_case collection_name}}>
+          <{{kebab_case collection_name}} {{#if (eq collection_type.type "ByAuthor")}}author="${unsafeStatic(encodeHashToBase64(record.signed_action.hashed.content.author))}"{{/if}}></{{kebab_case collection_name}}>
         </template>
       </api-demo>
-    </{{kebab_case app_name}}-context>
+    </{{kebab_case coordinator_zome_manifest.name}}-context>
   `, document.querySelector('element-demo'))
   })
 
@@ -67,7 +68,7 @@ onMounted(async () => {
 
 ## API Reference
 
-`{{kebab_case collection_name}}` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
+`<{{kebab_case collection_name}}>` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
 
 <api-docs src="custom-elements.json" only="{{kebab_case collection_name}}">
 </api-docs>

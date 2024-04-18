@@ -1,14 +1,13 @@
-
-# `edit-{{kebab_case entry_type.name}}`
+# `<edit-{{kebab_case entry_type.name}}>`
 
 ## Usage
 
 0. If you haven't already, [go through the setup for the module](/setup).
 
-1. Import the `edit-{{kebab_case entry_type.name}}` element somewhere in the javascript side of your web-app like this:
+1. Import the `<edit-{{kebab_case entry_type.name}}>` element somewhere in the javascript side of your web-app like this:
 
 ```js
-import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/edit-{{kebab_case entry_type.name}}.js'
+import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/edit-{{kebab_case entry_type.name}}.js'
 ```
 
 2. Use it in the html side of your web-app like this:
@@ -19,7 +18,7 @@ import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/edit-{{kebab_c
 ```
 
 > [!WARNING]
-> Like all the elements in this module, `<edit-{{kebab_case entry_type.name}}>` needs to be placed inside an initialized `<{{kebab_case app_name}}-context>`.
+> Like all the elements in this module, `<edit-{{kebab_case entry_type.name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.
 
 ## Demo
 
@@ -30,34 +29,37 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
-import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
-import { decodeHashFromBase64 } from '@holochain/client';
-import { render, html } from "lit";
+import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/mocks.js";
+import { {{pascal_case coordinator_zome_manifest.name}}Store, {{pascal_case coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}";
+import { decodeHashFromBase64, encodeHashToBase64 } from '@holochain/client';
+import { render } from "lit";
+import { html, unsafeStatic } from "lit/static-html.js";
 
 onMounted(async () => {
   // Elements need to be imported on the client side, not the SSR side
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case app_name}}-context.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/edit-{{kebab_case entry_type.name}}.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case coordinator_zome_manifest.name}}-context.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/edit-{{kebab_case entry_type.name}}.js');
 
-  const mock = new {{pascal_case app_name}}ZomeMock();
-  const client = new {{pascal_case app_name}}Client(mock);
+  const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
+  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock);
 
   const {{camel_case entry_type.name}} = await sample{{pascal_case entry_type.name}}(client);
 
   const record = await mock.create_{{snake_case entry_type.name}}({{camel_case entry_type.name}});
 
-  const store = new {{pascal_case app_name}}Store(client);
+  const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
   
   render(html`
-    <{{kebab_case app_name}}-context .store=${store}>
+    <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="edit-{{kebab_case entry_type.name}}" exclude-knobs="store">
-        <edit-{{kebab_case entry_type.name}} .original{{pascal_case entry_type.name}}Hash=${record.signed_action.hashed.hash} .currentRecord=${record}></edit-{{kebab_case entry_type.name}}>
+        <template data-element="edit-{{kebab_case entry_type.name}}" data-target="host">
+          <edit-{{kebab_case entry_type.name}} {{kebab_case entry_type.name}}-hash="${unsafeStatic(encodeHashToBase64(record.signed_action.hashed.hash))}"></edit-{{kebab_case entry_type.name}}>
+        </template>
       </api-demo>
-    </{{kebab_case app_name}}-context>
+    </{{kebab_case coordinator_zome_manifest.name}}-context>
   `, document.querySelector('element-demo'))
   })
 
@@ -66,7 +68,7 @@ onMounted(async () => {
 
 ## API Reference
 
-`edit-{{kebab_case entry_type.name}}` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
+`<edit-{{kebab_case entry_type.name}}>` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
 
 <api-docs src="custom-elements.json" only="edit-{{kebab_case entry_type.name}}">
 </api-docs>

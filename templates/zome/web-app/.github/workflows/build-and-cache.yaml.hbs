@@ -1,7 +1,5 @@
 name: "Build and cache nix packages"
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
   push: 
     branches: [ main ]
 
@@ -47,4 +45,3 @@ jobs:
           nix build -L .#{{snake_case app_name}}
           cachix push holochain-open-dev $(nix path-info .#{{snake_case app_name}})
           cachix pin holochain-open-dev {{snake_case app_name}}$(nix path-info .#{{snake_case app_name}})
-

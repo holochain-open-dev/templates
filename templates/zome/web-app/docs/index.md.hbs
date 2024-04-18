@@ -3,34 +3,28 @@
 layout: home
 
 hero:
-  name: "@holochain-open-dev/profiles"
-  text: "Profiles module for holochain apps"
-  tagline: Plug-and-play profile management for your hApps
+  name: "@holochain-open-dev/{{kebab_case app_name}}"
+  text: "{{title_case app_name}} zome for holochain apps"
+  tagline: Plug-and-play {{lower_case app_name}} management for your hApps
   actions:
     - theme: brand
       text: Setup
       link: /setup.md
     - theme: alt
       text: Integrity Zome API
-      link: "/backend/doc/hc_zome_profiles_integrity/index.html"
+      link: "/backend/doc/{{snake_case app_name}}_integrity/index.html"
       target: "_blank"
     - theme: alt
       text: Coordinator Zome API
-      link: "/backend/doc/hc_zome_profiles_coordinator/index.html"
+      link: "/backend/doc/{{snake_case app_name}}/index.html"
       target: "_blank"
     - theme: alt
       text: Frontend API
-      link: "/elements/profile-prompt.md"
+      link: "/elements/{{kebab_case app_name}}-store.md"
       target: "_blank"
 
 features:
   - title: UI+Backend Module
     details: Following the holochain-open-dev guidelines
     link: https://holochain-open-dev.github.io
-  - title: Manage your profile
-    details: Create and update your profile
-  - title: Search by nickname
-    details: Form elements for entries with a field of type `AgentPubKey`
-  - title: Configurable profile fields
-    details: Customize the fields that you need in your hApp
 ---

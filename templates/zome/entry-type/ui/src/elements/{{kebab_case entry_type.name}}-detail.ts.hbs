@@ -118,12 +118,9 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
   {{#if crud.update}}
           if (this._editing) {
       	  return html`<edit-{{kebab_case entry_type.name}}
-    {{#if link_from_original_to_each_update}}
-      	    .original{{pascal_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
-    {{/if}}
-      	    .currentRecord=${ {{camel_case entry_type.name}} }
-              @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
-        	    @edit-canceled=${() => { this._editing = false; } }
+      	    .{{camel_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
+            @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
+      	    @edit-canceled=${() => { this._editing = false; } }
       	    style="display: flex; flex: 1;"
       	  ></edit-{{kebab_case entry_type.name}}>`;
         }

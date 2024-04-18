@@ -1,13 +1,13 @@
-# `create-{{kebab_case entry_type.name}}`
+# `<create-{{kebab_case entry_type.name}}>`
 
 ## Usage
 
 0. If you haven't already, [go through the setup for the module](/setup).
 
-1. Import the `create-{{kebab_case entry_type.name}}` element somewhere in the javascript side of your web-app like this:
+1. Import the `<create-{{kebab_case entry_type.name}}>` element somewhere in the javascript side of your web-app like this:
 
 ```js
-import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/create-{{kebab_case entry_type.name}}.js'
+import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/create-{{kebab_case entry_type.name}}.js'
 ```
 
 2. Use it in the html side of your web-app like this:
@@ -18,7 +18,7 @@ import '@holochain-open-dev/{{kebab_case app_name}}/dist/elements/create-{{kebab
 ```
 
 > [!WARNING]
-> Like all the elements in this module, `<create-{{kebab_case entry_type.name}}>` needs to be placed inside an initialized `<{{kebab_case app_name}}-context>`.
+> Like all the elements in this module, `<create-{{kebab_case entry_type.name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.
 
 ## Demo
 
@@ -29,8 +29,8 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case app_name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case app_name}}/dist/mocks.js";
-import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from "@holochain-open-dev/{{kebab_case app_name}}";
+import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case entry_type.name}} } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/mocks.js";
+import { {{pascal_case coordinator_zome_manifest.name}}Store, {{pascal_case coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}";
 import { decodeHashFromBase64 } from '@holochain/client';
 import { render, html } from "lit";
 
@@ -39,23 +39,23 @@ onMounted(async () => {
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/{{kebab_case app_name}}-context.js');
-  await import('@holochain-open-dev/{{kebab_case app_name}}/dist/elements/create-{{kebab_case entry_type.name}}.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case coordinator_zome_manifest.name}}-context.js');
+  await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/create-{{kebab_case entry_type.name}}.js');
 
-  const mock = new {{pascal_case app_name}}ZomeMock();
-  const client = new {{pascal_case app_name}}Client(mock);
+  const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
+  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock);
 
   const {{camel_case entry_type.name}} = await sample{{pascal_case entry_type.name}}(client);
 
   const record = await mock.create_{{snake_case entry_type.name}}({{camel_case entry_type.name}});
 
-  const store = new {{pascal_case app_name}}Store(client);
+  const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
   
   render(html`
-    <{{kebab_case app_name}}-context .store=${store}>
+    <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
       <api-demo src="custom-elements.json" only="create-{{kebab_case entry_type.name}}" exclude-knobs="store">
       </api-demo>
-    </{{kebab_case app_name}}-context>
+    </{{kebab_case coordinator_zome_manifest.name}}-context>
   `, document.querySelector('element-demo'))
   })
 
@@ -64,7 +64,7 @@ onMounted(async () => {
 
 ## API Reference
 
-`create-{{kebab_case entry_type.name}}` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
+`<create-{{kebab_case entry_type.name}}>` is a [custom element](https://web.dev/articles/custom-elements-v1), which means that it can be used in any web app or website. Here is the reference for its API:
 
 <api-docs src="custom-elements.json" only="create-{{kebab_case entry_type.name}}">
 </api-docs>
