@@ -12,10 +12,83 @@ import '@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/e
 
 2. Use it in the html side of your web-app like this:
 
-```html
-<create-{{kebab_case entry_type.name}}>
+
+::: code-group
+```html [Lit]
+<create-{{kebab_case entry_type.name}} 
+  {{#each entry_type.fields}}
+    {{#if (not widget) }}
+      {{#if (not (eq cardinality "vector" ) )}}
+  .{{camel_case field_name}}=${ {{camel_case field_name}} }
+      {{else}}
+  .{{camel_case field_name}}=${[{{camel_case field_name}}]}
+      {{/if}}
+    {{/if}}
+  {{/each}}
+>
 </create-{{kebab_case entry_type.name}}>
 ```
+
+```html [React]
+<create-{{kebab_case entry_type.name}}
+  {{#each entry_type.fields}}
+    {{#if (not widget) }}
+      {{#if (not (eq cardinality "vector" ) )}}
+  {{camel_case field_name}}={ {{camel_case field_name}} }
+      {{else}}
+  {{camel_case field_name}}={[{{camel_case field_name}}]}
+      {{/if}}
+    {{/if}}
+  {{/each}}
+>
+</create-{{kebab_case entry_type.name}}>
+```
+
+```html [Angular]
+<create-{{kebab_case entry_type.name}}
+  {{#each entry_type.fields}}
+    {{#if (not widget) }}
+      {{#if (not (eq cardinality "vector" ) )}}
+  [{{camel_case field_name}}]="{{camel_case field_name}}"
+      {{else}}
+  [{{camel_case field_name}}]="[{{camel_case field_name}}]"
+      {{/if}}
+    {{/if}}
+  {{/each}}
+>
+</create-{{kebab_case entry_type.name}}>
+```
+
+```html [Vue]
+<create-{{kebab_case entry_type.name}}
+  {{#each entry_type.fields}}
+    {{#if (not widget) }}
+      {{#if (not (eq cardinality "vector" ) )}}
+  :{{camel_case field_name}}="{{camel_case field_name}}"
+      {{else}}
+  :{{camel_case field_name}}="[{{camel_case field_name}}]"
+      {{/if}}
+    {{/if}}
+  {{/each}}
+>
+</create-{{kebab_case entry_type.name}}>
+```
+
+```html [Svelte]
+<create-{{kebab_case entry_type.name}}
+  {{#each entry_type.fields}}
+    {{#if (not widget) }}
+      {{#if (not (eq cardinality "vector" ) )}}
+  {{kebab_case field_name}}={encodeHashToBase64({{camel_case field_name}})}
+      {{else}}
+  {{kebab_case field_name}}={[encodeHashToBase64({{camel_case field_name}})]}
+      {{/if}}
+    {{/if}}
+  {{/each}}
+>
+</create-{{kebab_case entry_type.name}}>
+```
+:::
 
 > [!WARNING]
 > Like all the elements in this module, `<create-{{kebab_case entry_type.name}}>` needs to be placed inside an initialized `<{{kebab_case coordinator_zome_manifest.name}}-context>`.
