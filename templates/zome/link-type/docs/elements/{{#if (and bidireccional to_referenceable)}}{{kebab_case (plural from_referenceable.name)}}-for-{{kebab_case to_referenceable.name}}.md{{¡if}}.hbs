@@ -53,6 +53,8 @@ Here is an interactive demo of the element:
 import { onMounted } from "vue";
 import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case to_referenceable.name}} } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/mocks.js";
 import { {{pascal_case coordinator_zome_manifest.name}}Store, {{pascal_case coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}";
+import { ProfilesClient, ProfilesStore } from '@holochain-open-dev/profiles';
+import { demoProfiles, ProfilesZomeMock } from '@holochain-open-dev/profiles/dist/mocks.js';
 import { decodeHashFromBase64, encodeHashToBase64, fakeActionHash } from '@holochain/client';
 import { render } from "lit";
 import { unsafeStatic, html } from "lit/static-html.js";
@@ -62,11 +64,20 @@ onMounted(async () => {
   // Reference: https://vitepress.dev/guide/ssr-compat#importing-in-mounted-hook
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
+  await import('@holochain-open-dev/profiles/dist/elements/profiles-context.js');
   await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case coordinator_zome_manifest.name}}-context.js');
   await import('@holochain-open-dev/{{kebab_case coordinator_zome_manifest.name}}/dist/elements/{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}.js');
 
+  const profiles = await demoProfiles();
+
+  const profilesMock = new ProfilesZomeMock(
+    profiles,
+    decodeHashFromBase64("uhCAk8OKb2hznzG023xxh_vR3Q7Y4IEOAo4B0QN7ZhbGYeww")
+  );
+  const profilesStore = new ProfilesStore(new ProfilesClient(profilesMock, "{{snake_case dna_role_name}}"));
+
   const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
-  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock);
+  const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock, "{{snake_case dna_role_name}}");
 
   const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}(client);
 
@@ -90,13 +101,15 @@ onMounted(async () => {
   const store = new {{pascal_case coordinator_zome_manifest.name}}Store(client);
 
   render(html`
-    <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
-      <api-demo src="custom-elements.json" only="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
-        <template data-element="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
-          <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} {{kebab_case to_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64((toActionHash))}"></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
-        </template>
-      </api-demo>
-    </{{kebab_case coordinator_zome_manifest.name}}-context>
+    <profiles-context .store=${profilesStore}>
+      <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
+        <api-demo src="custom-elements.json" only="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" exclude-knobs="store">
+          <template data-element="{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}" data-target="host">
+            <{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}} {{kebab_case to_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64((toActionHash))}"></{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}>
+          </template>
+        </api-demo>
+      </{{kebab_case coordinator_zome_manifest.name}}-context>
+    </profiles-context>
   `, document.querySelector('element-demo'))
   })
 
