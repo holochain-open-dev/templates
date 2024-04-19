@@ -26,7 +26,9 @@ import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../co
 @customElement('{{kebab_case (plural from_referenceable.name)}}-for-{{kebab_case to_referenceable.name}}')
 export class {{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} extends LitElement {
 
-  // REQUIRED. The {{pascal_case to_referenceable.singular_arg}} for which the {{plural (pascal_case from_referenceable.name)}} should be fetched
+  /**
+   * REQUIRED. The {{pascal_case to_referenceable.singular_arg}} for which the {{plural (pascal_case from_referenceable.name)}} should be fetched
+   */
   @property(hashProperty('{{kebab_case to_referenceable.singular_arg}}'))
   {{camel_case to_referenceable.singular_arg}}!: {{to_referenceable.hash_type}}; 
 

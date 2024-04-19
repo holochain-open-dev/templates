@@ -36,7 +36,9 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 @customElement('edit-{{kebab_case entry_type.name}}')
 export class Edit{{pascal_case entry_type.name}} extends LitElement {
 
-  // REQUIRED. The hash of the original `Create` action for this {{pascal_case entry_type.name}}
+  /**
+   * REQUIRED. The hash of the original `Create` action for this {{pascal_case entry_type.name}}
+   */
   @property(hashProperty('{{kebab_case entry_type.name}}-hash'))
   {{camel_case entry_type.name}}Hash!: ActionHash;
 

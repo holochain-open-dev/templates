@@ -37,16 +37,29 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 export class Create{{pascal_case entry_type.name}} extends LitElement {
   {{#each entry_type.fields}}
     {{#if (not widget) }}
-      {{#if (not (eq cardinality "vector" ) )}}
-  // REQUIRED. The {{lower_case field_name}} for this {{pascal_case ../entry_type.name}}
+      {{#if (eq cardinality "single" )}}
+  /**
+   * REQUIRED. The {{lower_case field_name}} for this {{pascal_case ../entry_type.name}}
+   */
   @property({{#if (or (eq field_type.type "AgentPubKey") (or (eq field_type.type "ActionHash") (eq field_type.type "EntryHash" ) ) ) }}hashProperty('{{kebab_case field_name}}'){{/if}})
   {{camel_case field_name}}!: {{> (concat field_type.type "/type") }};
 
       {{else}}
-  // REQUIRED. The {{plural (lower_case field_name)}} for this {{pascal_case ../entry_type.name}}
+        {{#if (eq cardinality "vector" )}}
+  /**
+   * REQUIRED. The {{plural (lower_case field_name)}} for this {{pascal_case ../entry_type.name}}
+   */
   @property()
   {{camel_case field_name}}!: Array<{{> (concat field_type.type "/type") }}>;
 
+        {{else}}
+  /**
+   * OPTIONAl. The {{lower_case field_name}} for this {{pascal_case ../entry_type.name}}
+   */
+  @property({{#if (or (eq field_type.type "AgentPubKey") (or (eq field_type.type "ActionHash") (eq field_type.type "EntryHash" ) ) ) }}hashProperty('{{kebab_case field_name}}'){{/if}})
+  {{camel_case field_name}}: {{> (concat field_type.type "/type") }} | undefined;
+
+        {{/if}}
       {{/if}}
     {{/if}}
   {{/each}}

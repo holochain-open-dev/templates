@@ -32,7 +32,9 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
 @customElement('{{kebab_case entry_type.name}}-summary')
 export class {{pascal_case entry_type.name}}Summary extends LitElement {
 
-  // REQUIRED. The hash of the {{pascal_case entry_type.name}} to show
+  /**
+   * REQUIRED. The hash of the {{pascal_case entry_type.name}} to show
+   */
   @property(hashProperty('{{kebab_case entry_type.name}}-hash'))
   {{camel_case entry_type.name}}Hash!: {{#if entry_type.reference_entry_hash}}EntryHash{{else}}ActionHash{{/if}};
 

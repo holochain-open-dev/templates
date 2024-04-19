@@ -31,7 +31,9 @@ import './{{kebab_case ../entry_type.name}}-summary.js';
 @customElement('{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}')
 export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} extends LitElement {
 
-  // REQUIRED. The {{pascal_case linked_from.singular_arg}} for which the {{pascal_case (plural ../entry_type.name)}} should be fetched
+  /**
+   * REQUIRED. The {{pascal_case linked_from.singular_arg}} for which the {{pascal_case (plural ../entry_type.name)}} should be fetched
+   */
   @property(hashProperty('{{kebab_case linked_from.singular_arg}}'))
   {{camel_case linked_from.singular_arg}}!: {{linked_from.hash_type}};
 

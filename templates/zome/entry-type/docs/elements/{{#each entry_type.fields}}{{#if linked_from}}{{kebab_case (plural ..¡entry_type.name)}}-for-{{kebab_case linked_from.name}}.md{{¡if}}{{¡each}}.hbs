@@ -57,7 +57,7 @@ import { decodeHashFromBase64, encodeHashToBase64 } from '@holochain/client';
 import { render } from "lit";
 import { html, unsafeStatic } from "lit/static-html.js";
 
-import { {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock, {{#if (ne linked_from.hash_type "AgentPubKey")}}sample{{pascal_case linked_from.name}}, {{/if}}sample{{pascal_case ../entry_type.name}} } from "../../ui/src/mocks.ts";
+import { {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock, {{#if (and (ne linked_from.name ../entry_type.name) (ne linked_from.hash_type "AgentPubKey"))}}sample{{pascal_case linked_from.name}}, {{/if}}sample{{pascal_case ../entry_type.name}} } from "../../ui/src/mocks.ts";
 import { {{pascal_case ../coordinator_zome_manifest.name}}Store } from "../../ui/src/{{kebab_case ../coordinator_zome_manifest.name}}-store.ts";
 import { {{pascal_case ../coordinator_zome_manifest.name}}Client } from "../../ui/src/{{kebab_case ../coordinator_zome_manifest.name}}-client.ts";
 

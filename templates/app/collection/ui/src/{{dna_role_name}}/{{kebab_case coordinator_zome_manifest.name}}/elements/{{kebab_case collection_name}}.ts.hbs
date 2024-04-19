@@ -23,7 +23,9 @@ import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../co
 export class {{pascal_case collection_name}} extends LitElement {
   {{#if (eq collection_type.type "ByAuthor")}}
 
-  // REQUIRED. The author for which the {{plural (pascal_case referenceable.name)}} should be fetched
+  /**
+   * REQUIRED. The author for which the {{plural (pascal_case referenceable.name)}} should be fetched
+   */
   @property(hashProperty('author'))
   author!: AgentPubKey;
   {{/if}}
