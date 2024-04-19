@@ -53,11 +53,11 @@ Here is an interactive demo of the element:
 import { onMounted } from "vue";
 import { ProfilesClient, ProfilesStore } from '@holochain-open-dev/profiles';
 import { demoProfiles, ProfilesZomeMock } from '@holochain-open-dev/profiles/dist/mocks.js';
-import { decodeHashFromBase64, encodeHashToBase64, fakeActionHash } from '@holochain/client';
+import { decodeHashFromBase64, encodeHashToBase64, fakeActionHash, fakeAgentPubKey } from '@holochain/client';
 import { render } from "lit";
 import { html, unsafeStatic } from "lit/static-html.js";
 
-import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case from_referenceable.name}} } from "../../ui/src/mocks.ts";
+import { {{pascal_case coordinator_zome_manifest.name}}ZomeMock{{#if (eq to_referenceable.hash_type "ActionHash")}}, sample{{pascal_case to_referenceable.name}}{{/if}} } from "../../ui/src/mocks.ts";
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from "../../ui/src/{{kebab_case coordinator_zome_manifest.name}}-store.ts";
 import { {{pascal_case coordinator_zome_manifest.name}}Client } from "../../ui/src/{{kebab_case coordinator_zome_manifest.name}}-client.ts";
 
@@ -71,32 +71,35 @@ onMounted(async () => {
   if (!customElements.get('{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}')) await import('../../ui/src/elements/{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}.ts');
 
   const profiles = await demoProfiles();
+  const myPubKey = Array.from(profiles.keys())[0];
 
-  const profilesMock = new ProfilesZomeMock(
-    profiles,
-    Array.from(profiles.keys())[0]
-  );
+  const profilesMock = new ProfilesZomeMock(profiles, myPubKey);
   const profilesStore = new ProfilesStore(new ProfilesClient(profilesMock, "{{snake_case dna_role_name}}"));
 
   const mock = new {{pascal_case coordinator_zome_manifest.name}}ZomeMock();
   const client = new {{pascal_case coordinator_zome_manifest.name}}Client(mock, "{{snake_case dna_role_name}}");
 
-  const {{camel_case from_referenceable.name}} = await sample{{pascal_case from_referenceable.name}}(client);
-
-  const record = await mock.create_{{snake_case from_referenceable.name}}({{camel_case from_referenceable.name}});
-
-  const fromActionHash = await fakeActionHash();
+  {{#if (eq from_referenceable.hash_type "ActionHash")}}
+  const fromHash = await fakeActionHash();
+  {{/if}}
+  {{#if (eq from_referenceable.hash_type "AgentPubKey")}}
+  const fromHash = await fakeAgentPubKey();
+  {{/if}}
 
   {{#if (eq to_referenceable.hash_type "ActionHash")}}
+  const {{camel_case to_referenceable.name}} = await sample{{pascal_case to_referenceable.name}}(client);
+
+  const record = await mock.create_{{snake_case to_referenceable.name}}({{camel_case to_referenceable.name}});
+
   await mock.add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}({
     {{to_referenceable.singular_arg}}: record.signed_action.hashed.hash,
-    {{from_referenceable.singular_arg}}: fromActionHash
+    {{from_referenceable.singular_arg}}: fromHash
   });
   {{/if}}
   {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
   await mock.add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}({
-    {{to_referenceable.singular_arg}}: record.signed_action.hashed.content.author,
-    {{from_referenceable.singular_arg}}: fromActionHash
+    {{to_referenceable.singular_arg}}: myPubKey,
+    {{from_referenceable.singular_arg}}: fromHash
   });
   {{/if}}
 
@@ -107,7 +110,7 @@ onMounted(async () => {
       <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
         <api-demo src="custom-elements.json" only="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" exclude-knobs="store">
           <template data-element="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" data-target="host">
-            <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} {{kebab_case from_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64(fromActionHash))}"></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
+            <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} {{kebab_case from_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64(fromHash))}"></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
           </template>
         </api-demo>
       </{{kebab_case coordinator_zome_manifest.name}}-context>

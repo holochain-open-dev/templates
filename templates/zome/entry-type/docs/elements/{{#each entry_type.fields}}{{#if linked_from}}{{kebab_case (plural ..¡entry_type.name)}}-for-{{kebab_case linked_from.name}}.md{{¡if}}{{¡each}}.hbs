@@ -71,16 +71,15 @@ onMounted(async () => {
   if (!customElements.get('{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}')) await import('../../ui/src/elements/{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}.ts');
 
   const profiles = await demoProfiles();
+  const myPubKey = Array.from(profiles.keys())[0];
 
-  const profilesMock = new ProfilesZomeMock(
-    profiles,
-    Array.from(profiles.keys())[0]
-  );
+  const profilesMock = new ProfilesZomeMock(profiles, myPubKey);
   const profilesStore = new ProfilesStore(new ProfilesClient(profilesMock, "{{snake_case ../dna_role_name}}"));
 
   const mock = new {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock();
   const client = new {{pascal_case ../coordinator_zome_manifest.name}}Client(mock, "{{snake_case ../dna_role_name}}");
 
+  {{#if (ne linked_from.hash_type "AgentPubKey")}}
   const {{camel_case linked_from.name}}1 = await sample{{pascal_case linked_from.name}}(client);
 
   const record1 = await mock.create_{{snake_case linked_from.name}}({{camel_case linked_from.name}}1);
@@ -88,6 +87,11 @@ onMounted(async () => {
   const {{camel_case ../entry_type.name}}2 = await sample{{pascal_case ../entry_type.name}}(client, {
     {{field_name}}: {{#if (eq cardinality "vector")}}[record1.signed_action.hashed.hash]{{else}}record1.signed_action.hashed.hash{{/if}}
   });
+  {{else}}
+  const {{camel_case ../entry_type.name}}2 = await sample{{pascal_case ../entry_type.name}}(client, {
+    {{field_name}}: {{#if (eq cardinality "vector")}}[myPubKey]{{else}}myPubKey{{/if}}
+  });
+  {{/if}}
 
   const record = await mock.create_{{snake_case ../entry_type.name}}({{camel_case ../entry_type.name}}2);
 
