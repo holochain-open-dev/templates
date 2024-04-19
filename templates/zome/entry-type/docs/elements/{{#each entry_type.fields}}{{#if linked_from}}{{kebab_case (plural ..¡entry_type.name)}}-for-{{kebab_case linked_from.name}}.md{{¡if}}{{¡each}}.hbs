@@ -51,13 +51,15 @@ Here is an interactive demo of the element:
 
 <script setup>
 import { onMounted } from "vue";
-import { {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case ../entry_type.name}} } from "@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}/dist/mocks.js";
-import { {{pascal_case ../coordinator_zome_manifest.name}}Store, {{pascal_case ../coordinator_zome_manifest.name}}Client } from "@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}";
 import { ProfilesClient, ProfilesStore } from '@holochain-open-dev/profiles';
 import { demoProfiles, ProfilesZomeMock } from '@holochain-open-dev/profiles/dist/mocks.js';
 import { decodeHashFromBase64, encodeHashToBase64 } from '@holochain/client';
 import { render } from "lit";
 import { html, unsafeStatic } from "lit/static-html.js";
+
+import { {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock, sample{{pascal_case ../entry_type.name}} } from "../../ui/src/mocks.ts";
+import { {{pascal_case ../coordinator_zome_manifest.name}}Store } from "../../ui/src/{{kebab_case ../coordinator_zome_manifest.name}}-store.ts";
+import { {{pascal_case ../coordinator_zome_manifest.name}}Client } from "../../ui/src/{{kebab_case ../coordinator_zome_manifest.name}}-client.ts";
 
 onMounted(async () => {
   // Elements need to be imported on the client side, not the SSR side
@@ -65,29 +67,29 @@ onMounted(async () => {
   await import('@api-viewer/docs/lib/api-docs.js');
   await import('@api-viewer/demo/lib/api-demo.js');
   await import('@holochain-open-dev/profiles/dist/elements/profiles-context.js');
-  await import('@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}/dist/elements/{{kebab_case ../coordinator_zome_manifest.name}}-context.js');
-  await import('@holochain-open-dev/{{kebab_case ../coordinator_zome_manifest.name}}/dist/elements/{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}.js');
+  if (!customElements.get('{{kebab_case ../coordinator_zome_manifest.name}}-context')) await import('../../ui/src/elements/{{kebab_case ../coordinator_zome_manifest.name}}-context.ts');
+  if (!customElements.get('{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}')) await import('../../ui/src/elements/{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}.ts');
 
   const profiles = await demoProfiles();
 
   const profilesMock = new ProfilesZomeMock(
     profiles,
-    decodeHashFromBase64("uhCAk8OKb2hznzG023xxh_vR3Q7Y4IEOAo4B0QN7ZhbGYeww")
+    Array.from(profiles.keys())[0]
   );
-  const profilesStore = new ProfilesStore(new ProfilesClient(profilesMock, "{{snake_case dna_role_name}}"));
+  const profilesStore = new ProfilesStore(new ProfilesClient(profilesMock, "{{snake_case ../dna_role_name}}"));
 
   const mock = new {{pascal_case ../coordinator_zome_manifest.name}}ZomeMock();
-  const client = new {{pascal_case ../coordinator_zome_manifest.name}}Client(mock, "{{snake_case dna_role_name}}");
+  const client = new {{pascal_case ../coordinator_zome_manifest.name}}Client(mock, "{{snake_case ../dna_role_name}}");
 
-  const {{camel_case linked_from.name}} = await sample{{pascal_case linked_from.name}}(client);
+  const {{camel_case linked_from.name}}1 = await sample{{pascal_case linked_from.name}}(client);
 
-  const record1 = await mock.create_{{snake_case linked_from.name}}({{camel_case linked_from.name}});
+  const record1 = await mock.create_{{snake_case linked_from.name}}({{camel_case linked_from.name}}1);
 
-  const {{camel_case ../entry_type.name}} = await sample{{pascal_case ../entry_type.name}}(client, {
+  const {{camel_case ../entry_type.name}}2 = await sample{{pascal_case ../entry_type.name}}(client, {
     {{field_name}}: {{#if (eq cardinality "vector")}}[record1.signed_action.hashed.hash]{{else}}record1.signed_action.hashed.hash{{/if}}
   });
 
-  const record = await mock.create_{{snake_case ../entry_type.name}}({{camel_case ../entry_type.name}});
+  const record = await mock.create_{{snake_case ../entry_type.name}}({{camel_case ../entry_type.name}}2);
 
   const store = new {{pascal_case ../coordinator_zome_manifest.name}}Store(client);
   
@@ -96,7 +98,7 @@ onMounted(async () => {
       <{{kebab_case ../coordinator_zome_manifest.name}}-context .store=${store}>
         <api-demo src="custom-elements.json" only="{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}" exclude-knobs="store">
           <template data-element="{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}" data-target="host">
-            <{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{#if (eq cardinality "vector")}}{{kebab_case linked_from.singular_arg}}="${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}[0]))}"{{else}}{{kebab_case linked_from.singular_arg}}=${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}.{{field_name}}))}" {{/if}}></{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
+            <{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}} {{#if (eq cardinality "vector")}}{{kebab_case linked_from.singular_arg}}="${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}2.{{field_name}}[0]))}"{{else}}{{kebab_case linked_from.singular_arg}}=${unsafeStatic(encodeHashToBase64({{camel_case ../entry_type.name}}2.{{field_name}}))}" {{/if}}></{{kebab_case (plural ../entry_type.name)}}-for-{{kebab_case linked_from.name}}>
           </template>
         </api-demo>
       </{{kebab_case ../coordinator_zome_manifest.name}}-context>

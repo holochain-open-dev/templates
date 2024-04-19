@@ -15,6 +15,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/alert/alert.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
   {{#each entry_type.fields}}
     {{#if widget}}
 {{> (concat field_type.type "/" widget "/edit/imports") }}
@@ -58,7 +59,7 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
    * @internal
    */
   @state()
-  _{{camel_case field_name}}Fields!: Array<number>; 
+  _{{camel_case field_name}}Fields: Array<number> = []; 
     {{/if}}
   {{/if}}
 {{/each}}
@@ -72,6 +73,9 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
     {{/if}}
   {{/if}}
 {{/each}}
+    setTimeout(() => {
+      (this.shadowRoot?.getElementById('form') as HTMLFormElement).reset();
+    });
   }
 
   async update{{pascal_case entry_type.name}}(currentRecord: EntryRecord<{{pascal_case entry_type.name}}>, fields: Partial<{{pascal_case entry_type.name}}>) {  
@@ -123,7 +127,8 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
       <sl-card>
         <span slot="header">${msg("Edit {{title_case entry_type.name}}")}</span>
 
-        <form 
+        <form
+          id="form"
           class="column"
           style="flex: 1; gap: 16px;"
           ${onSubmit(fields => this.update{{pascal_case entry_type.name}}(currentRecord, fields))}
