@@ -108,8 +108,8 @@ onMounted(async () => {
   render(html`
     <profiles-context .store=${profilesStore}>
       <{{kebab_case coordinator_zome_manifest.name}}-context .store=${store}>
-        <api-demo src="custom-elements.json" only="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" exclude-knobs="store">
-          <template data-element="{{(plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" data-target="host">
+        <api-demo src="custom-elements.json" only="{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" exclude-knobs="store">
+          <template data-element="{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}" data-target="host">
             <{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}} {{kebab_case from_referenceable.singular_arg}}="${unsafeStatic(encodeHashToBase64(fromHash))}"></{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}>
           </template>
         </api-demo>
