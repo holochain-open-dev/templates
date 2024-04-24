@@ -217,7 +217,11 @@ export async function sample{{pascal_case entry_type.name}}(client: {{pascal_cas
         {{/if}}
       {{/if}}
     {{else}}
+      {{#if (eq cardinality "vector")}}
+          {{field_name}}: [client.client.myPubKey],
+      {{else}}
           {{field_name}}: client.client.myPubKey,
+      {{/if}}
     {{/if}}
   {{else}}
       {{#if (eq cardinality "vector")}}

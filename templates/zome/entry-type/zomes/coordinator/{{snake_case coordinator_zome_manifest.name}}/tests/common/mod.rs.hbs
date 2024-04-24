@@ -27,13 +27,21 @@ pub async fn sample_{{snake_case entry_type.name}}_1(conductor: &SweetConductor,
         {{/if}}
       {{/if}}
     {{else}}
-          {{field_name}}: zome.cell_id().agent_pubkey().clone(),
+      {{#if (eq cardinality "vector")}}
+      {{field_name}}: vec![zome.cell_id().agent_pubkey().clone()],
+      {{else}}
+      {{field_name}}: zome.cell_id().agent_pubkey().clone(),
+      {{/if}}
     {{/if}}
   {{else}}
       {{#if (eq cardinality "vector")}}
 	  {{field_name}}: vec![{{> (concat field_type.type "/sample1")}}],
       {{else}}
+        {{#if (eq cardinality "option")}}
+	  {{field_name}}: Some({{> (concat field_type.type "/sample1")}}),
+        {{else}}
 	  {{field_name}}: {{> (concat field_type.type "/sample1")}},
+        {{/if}}
       {{/if}}
   {{/if}}
 {{/each}}

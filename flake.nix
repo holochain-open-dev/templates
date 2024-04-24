@@ -11,7 +11,6 @@
     flake-parts.follows = "holochain/flake-parts";
     scaffolding = {
       url = "github:holochain/scaffolding";
-      inputs.holochain.follows = "holochain";
     };
   };
 
