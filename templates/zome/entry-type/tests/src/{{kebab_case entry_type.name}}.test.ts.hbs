@@ -5,7 +5,7 @@ import { ActionHash, SignedActionHashed, Delete, Record } from '@holochain/clien
 import { decode } from '@msgpack/msgpack';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { cleanNodeDecoding } from '@holochain-open-dev/utils/dist/clean-node-decoding.js';
-import { toPromise } from '@holochain-open-dev/stores';
+import { toPromise } from '@holochain-open-dev/signals';
 
 import { {{pascal_case entry_type.name}} } from '../../ui/src/types.js';
 import { sample{{pascal_case entry_type.name}} } from '../../ui/src/mocks.js';

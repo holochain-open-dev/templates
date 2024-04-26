@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { subscribe } from '@holochain-open-dev/stores';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { renderAsyncStatus, sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -38,7 +38,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
  */
 @localized()
 @customElement('{{kebab_case entry_type.name}}-detail')
-export class {{pascal_case entry_type.name}}Detail extends LitElement {
+export class {{pascal_case entry_type.name}}Detail extends SignalWatcher(LitElement) {
 
   /**
    * REQUIRED. The hash of the {{pascal_case entry_type.name}} to show
@@ -114,11 +114,23 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
   }
   
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
-      renderAsyncStatus({
-        complete: {{camel_case entry_type.name}} => {
+    const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}}$;
+
+    switch ({{camel_case entry_type.name}}.status) {
+      case 'pending': 
+        return html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`;
+      case 'error': 
+        return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
+          .error=${{{camel_case entry_type.name}}.error}
+        ></display-error>`;
+      case 'completed':
   {{#if crud.update}}
-          if (this._editing) {
+        if (this._editing) {
       	  return html`<edit-{{kebab_case entry_type.name}}
       	    .{{camel_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
             @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
@@ -129,18 +141,7 @@ export class {{pascal_case entry_type.name}}Detail extends LitElement {
 
   {{/if}}
           return this.renderDetail({{camel_case entry_type.name}});
-        },
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
-        >
-          <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
-          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+    }
   }
   
   static styles = [sharedStyles];

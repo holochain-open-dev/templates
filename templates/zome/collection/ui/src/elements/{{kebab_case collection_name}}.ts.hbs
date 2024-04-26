@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
-import { subscribe } from '@holochain-open-dev/stores';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { hashProperty, sharedStyles, wrapPathInSvg, renderAsyncStatus } from '@holochain-open-dev/elements';
@@ -20,7 +20,7 @@ import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../co
  */
 @localized()
 @customElement('{{kebab_case collection_name}}')
-export class {{pascal_case collection_name}} extends LitElement {
+export class {{pascal_case collection_name}} extends SignalWatcher(LitElement) {
   {{#if (eq collection_type.type "ByAuthor")}}
 
   /**

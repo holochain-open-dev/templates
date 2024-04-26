@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { subscribe } from '@holochain-open-dev/stores';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { renderAsyncStatus, hashProperty, sharedStyles } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 
@@ -30,7 +30,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
  */
 @localized()
 @customElement('{{kebab_case entry_type.name}}-summary')
-export class {{pascal_case entry_type.name}}Summary extends LitElement {
+export class {{pascal_case entry_type.name}}Summary extends SignalWatcher(LitElement) {
 
   /**
    * REQUIRED. The hash of the {{pascal_case entry_type.name}} to show
@@ -66,31 +66,33 @@ export class {{pascal_case entry_type.name}}Summary extends LitElement {
   }
   
   render{{pascal_case entry_type.name}}() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
-      renderAsyncStatus({
-        complete: {{camel_case entry_type.name}} => this.renderSummary({{camel_case entry_type.name}}),
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+    const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion${{else}}entry${{/if}}.get();
+
+    switch ({{camel_case entry_type.name}}.status) {
+      case 'pending':
+        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
+        </div>`;
+      case 'error':
+        return html`<display-error
           .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+          .error=${{{camel_case entry_type.name}}}.error}
+        ></display-error>`;
+      case 'completed':
+        return this.renderSummary({{camel_case entry_type.name}});
+    }
   }
   
   render() {
     return html`<sl-card style="flex: 1; cursor: grab;" @click=${() => this.dispatchEvent(new CustomEvent('{{kebab_case entry_type.name}}-selected', {
-          composed: true,
-          bubbles: true,
-          detail: {
-            {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
-          }
-        }))}>
-        ${this.render{{pascal_case entry_type.name}}()}
+      composed: true,
+      bubbles: true,
+      detail: {
+        {{camel_case entry_type.name}}Hash: this.{{camel_case entry_type.name}}Hash
+      }
+    }))}>
+      ${this.render{{pascal_case entry_type.name}}()}
     </sl-card>`;
   }
 

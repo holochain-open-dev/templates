@@ -3,7 +3,7 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { consume } from '@lit/context';
 import { hashProperty, sharedStyles, wrapPathInSvg, renderAsyncStatus } from '@holochain-open-dev/elements';
-import { subscribe } from '@holochain-open-dev/stores';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
 
@@ -25,7 +25,7 @@ import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../co
  */
 @localized()
 @customElement('{{kebab_case (plural to_referenceable.name)}}-for-{{kebab_case from_referenceable.name}}')
-export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} extends LitElement {
+export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} extends SignalWatcher(LitElement) {
 
   /**
    * REQUIRED. The {{pascal_case from_referenceable.singular_arg}} for which the {{plural (pascal_case to_referenceable.name)}} should be fetched
@@ -69,24 +69,27 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   }
 
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{#if (eq from_referenceable.hash_type "AgentPubKey")}}{{plural (camel_case to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}){{else}}{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}},
-      renderAsyncStatus({
-      {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
-        complete: agents => this.renderList(agents),
-      {{else}}
-        complete: map => this.renderList(Array.from(map.keys())),
-      {{/if}}
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+    const {{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{#if (eq from_referenceable.hash_type "AgentPubKey")}}{{plural (camel_case to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}){{else}}{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{/if}}{{#if delete}}.live{{/if}}$.get(); 
+
+    
+    switch ({{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}}.status) {
+      case 'pending':
+        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
-          .headline=${msg("Error fetching the {{lower_case (plural from_referenceable.name)}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+        </div>`;
+      case 'error':
+        return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural to_referenceable.name)}}")}
+          .error=${ {{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}}.error}
+        ></display-error>`;
+      case 'completed':
+      {{#if (eq to_referenceable.hash_type "AgentPubKey")}}
+        return this.renderList(agents.value);
+      {{else}}
+        return this.renderList(Array.from(map.value.keys()));
+      {{/if}}
+    }
   }
   
   static styles = [sharedStyles];

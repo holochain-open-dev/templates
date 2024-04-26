@@ -4,7 +4,7 @@ import '@shoelace-style/shoelace/dist/themes/light.css';
 import { LitElement, css, html } from 'lit';
 import { property, state, customElement } from 'lit/decorators.js';
 import { AppAgentWebsocket, AppAgentClient, ActionHash } from '@holochain/client';
-import { subscribe } from '@holochain-open-dev/stores';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { sharedStyles, renderAsyncStatus } from '@holochain-open-dev/elements';
 import { provide } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -27,7 +27,7 @@ type View = { view: 'main' };
 
 @localized()
 @customElement('holochain-app')
-export class HolochainApp extends LitElement {
+export class HolochainApp extends SignalWatcher(LitElement) {
   @state() _loading = true;
   @state() _view = { view: 'main' };
   @state() _error: unknown | undefined;
@@ -55,22 +55,27 @@ export class HolochainApp extends LitElement {
   }
 
   renderMyProfile() {
-    return html`${subscribe(this._profilesStore.myProfile, renderAsyncStatus({
-      complete: profile => html`<div
+    const myProfile = this._profilesStore.myProfile$.get();
+
+    switch (myProfile.status) {
+      case 'pending':
+        return html`<profile-list-item-skeleton></profile-list-item-skeleton>`;
+      case 'error';
+        return html`<display-error
+            .headline=${msg('Error fetching the profile')}
+            .error=${myProfile.error}
+            tooltip
+          ></display-error>`;
+      case 'completed':
+        return html`<div
             class="row"
             style="align-items: center;"
             slot="actionItems"
           >
             <agent-avatar .agentPubKey=${this._client.myPubKey}></agent-avatar>
-            <span style="margin: 0 16px;">${profile?.entry.nickname}</span>
-          </div>`,
-      error: e => html`<display-error
-            .headline=${msg('Error fetching the profile')}
-            .error=${e}
-            tooltip
-          ></display-error>`,
-      pending: () => html`<profile-list-item-skeleton></profile-list-item-skeleton>`
-    }))}`
+            <span style="margin: 0 16px;">${myProfile.value?.entry.nickname}</span>
+          </div>`;
+    }
   }
 
   // TODO: add here the content of your application

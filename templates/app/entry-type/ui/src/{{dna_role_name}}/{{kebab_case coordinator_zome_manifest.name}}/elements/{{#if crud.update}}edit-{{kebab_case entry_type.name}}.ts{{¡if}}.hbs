@@ -4,7 +4,7 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { ActionHash, Record, EntryHash, AgentPubKey } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { hashState, notifyError, sharedStyles, hashProperty, renderAsyncStatus, wrapPathInSvg, onSubmit } from '@holochain-open-dev/elements';
-import { subscribe, toPromise } from '@holochain-open-dev/stores';
+import { SignalWatcher, toPromise } from '@holochain-open-dev/signals';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiDelete } from '@mdi/js';
@@ -34,7 +34,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
  */
 @localized()
 @customElement('edit-{{kebab_case entry_type.name}}')
-export class Edit{{pascal_case entry_type.name}} extends LitElement {
+export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElement) {
 
   /**
    * REQUIRED. The hash of the original `Create` action for this {{pascal_case entry_type.name}}
@@ -169,20 +169,22 @@ export class Edit{{pascal_case entry_type.name}} extends LitElement {
   }
 
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
-      renderAsyncStatus({
-        complete: {{camel_case entry_type.name}} => this.renderEditForm({{camel_case entry_type.name}}),
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+  const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion${{else}}entry${{/if}}.get();
+
+    switch ({{camel_case entry_type.name}}.status) {
+      case 'pending':
+        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
+        </div>`;
+      case 'error':
+        return html`<display-error
           .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+          .error=${{{camel_case entry_type.name}}}.error}
+        ></display-error>`;
+      case 'completed':
+        return this.renderEditForm({{camel_case entry_type.name}});
+    }
   }
 
   static styles = [sharedStyles];
