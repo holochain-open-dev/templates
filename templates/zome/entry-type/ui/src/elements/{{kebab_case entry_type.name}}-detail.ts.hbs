@@ -114,11 +114,22 @@ export class {{pascal_case entry_type.name}}Detail extends SignalWatcher(LitElem
   }
   
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}},
-      renderAsyncStatus({
-        complete: {{camel_case entry_type.name}} => {
+    const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}}$.get();
+  
+    switch ({{camel_case entry_type.name}}.status) {
+      case 'pending':
+        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`;
+      case 'error':
+        return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
+          .error=${{{camel_case entry_type.name}}.error}
+        ></display-error>`;
+      case 'completed':
   {{#if crud.update}}
-          if (this._editing) {
+        if (this._editing) {
       	  return html`<edit-{{kebab_case entry_type.name}}
       	    .{{camel_case entry_type.name}}Hash=${this.{{camel_case entry_type.name}}Hash}
             @{{kebab_case entry_type.name}}-updated=${async () => { this._editing = false; } }
@@ -128,19 +139,8 @@ export class {{pascal_case entry_type.name}}Detail extends SignalWatcher(LitElem
         }
 
   {{/if}}
-          return this.renderDetail({{camel_case entry_type.name}});
-        },
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
-        >
-          <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
-          .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+        return this.renderDetail({{camel_case entry_type.name}});
+    }
   }
   
   static styles = [sharedStyles];

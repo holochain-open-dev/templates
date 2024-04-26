@@ -65,20 +65,22 @@ export class {{pascal_case collection_name}} extends SignalWatcher(LitElement) {
   }
 
   render() {
-    return html`${subscribe(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}},
-      renderAsyncStatus({
-        complete: map => this.renderList(Array.from(map.keys())),
-        pending: () => html`<div
-          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+    const map = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{/if}}$.get();
+  
+    switch ({{camel_case entry_type.name}}.status) {
+      case 'pending':
+        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
+        </div>`;
+      case 'error':
+        return html`<display-error
           .headline=${msg("Error fetching the {{lower_case (plural referenceable.name)}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+          .error=${{{camel_case entry_type.name}}.error}
+        ></display-error>`;
+      case 'completed':
+        return this.renderList(Array.from(map.value.keys()));
+    }
   }
   
   static styles = [sharedStyles];

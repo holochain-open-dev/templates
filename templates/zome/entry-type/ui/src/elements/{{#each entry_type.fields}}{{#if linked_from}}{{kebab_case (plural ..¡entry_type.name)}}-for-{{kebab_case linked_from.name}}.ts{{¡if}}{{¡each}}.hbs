@@ -65,23 +65,43 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
 
   render() {
   {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
-    return html`${subscribe(pipe(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}, hashes => slice(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{camel_case (plural ../entry_type.name)}}, hashes)),
-  {{else}}
-    return html`${subscribe(this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}},
-  {{/if}}
-      renderAsyncStatus({
-        complete: map => this.renderList(Array.from(map.keys())),
-        pending: () => html`<div
+    const hashes = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}$.get();
+
+    switch (hashes.status) {
+      case 'pending': 
+        return html`<div
           style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
-        </div>`,
-        error: e => html`<display-error
+        </div>`;
+      case 'error': 
+        return html`<display-error
           .headline=${msg("Error fetching the {{lower_case (plural ../entry_type.name)}}")}
-          .error=${e}
-        ></display-error>`
-      })
-    )}`;
+          .error=${hashes.error}
+        ></display-error>`;
+      case 'completed':
+        return this.renderList(hashes);
+    }
+      
+  {{else}}
+    const map = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}$.get();
+
+    switch (map.status) {
+      case 'pending': 
+        return html`<div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        >
+          <sl-spinner style="font-size: 2rem;"></sl-spinner>
+        </div>`;
+      case 'error': 
+        return html`<display-error
+          .headline=${msg("Error fetching the {{lower_case (plural ../entry_type.name)}}")}
+          .error=${map.error}
+        ></display-error>`;
+      case 'completed':
+        return this.renderList(Array.from(map.keys()));
+    }
+  {{/if}}
   }
   
   static styles = [sharedStyles];
