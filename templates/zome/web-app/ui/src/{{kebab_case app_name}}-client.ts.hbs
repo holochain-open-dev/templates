@@ -4,7 +4,7 @@ import {
   Link,
   DeleteLink,
   Delete,
-  AppAgentClient, 
+  AppClient, 
   Record, 
   ActionHash, 
   EntryHash, 
@@ -16,7 +16,7 @@ import { {{pascal_case app_name}}Signal } from './types.js';
 
 export class {{pascal_case app_name}}Client extends ZomeClient<{{pascal_case app_name}}Signal> {
 
-  constructor(public client: AppAgentClient, public roleName: string, public zomeName = '{{snake_case app_name}}') {
+  constructor(public client: AppClient, public roleName: string, public zomeName = '{{snake_case app_name}}') {
     super(client, roleName, zomeName);
   }
 }

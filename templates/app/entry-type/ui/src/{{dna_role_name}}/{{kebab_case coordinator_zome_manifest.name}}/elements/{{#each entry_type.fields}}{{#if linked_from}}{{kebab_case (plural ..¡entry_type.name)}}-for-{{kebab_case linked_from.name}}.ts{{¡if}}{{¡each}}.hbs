@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { state, customElement, property } from 'lit/decorators.js';
 import { Record, EntryHash, ActionHash, AgentPubKey } from '@holochain/client';
-import { AsyncComputed, SignalWatcher } from '@holochain-open-dev/stores';
+import { AsyncComputed, SignalWatcher } from '@holochain-open-dev/signals';
 import { EntryRecord, slice} from '@holochain-open-dev/utils';
 import { renderAsyncStatus, hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';

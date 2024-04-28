@@ -38,7 +38,7 @@ test('create and read {{pascal_case entry_type.name}}', async () => {
     );
 
     // Bob gets the created {{pascal_case entry_type.name}}
-    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}{{#if entry_type.reference_entry_hash}}.entryHash{{else}}.actionHash{{/if}}){{#if crud.update}}.original{{else}}.entry{{/if}});
+    const createReadOutput: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}{{#if entry_type.reference_entry_hash}}.entryHash{{else}}.actionHash{{/if}}){{#if crud.update}}.original{{else}}.entry{{/if}}$);
     assert.deepEqual(sample, cleanNodeDecoding(createReadOutput.entry));
   });
 });
@@ -67,7 +67,7 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).latestVersion);
+    const readUpdatedOutput0: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).latestVersion$);
     assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput0.entry));
 
     // Alice updates the {{pascal_case entry_type.name}} again
@@ -83,7 +83,7 @@ test('create and update {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob gets the updated {{pascal_case entry_type.name}}
-    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get(originalActionHash).latestVersion);
+    const readUpdatedOutput1: EntryRecord<{{pascal_case entry_type.name}}> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get(originalActionHash).latestVersion$);
     assert.deepEqual(contentUpdate, cleanNodeDecoding(readUpdatedOutput1.entry));
   });
 });
@@ -109,7 +109,7 @@ test('create and delete {{pascal_case entry_type.name}}', async () => {
     );
         
     // Bob tries to get the deleted {{pascal_case entry_type.name}}
-    const deletes: Array<SignedActionHashed<Delete>> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).deletes);
+    const deletes: Array<SignedActionHashed<Delete>> = await toPromise(bob.store.{{camel_case (plural entry_type.name)}}.get({{camel_case entry_type.name}}.actionHash).deletes$);
     assert.equal(deletes.length, 1);
   });
 });

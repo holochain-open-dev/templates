@@ -3,7 +3,7 @@ import '@shoelace-style/shoelace/dist/themes/light.css';
 
 import { LitElement, css, html } from 'lit';
 import { property, state, customElement } from 'lit/decorators.js';
-import { AppAgentWebsocket, AppAgentClient, ActionHash } from '@holochain/client';
+import { AppWebsocket, AppClient, ActionHash } from '@holochain/client';
 import { SignalWatcher } from '@holochain-open-dev/signals';
 import { sharedStyles, renderAsyncStatus } from '@holochain-open-dev/elements';
 import { provide } from '@lit/context';
@@ -36,11 +36,11 @@ export class HolochainApp extends SignalWatcher(LitElement) {
   @property()
   _profilesStore!: ProfilesStore;
 
-  _client!: AppAgentClient;
+  _client!: AppClient;
 
   async firstUpdated() {
     try {
-      this._client = await AppAgentWebsocket.connect('{{app_name}}');
+      this._client = await AppWebsocket.connect('{{app_name}}');
       await this.initStores(this._client);
     } catch (e: unknown) {
       this._error = e;
@@ -50,8 +50,8 @@ export class HolochainApp extends SignalWatcher(LitElement) {
   }
 
   // Don't change this
-  async initStores(appAgentClient: AppAgentClient) {
-    this._profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, 'TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME'));
+  async initStores(appClient: AppClient) {
+    this._profilesStore = new ProfilesStore(new ProfilesClient(appClient, 'TODO:REPLACE_ME_WITH_THE_DNA_WITH_THE_PROFILES_ZOME'));
   }
 
   renderMyProfile() {

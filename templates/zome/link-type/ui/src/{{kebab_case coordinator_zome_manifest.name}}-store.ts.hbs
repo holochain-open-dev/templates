@@ -6,8 +6,8 @@
       {{previous_scope_content}}
           {{#if delete}}
       {{camel_case (plural to_referenceable.name)}}: {
-        live: pipe(
-          liveLinksStore(
+        live$: mapCompleted(
+          liveLinksSignal(
             this.client,
             {{camel_case from_referenceable.singular_arg}},
             () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -19,8 +19,8 @@
           links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
         {{/if}}
         ),
-        deleted: pipe(
-          deletedLinksStore(
+        deleted$: mapCompleted(
+          deletedLinksSignal(
             this.client,
             {{camel_case from_referenceable.singular_arg}},
             () => this.client.getDeleted{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -34,8 +34,8 @@
         ),
       },
           {{else}}
-      {{camel_case (plural to_referenceable.name)}}: pipe(
-        liveLinksStore(
+      {{camel_case (plural to_referenceable.name)}}$: mapCompleted(
+        liveLinksSignal(
           this.client,
           {{camel_case from_referenceable.singular_arg}},
           () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -55,8 +55,8 @@
       {{previous_scope_content}}
               {{#if delete}}
       {{camel_case (plural from_referenceable.name)}}: {
-        live: pipe(
-          liveLinksStore(
+        live$: mapCompleted(
+          liveLinksSignal(
             this.client,
             {{camel_case to_referenceable.singular_arg}},
             () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -68,8 +68,8 @@
           links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
         {{/if}}
         ),
-        deleted: pipe(
-          deletedLinksStore(
+        deleted$: mapCompleted(
+          deletedLinksSignal(
             this.client,
             {{camel_case to_referenceable.singular_arg}},
             () => this.client.getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -83,8 +83,8 @@
         ),
       },
               {{else}}
-      {{camel_case (plural from_referenceable.name)}}: pipe(
-        liveLinksStore(
+      {{camel_case (plural from_referenceable.name)}}$: mapCompleted(
+        liveLinksSignal(
           this.client,
           {{camel_case to_referenceable.singular_arg}},
           () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -109,8 +109,8 @@
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
 
   {{camel_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}} = new LazyHoloHashMap(({{camel_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}) => {{#if delete}}({
-    live: pipe(
-      liveLinksStore(
+    live$: mapCompleted(
+      liveLinksSignal(
         this.client,
         {{camel_case from_referenceable.singular_arg}},
         () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -122,8 +122,8 @@
       links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l.target))
     {{/if}}
     ),
-    deleted: pipe(
-      deletedLinksStore(
+    deleted$: mapCompleted(
+      deletedLinksSignal(
         this.client,
         {{camel_case from_referenceable.singular_arg}},
         () => this.client.getDeleted{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -135,8 +135,8 @@
       links => slice(this.{{camel_case (plural to_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
     {{/if}}
     ),
-  }{{else}}pipe(
-      liveLinksStore(
+  }{{else}}mapCompleted(
+      liveLinksSignal(
         this.client,
         {{camel_case from_referenceable.singular_arg}},
         () => this.client.get{{pascal_case (plural to_referenceable.name)}}For{{pascal_case from_referenceable.name}}({{camel_case from_referenceable.singular_arg}}),
@@ -157,8 +157,8 @@
       {{previous_scope_content}}
               {{#if delete}}
       {{camel_case (plural from_referenceable.name)}}: {
-        live: pipe(
-          liveLinksStore(
+        live$: mapCompleted(
+          liveLinksSignal(
             this.client,
             {{camel_case to_referenceable.singular_arg}},
             () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -170,8 +170,8 @@
           links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
         {{/if}}
         ),
-        deleted: pipe(
-          deletedLinksStore(
+        deleted$: mapCompleted(
+          deletedLinksSignal(
             this.client,
             {{camel_case to_referenceable.singular_arg}},
             () => this.client.getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -185,8 +185,8 @@
         ),
       },
               {{else}}
-      {{camel_case (plural from_referenceable.name)}}: pipe(
-        liveLinksStore(
+      {{camel_case (plural from_referenceable.name)}}$: mapCompleted(
+        liveLinksSignal(
           this.client,
           {{camel_case to_referenceable.singular_arg}},
           () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -205,8 +205,8 @@
   /** {{title_case (plural from_referenceable.name)}} for {{title_case to_referenceable.name}} */
 
   {{camel_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}} = new LazyHoloHashMap(({{camel_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}}) => {{#if delete}}({
-    live: pipe(
-      liveLinksStore(
+    live$: mapCompleted(
+      liveLinksSignal(
         this.client,
         {{camel_case to_referenceable.singular_arg}},
         () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -218,8 +218,8 @@
       links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l.target))
     {{/if}}
     ),
-    deleted: pipe(
-      deletedLinksStore(
+    deleted$: mapCompleted(
+      deletedLinksSignal(
         this.client,
         {{camel_case to_referenceable.singular_arg}},
         () => this.client.getDeleted{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),
@@ -231,8 +231,8 @@
       links => slice(this.{{camel_case (plural from_referenceable.name)}}, links.map(l => l[0].hashed.content.target_address))
     {{/if}}
     ),
-  }){{else}}pipe(
-      liveLinksStore(
+  }){{else}}mapCompleted(
+      liveLinksSignal(
         this.client,
         {{camel_case to_referenceable.singular_arg}},
         () => this.client.get{{pascal_case (plural from_referenceable.name)}}For{{pascal_case to_referenceable.name}}({{camel_case to_referenceable.singular_arg}}),

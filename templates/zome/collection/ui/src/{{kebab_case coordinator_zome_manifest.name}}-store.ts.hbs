@@ -6,8 +6,8 @@
 
   {{#if (eq collection_type.type "ByAuthor")}}
   {{camel_case collection_name}} = new LazyHoloHashMap((author: AgentPubKey) => 
-    pipe(
-      collectionStore(
+    mapCompleted(
+      collectionSignal(
         this.client, 
         () => this.client.get{{pascal_case collection_name}}(author),
         '{{pascal_case collection_name}}'
@@ -16,8 +16,8 @@
     )
   );
   {{else}}
-  {{camel_case collection_name}} = pipe(
-    collectionStore(
+  {{camel_case collection_name}}$ = mapCompleted(
+    collectionSignal(
       this.client, 
       () => this.client.get{{pascal_case collection_name}}(),
       '{{pascal_case collection_name}}'

@@ -15,7 +15,7 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     const { alice, bob } = await setup(scenario);
 
     // Bob gets {{lower_case collection_name}}
-    let collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{/if}});
+    let collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{else}}${{/if}});
     assert.equal(collectionOutput.size, 0);
 
     // Alice creates a {{pascal_case referenceable.name}}
@@ -28,7 +28,7 @@ test('create a {{pascal_case referenceable.name}} and get {{lower_case collectio
     );
     
     // Bob gets {{lower_case collection_name}} again
-    collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{/if}});
+    collectionOutput = await toPromise(bob.store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(alice.player.agentPubKey){{else}}${{/if}});
     assert.equal(collectionOutput.size, 1);
     assert.deepEqual({{camel_case referenceable.name}}.{{#if (eq referenceable.hash_type "ActionHash")}}actionHash{{else}}entryHash{{/if}}, Array.from(collectionOutput.keys())[0]);    
   });

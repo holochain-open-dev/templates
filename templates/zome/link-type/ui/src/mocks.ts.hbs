@@ -1,5 +1,5 @@
 {{#merge previous_file_content}}
-  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "ZomeMock extends ZomeMock implements AppAgentClient {" ) }}
+  {{#match_scope (concat "export class " (pascal_case coordinator_zome_manifest.name) "ZomeMock extends ZomeMock implements AppClient {" ) }}
   {{previous_scope_content}}
   
   /** {{title_case (plural to_referenceable.name)}} for {{title_case from_referenceable.name}} */
