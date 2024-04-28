@@ -35,11 +35,11 @@ export async function setup(scenario: Scenario) {
   await scenario.shareAllAgents();
 
   const aliceStore = new {{pascal_case zome_manifest.name}}Store(
-    new {{pascal_case zome_manifest.name}}Client(alice.appAgentWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
+    new {{pascal_case zome_manifest.name}}Client(alice.appWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
   );
 
   const bobStore = new {{pascal_case zome_manifest.name}}Store(
-    new {{pascal_case zome_manifest.name}}Client(bob.appAgentWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
+    new {{pascal_case zome_manifest.name}}Client(bob.appWs as any, '{{snake_case dna_role_name}}', '{{snake_case zome_manifest.name}}')
   );
 
   // Shortcut peer discovery through gossip and register all agents in every

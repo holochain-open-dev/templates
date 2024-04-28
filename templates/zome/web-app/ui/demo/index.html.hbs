@@ -66,11 +66,11 @@ export class DemoApp extends LitElement {
     this.requestUpdate();
   }
 
-  async initStores(appAgentClient) {
-    const profilesStore = new ProfilesStore(new ProfilesClient(appAgentClient, '{{app_name}}_test'));
+  async initStores(appClient) {
+    const profilesStore = new ProfilesStore(new ProfilesClient(appClient, '{{app_name}}_test'));
     new ContextProvider(this, profilesStoreContext, profilesStore);
     
-    this._{{camel_case app_name}}Store = new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(appAgentClient, '{{snake_case app_name}}_test'));
+    this._{{camel_case app_name}}Store = new {{pascal_case app_name}}Store(new {{pascal_case app_name}}Client(appClient, '{{snake_case app_name}}_test'));
   }
 
   renderContent() {
