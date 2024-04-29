@@ -70,17 +70,17 @@ export class {{pascal_case entry_type.name}}Summary extends SignalWatcher(LitEle
 
     switch ({{camel_case entry_type.name}}.status) {
       case 'pending':
-        return y: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
+        return html`<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;"
         >
           <sl-spinner style="font-size: 2rem;"></sl-spinner>
         </div>`;
       case 'error':
         return html`<display-error
           .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${ {{camel_case entry_type.name}}}.error}
+          .error=${ {{camel_case entry_type.name}}.error}
         ></display-error>`;
       case 'completed':
-        return this.renderSummary({{camel_case entry_type.name}});
+        return this.renderSummary({{camel_case entry_type.name}}.value);
     }
   }
   

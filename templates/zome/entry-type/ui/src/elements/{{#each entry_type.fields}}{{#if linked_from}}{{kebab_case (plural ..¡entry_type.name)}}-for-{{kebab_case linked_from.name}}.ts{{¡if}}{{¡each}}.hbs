@@ -80,7 +80,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
           .error=${hashes.error}
         ></display-error>`;
       case 'completed':
-        return this.renderList(hashes);
+        return this.renderList(hashes.value);
     }
       
   {{else}}
@@ -99,7 +99,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
           .error=${map.error}
         ></display-error>`;
       case 'completed':
-        return this.renderList(Array.from(map.keys()));
+        return this.renderList(Array.from(map.value.keys()));
     }
   {{/if}}
   }

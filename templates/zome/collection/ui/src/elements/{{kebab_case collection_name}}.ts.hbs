@@ -67,7 +67,7 @@ export class {{pascal_case collection_name}} extends SignalWatcher(LitElement) {
   render() {
     const map = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case collection_name}}{{#if (eq collection_type.type "ByAuthor")}}.get(this.author){{else}}${{/if}}.get();
   
-    switch ({{camel_case entry_type.name}}.status) {
+    switch (map.status) {
       case 'pending':
         return html`<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1;">
           <sl-spinner style="font-size: 2rem;"></sl-spinner>

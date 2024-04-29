@@ -140,7 +140,7 @@ export class {{pascal_case entry_type.name}}Detail extends SignalWatcher(LitElem
         }
 
   {{/if}}
-          return this.renderDetail({{camel_case entry_type.name}});
+          return this.renderDetail({{camel_case entry_type.name}}.value);
     }
   }
   
