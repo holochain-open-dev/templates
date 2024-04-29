@@ -3,7 +3,7 @@ import { state, customElement, property } from 'lit/decorators.js';
 import { Record, EntryHash, ActionHash, AgentPubKey } from '@holochain/client';
 import { AsyncComputed, SignalWatcher } from '@holochain-open-dev/signals';
 import { EntryRecord, slice} from '@holochain-open-dev/utils';
-import { renderAsyncStatus, hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
@@ -65,7 +65,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
 
   render() {
   {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
-    const hashes = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}$.get();
+    const hashes = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{#if (not ../crud.delete)}}${{/if}}{{/if}}{{#if ../crud.delete}}.live${{/if}}.get();
 
     switch (hashes.status) {
       case 'pending': 
@@ -84,7 +84,7 @@ export class {{pascal_case (plural ../entry_type.name)}}For{{pascal_case linked_
     }
       
   {{else}}
-    const map = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{/if}}{{#if ../crud.delete}}.live{{/if}}$.get();
+    const map = this.{{camel_case ../coordinator_zome_manifest.name}}Store.{{#if (eq linked_from.hash_type "AgentPubKey")}}{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get(this.{{camel_case linked_from.singular_arg}}){{else}}{{camel_case (plural linked_from.name)}}.get(this.{{camel_case linked_from.singular_arg}}).{{camel_case (plural ../entry_type.name)}}{{#if (not ../crud.delete)}}${{/if}}{{/if}}{{#if ../crud.delete}}.live${{/if}}.get();
 
     switch (map.status) {
       case 'pending': 

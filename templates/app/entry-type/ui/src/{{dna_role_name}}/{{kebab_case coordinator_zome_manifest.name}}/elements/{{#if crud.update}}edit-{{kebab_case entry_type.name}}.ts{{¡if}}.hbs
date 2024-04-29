@@ -3,7 +3,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { state, customElement, property } from 'lit/decorators.js';
 import { ActionHash, Record, EntryHash, AgentPubKey } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { hashState, notifyError, sharedStyles, hashProperty, renderAsyncStatus, wrapPathInSvg, onSubmit } from '@holochain-open-dev/elements';
+import { hashState, notifyError, sharedStyles, hashProperty, wrapPathInSvg, onSubmit } from '@holochain-open-dev/elements';
 import { SignalWatcher, toPromise } from '@holochain-open-dev/signals';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -180,7 +180,7 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
       case 'error':
         return html`<display-error
           .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${{{camel_case entry_type.name}}}.error}
+          .error=${ {{camel_case entry_type.name}}}.error}
         ></display-error>`;
       case 'completed':
         return this.renderEditForm({{camel_case entry_type.name}});

@@ -58,7 +58,7 @@ export class DemoApp extends LitElement {
   }
 
   async firstUpdated() {
-    this._client = await AppWebsocket.connect('{{app_name}}');
+    this._client = await AppWebsocket.connect();
 
     await this.initStores(this._client);
 

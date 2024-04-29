@@ -5,7 +5,7 @@ import { LitElement, css, html } from 'lit';
 import { property, state, customElement } from 'lit/decorators.js';
 import { AppWebsocket, AppClient, ActionHash } from '@holochain/client';
 import { SignalWatcher } from '@holochain-open-dev/signals';
-import { sharedStyles, renderAsyncStatus } from '@holochain-open-dev/elements';
+import { sharedStyles } from '@holochain-open-dev/elements';
 import { provide } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import {
@@ -40,7 +40,7 @@ export class HolochainApp extends SignalWatcher(LitElement) {
 
   async firstUpdated() {
     try {
-      this._client = await AppWebsocket.connect('{{app_name}}');
+      this._client = await AppWebsocket.connect();
       await this.initStores(this._client);
     } catch (e: unknown) {
       this._error = e;

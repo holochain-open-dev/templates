@@ -3,7 +3,7 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { SignalWatcher } from '@holochain-open-dev/signals';
-import { renderAsyncStatus, sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
+import { sharedStyles, hashProperty, wrapPathInSvg, notifyError } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiPencil, mdiDelete } from '@mdi/js';
@@ -126,7 +126,7 @@ export class {{pascal_case entry_type.name}}Detail extends SignalWatcher(LitElem
       case 'error': 
         return html`<display-error
           .headline=${msg("Error fetching the {{lower_case entry_type.name}}")}
-          .error=${{{camel_case entry_type.name}}.error}
+          .error=${ {{camel_case entry_type.name}}.error}
         ></display-error>`;
       case 'completed':
   {{#if crud.update}}
