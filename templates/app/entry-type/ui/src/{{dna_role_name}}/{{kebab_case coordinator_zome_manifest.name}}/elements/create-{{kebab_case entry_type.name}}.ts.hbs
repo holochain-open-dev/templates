@@ -3,6 +3,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { state, property, query, customElement } from 'lit/decorators.js';
 import { ActionHash, Record, DnaHash, AgentPubKey, EntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import { hashProperty, notifyError, hashState, sharedStyles, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -34,7 +35,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
  */
 @localized()
 @customElement('create-{{kebab_case entry_type.name}}')
-export class Create{{pascal_case entry_type.name}} extends LitElement {
+export class Create{{pascal_case entry_type.name}} extends SignalWatcher(LitElement) {
   {{#each entry_type.fields}}
     {{#if (not widget) }}
       {{#if (eq cardinality "single" )}}

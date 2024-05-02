@@ -60,7 +60,7 @@ export class HolochainApp extends SignalWatcher(LitElement) {
     switch (myProfile.status) {
       case 'pending':
         return html`<profile-list-item-skeleton></profile-list-item-skeleton>`;
-      case 'error';
+      case 'error':
         return html`<display-error
             .headline=${msg('Error fetching the profile')}
             .error=${myProfile.error}

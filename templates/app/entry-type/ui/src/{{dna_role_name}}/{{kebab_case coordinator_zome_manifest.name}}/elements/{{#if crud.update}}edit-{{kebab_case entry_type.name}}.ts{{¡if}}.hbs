@@ -183,7 +183,7 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
           .error=${ {{camel_case entry_type.name}}.error}
         ></display-error>`;
       case 'completed':
-        return this.renderEditForm({{camel_case entry_type.name}});
+        return this.renderEditForm({{camel_case entry_type.name}}.value);
     }
   }
 

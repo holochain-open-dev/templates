@@ -4,8 +4,8 @@
   "scripts": {
     "start": "vite --port $UI_PORT --clearScreen false",
     "build": "vite build",
-    "lint": "eslint src --ignore-path .gitignore && prettier \"**/*.ts\" --check --ignore-path .gitignore",
-    "format": "eslint src --fix --ignore-path .gitignore && prettier \"**/*.ts\" --write --ignore-path .gitignore",
+    "lint": "eslint src && prettier \"**/*.ts\" --check --ignore-path .gitignore",
+    "format": "eslint src && prettier \"**/*.ts\" --write --ignore-path .gitignore",
     "package": "pnpm build && cd dist && bestzip ../dist.zip *",
     "localize:extract": "lit-localize extract",
     "localize:build": "lit-localize build"

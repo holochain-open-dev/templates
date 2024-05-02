@@ -3,7 +3,7 @@ import { {{pascal_case zome_manifest.name}}Client } from './{{dna_role_name}}/{{
 import { {{pascal_case zome_manifest.name}}Store } from './{{dna_role_name}}/{{kebab_case zome_manifest.name}}/{{kebab_case zome_manifest.name}}-store.js';
 
 {{#merge previous_file_content}}
-  {{#match_scope "export class HolochainApp extends LitElement {"}}
+  {{#match_scope "export class HolochainApp extends SignalWatcher(LitElement) {"}}
   @provide({ context: {{camel_case zome_manifest.name}}StoreContext })
   @property()
   _{{camel_case zome_manifest.name}}Store!: {{pascal_case zome_manifest.name}}Store;

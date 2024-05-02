@@ -30,7 +30,7 @@ import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq fie
  */
 @localized()
 @customElement('{{kebab_case entry_type.name}}-summary')
-export class {{pascal_case entry_type.name}}Summary extends LitElement {
+export class {{pascal_case entry_type.name}}Summary extends SignalWatcher(LitElement) {
 
   /**
    * REQUIRED. The hash of the {{pascal_case entry_type.name}} to show
@@ -49,15 +49,15 @@ export class {{pascal_case entry_type.name}}Summary extends LitElement {
       <div class="column" style="gap: 16px;">
 
 	{{#each entry_type.fields}}
-          {{#if widget}}	  
-          <div class="column" style="gap: 8px">
-	        <span><strong>${msg("{{title_case field_name}}")}</strong></span>
-            {{#if (not (eq cardinality "vector") )}}
- 	        <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") field_name=field_name variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
-            {{else}}
-              {{> Vec/detail/render variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
-            {{/if}}
-	  </div>
+      {{#if widget}}	  
+        <div class="column" style="gap: 8px">
+          <span><strong>${msg("{{title_case field_name}}")}</strong></span>
+        {{#if (not (eq cardinality "vector") )}}
+          <span style="white-space: pre-line">{{> (concat field_type.type "/" widget "/detail/render") field_name=field_name variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) }}</span>
+        {{else}}
+            {{> Vec/detail/render variable_to_read=(concat "entryRecord.entry." (snake_case field_name) ) field_name=field_name field_type=field_type widget=widget }}
+        {{/if}}
+        </div>
 
  	  {{/if}}
 	{{/each}}

@@ -37,6 +37,7 @@ import { ContextProvider } from '@lit/context';
 import { LitElement, css, html } from 'lit';
 import { AppWebsocket } from '@holochain/client';
 import { sharedStyles } from '@holochain-open-dev/elements';
+import { SignalWatcher } from '@holochain-open-dev/signals';
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
 import {
   ProfilesClient,
@@ -49,7 +50,7 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '../src/elements/{{kebab_case app_name}}-context.ts';
 import { {{pascal_case app_name}}Store, {{pascal_case app_name}}Client } from '../src/index.ts';
 
-export class DemoApp extends LitElement {
+export class DemoApp extends SignalWatcher(LitElement) {
 
   constructor() {
     super();
