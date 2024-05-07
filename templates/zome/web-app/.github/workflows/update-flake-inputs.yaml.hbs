@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  update-flake-inputs:
+  automerge:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,13 +42,13 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        if: steps.changes.outputs.src == 'true'
+        if: steps.changes.outputs.flake_lock == 'true' || steps.changes.outputs.package_json == 'true'
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT }}
 
       - name: Enable Pull Request Automerge
-        if: steps.changes.outputs.src == 'true' && steps.cpr.outputs.pull-request-operation == 'created'
+        if: (steps.changes.outputs.flake_lock == 'true' || steps.changes.outputs.package_json == 'true') && steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           token: ${{ secrets.PAT }}
