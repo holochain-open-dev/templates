@@ -10,7 +10,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     {{../previous_scope_content}}
               {{#if ../crud.delete}}
     {{camel_case (plural ../entry_type.name)}}: {
-      live$: mapCompleted(
+      live$: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -19,7 +19,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         ), 
         links => slice(this.{{camel_case (plural ../entry_type.name)}}, links.map(l => l.target))
       ),
-      deleted$: mapCompleted(
+      deleted$: pipe(
         deletedLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -29,7 +29,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
       ),
     },
               {{else}}
-    {{camel_case (plural ../entry_type.name)}}$: mapCompleted(
+    {{camel_case (plural ../entry_type.name)}}$: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -61,7 +61,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         {{#if (eq (pascal_case linked_from.name) (pascal_case ../entry_type.name))}}
           {{#if ../crud.delete}}
     {{camel_case (plural ../entry_type.name)}}: {
-        live$: mapCompleted(
+        live$: pipe(
           liveLinksSignal(
             this.client,
             {{camel_case linked_from.singular_arg}},
@@ -69,7 +69,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
             '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
           ), links => links.map(l => l.target)
         ),
-        deleted$: mapCompleted(
+        deleted$: pipe(
           deletedLinksSignal(
             this.client,
             {{camel_case linked_from.singular_arg}},
@@ -79,7 +79,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         ),
     },
           {{else}}
-    {{camel_case (plural ../entry_type.name)}}$: mapCompleted(
+    {{camel_case (plural ../entry_type.name)}}$: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -99,7 +99,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
           {{#if (and (ne (pascal_case linked_from.name) (pascal_case ../entry_type.name)) (not (includes ../previous_file_content (concat (camel_case (plural linked_from.name)) " = new LazyHoloHashMap((" (camel_case linked_from.name) "Hash: ActionHash) => ({"))))}}
             {{#if ../crud.delete}}
   {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new LazyHoloHashMap(({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}) => ({
-      live$: mapCompleted(
+      live$: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -107,7 +107,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
           '{{pascal_case linked_from.name}}To{{pascal_case (plural ../entry_type.name)}}'
         ), links => slice(this.{{camel_case (plural ../entry_type.name)}}, links.map(l => l.target))
       ),
-      deleted$: mapCompleted(
+      deleted$: pipe(
         deletedLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -117,7 +117,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
       ),
   }));
             {{else}}
-  {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new LazyHoloHashMap(({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}) => mapCompleted(
+  {{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}} = new LazyHoloHashMap(({{camel_case linked_from.singular_arg}}: {{linked_from.hash_type}}) => pipe(
       liveLinksSignal(
         this.client,
         {{camel_case linked_from.singular_arg}},
