@@ -1,4 +1,4 @@
-{ inputs, rootPath, ... }:
+{ inputs, rootPath, nonWasmCrates, ... }:
 
 {
   perSystem =
@@ -9,6 +9,7 @@
         workspacePath = rootPath;
         holochain = inputs'.holochain;
         crateCargoToml = ./Cargo.toml;
+        excludedCrates = nonWasmCrates;
       };
     };
 }

@@ -27,6 +27,8 @@
           # Special arguments for the flake parts of this repository
           
           rootPath = ./.;
+          # Non-zome crates that should be excluded from wasm compilation
+          nonWasmCrates = [];
         };
       }
       {
