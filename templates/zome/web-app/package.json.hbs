@@ -4,10 +4,10 @@
   "scripts": {
     "start": "AGENTS=2 pnpm network",
     "network": "hc s clean && pnpm build:happ && BOOTSTRAP_PORT=$(port) SIGNAL_PORT=$(port) UI_PORT=8888 concurrently -k \"pnpm -F @holochain-open-dev/{{kebab_case app_name}} start\" \"pnpm launch\" \"holochain-playground\" \"pnpm local-services\"",
-    "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}_test-debug.happ --ui-port $UI_PORT network --bootstrap http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
+    "launch": "echo pass | RUST_LOG=warn hc launch --piped -n $AGENTS workdir/{{app_name}}_test.happ --ui-port $UI_PORT network --bootstrap http://127.0.0.1:$BOOTSTRAP_PORT webrtc ws://127.0.0.1:$SIGNAL_PORT",
     "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
     "test": "pnpm build:happ && nix flake check -L && pnpm -F tests test",
-    "build:happ": "nix build -L .#{{snake_case app_name}}_test_app.meta.debug -o workdir/{{app_name}}_test-debug.happ"
+    "build:happ": "nix build -L .#{{snake_case app_name}}_test_app -o workdir/{{app_name}}_test.happ"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.1.1",

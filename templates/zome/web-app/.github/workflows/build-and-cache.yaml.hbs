@@ -30,18 +30,18 @@ jobs:
         env:
           CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_TOKEN_HOLOCHAIN_OPEN_DEV }}"
         run: |
-          nix build -L .#{{snake_case app_name}}_integrity.meta.debug
-          cachix push holochain-open-dev $(nix path-info .#{{snake_case app_name}}_integrity.meta.debug)
-          cachix pin holochain-open-dev {{snake_case app_name}}_integrity_debug $(nix path-info .#{{snake_case app_name}}_integrity.meta.debug)
-
           nix build -L .#{{snake_case app_name}}_integrity
-          cachix push holochain-open-dev $(nix path-info .#{{snake_case app_name}}_integrity)
-          cachix pin holochain-open-dev {{snake_case app_name}}_integrity $(nix path-info .#{{snake_case app_name}}_integrity)
+          cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}}_integrity)
+          cachix pin holochain-open-dev {{snake_case app_name}}_integrity_debug $(nix path-info --accept-flake-config .#{{snake_case app_name}}_integrity)
 
-          nix build -L .#{{snake_case app_name}}.meta.debug
-          cachix push holochain-open-dev $(nix path-info .#{{snake_case app_name}}.meta.debug)
-          cachix pin holochain-open-dev {{snake_case app_name}}_debug $(nix path-info .#{{snake_case app_name}}.meta.debug)
+          nix build -L .#{{snake_case app_name}}_integrity.meta.release
+          cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}}_integrity)
+          cachix pin holochain-open-dev {{snake_case app_name}}_integrity $(nix path-info --accept-flake-config .#{{snake_case app_name}}_integrity.meta.release)
 
           nix build -L .#{{snake_case app_name}}
-          cachix push holochain-open-dev $(nix path-info .#{{snake_case app_name}})
-          cachix pin holochain-open-dev {{snake_case app_name}}$(nix path-info .#{{snake_case app_name}})
+          cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}})
+          cachix pin holochain-open-dev {{snake_case app_name}}_debug $(nix path-info --accept-flake-config .#{{snake_case app_name}})
+
+          nix build -L .#{{snake_case app_name}}.meta.release
+          cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}}.meta.release)
+          cachix pin holochain-open-dev {{snake_case app_name}}$(nix path-info --accept-flake-config .#{{snake_case app_name}}.meta.release)

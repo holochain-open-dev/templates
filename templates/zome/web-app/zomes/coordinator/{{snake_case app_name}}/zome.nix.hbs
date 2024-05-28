@@ -10,7 +10,6 @@
         workspacePath = rootPath;
         holochain = inputs'.holochain;
         crateCargoToml = ./Cargo.toml;
-        excludedCrates = nonWasmCrates;
       };
 
       # Test only this zome and its integrity in isolation
@@ -38,7 +37,7 @@
           '';
           zomes = inputs.hc-infra.outputs.lib.filterZomes self'.packages;
           holochain = inputs'.holochain;
-        }).meta.debug;
+        });
         crateCargoToml = ./Cargo.toml;
       };
 
