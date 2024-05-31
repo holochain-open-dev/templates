@@ -34,11 +34,6 @@
     inputs.flake-parts.lib.mkFlake
       {
         inherit inputs;
-        specialArgs = {
-          # Special arguments for the flake parts of this repository
-          
-          rootPath = ./.;
-        };
       }
       {
         imports = [

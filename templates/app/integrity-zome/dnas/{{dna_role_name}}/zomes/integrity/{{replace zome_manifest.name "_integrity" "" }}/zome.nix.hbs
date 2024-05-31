@@ -1,4 +1,4 @@
-{ inputs, rootPath, ... }:
+{ inputs, ... }:
 
 {
   perSystem =
@@ -6,7 +6,7 @@
     , ...
     }: {
       packages.{{zome_manifest.name}} = inputs.hc-infra.outputs.lib.rustZome {
-        workspacePath = rootPath;
+        workspacePath = inputs.self.outPath;
         holochain = inputs'.holochain;
         crateCargoToml = ./Cargo.toml;
       };
