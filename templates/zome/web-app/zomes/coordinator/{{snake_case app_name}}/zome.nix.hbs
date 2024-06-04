@@ -3,6 +3,7 @@
 {
   perSystem =
     { inputs'
+    , system
     , self'
     , ...
     }: {
@@ -10,6 +11,8 @@
         workspacePath = inputs.self.outPath;
         holochain = inputs'.holochain;
         crateCargoToml = ./Cargo.toml;
+        cargoArtifacts =
+          inputs.hc-infra.outputs.lib.zomeCargoArtifacts { inherit system; };
       };
 
       # Test only this zome and its integrity in isolation
@@ -39,6 +42,9 @@
           holochain = inputs'.holochain;
         });
         crateCargoToml = ./Cargo.toml;
+        cargoArtifacts = inputs.hc-infra.outputs.lib.holochainCargoArtifacts {
+          inherit system;
+        };
       };
 
     };
