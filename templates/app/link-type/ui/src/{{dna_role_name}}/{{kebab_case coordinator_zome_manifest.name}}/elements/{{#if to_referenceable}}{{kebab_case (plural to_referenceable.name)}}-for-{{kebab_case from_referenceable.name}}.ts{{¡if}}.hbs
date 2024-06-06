@@ -69,7 +69,7 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
   }
 
   render() {
-    const {{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{#if (eq from_referenceable.hash_type "AgentPubKey")}}{{plural (camel_case to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}){{else}}{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{#if (not delete)}}${{/if}}{{/if}}{{#if delete}}.live${{/if}}.get(); 
+    const {{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{#if (eq from_referenceable.hash_type "AgentPubKey")}}{{plural (camel_case to_referenceable.name)}}For{{pascal_case from_referenceable.name}}.get(this.{{camel_case from_referenceable.singular_arg}}){{else}}{{camel_case (plural from_referenceable.name)}}.get(this.{{camel_case from_referenceable.singular_arg}}).{{plural (camel_case to_referenceable.name)}}{{#if (not delete)}}${{/if}}{{/if}}{{#if delete}}.live{{/if}}.get(); 
     
     switch ({{#if (eq to_referenceable.hash_type "AgentPubKey")}}agents{{else}}map{{/if}}.status) {
       case 'pending':

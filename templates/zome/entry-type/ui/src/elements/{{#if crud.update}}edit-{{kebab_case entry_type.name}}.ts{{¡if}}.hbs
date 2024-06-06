@@ -169,7 +169,7 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
   }
 
   render() {
-    const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion${{else}}entry${{/if}}.get();
+    const {{camel_case entry_type.name}} = this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}}.get();
   
     switch ({{camel_case entry_type.name}}.status) {
       case 'pending':

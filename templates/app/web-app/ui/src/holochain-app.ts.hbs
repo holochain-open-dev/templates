@@ -55,7 +55,7 @@ export class HolochainApp extends SignalWatcher(LitElement) {
   }
 
   renderMyProfile() {
-    const myProfile = this._profilesStore.myProfile$.get();
+    const myProfile = this._profilesStore.myProfile.get();
 
     switch (myProfile.status) {
       case 'pending':
