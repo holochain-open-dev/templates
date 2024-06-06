@@ -3,20 +3,19 @@ set -e
 
 DIR=$(pwd)
 
-nix shell .#hc-scaffold-zome-template --command bash -c "
+nix shell --accept-flake-config .#hc-scaffold-zome-template --command bash -c "
 cd /tmp
 rm -rf posts-open-dev
 mkdir posts-open-dev
 cd posts-open-dev
 
-hc-scaffold web-app posts --setup-nix true 
+hc-scaffold web-app posts --setup-nix true -F 
 "
 
 cd /tmp/posts-open-dev/posts
 
-nix develop --override-input scaffolding "path:$DIR" --command bash -c "
+nix develop --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
 set -e
-cat package.json | nix run nixpkgs#jq -- 'del(.hcScaffold)' > package-tmp.json && mv package-tmp.json package.json
 
 hc-scaffold entry-type post --zome posts_integrity --reference-entry-hash false --crud crud --link-from-original-to-each-update true --fields title:String:TextField,needs:Vec\<String\>:TextField
 hc-scaffold entry-type comment --zome posts_integrity  --reference-entry-hash false --crud crud --link-from-original-to-each-update false --fields post_hash:ActionHash::Post

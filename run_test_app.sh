@@ -3,17 +3,16 @@ set -e
 
 DIR=$(pwd)
 
-nix shell .#hc-scaffold-app-template --command bash -c "
+nix shell --accept-flake-config .#hc-scaffold-app-template --command bash -c "
 cd /tmp
 rm -rf forum-lit-open-dev
 
-hc-scaffold web-app forum-lit-open-dev --setup-nix true 
+hc-scaffold web-app forum-lit-open-dev --setup-nix true -F
 "
 
 cd /tmp/forum-lit-open-dev
 
-nix develop --override-input scaffolding "path:$DIR" --command bash -c "
-cat package.json | nix run nixpkgs#jq -- 'del(.hcScaffold)' > package-tmp.json && mv package-tmp.json package.json
+nix develop --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
 
 set -e
 hc-scaffold dna forum 
