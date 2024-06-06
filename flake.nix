@@ -9,7 +9,7 @@
 
     nixpkgs.follows = "holochain/nixpkgs";
     flake-parts.follows = "holochain/flake-parts";
-    scaffolding.url = "github:holochain/scaffolding";
+    scaffolding.url = "github:holochain/scaffolding/holochain-0.3";
   };
 
   nixConfig = {
