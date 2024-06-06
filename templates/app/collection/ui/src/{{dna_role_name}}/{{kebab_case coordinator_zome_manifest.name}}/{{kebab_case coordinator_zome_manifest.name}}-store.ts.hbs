@@ -16,7 +16,7 @@
     )
   );
   {{else}}
-  {{camel_case collection_name}}$ = pipe(
+  {{camel_case collection_name}} = pipe(
     collectionSignal(
       this.client, 
       () => this.client.get{{pascal_case collection_name}}(),

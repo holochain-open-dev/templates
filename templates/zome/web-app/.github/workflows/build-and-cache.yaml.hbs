@@ -44,4 +44,4 @@ jobs:
 
           nix build -L .#{{snake_case app_name}}.meta.release
           cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}}.meta.release)
-          cachix pin holochain-open-dev {{snake_case app_name}}$(nix path-info --accept-flake-config .#{{snake_case app_name}}.meta.release)
+          cachix pin holochain-open-dev {{snake_case app_name}} $(nix path-info --accept-flake-config .#{{snake_case app_name}}.meta.release)

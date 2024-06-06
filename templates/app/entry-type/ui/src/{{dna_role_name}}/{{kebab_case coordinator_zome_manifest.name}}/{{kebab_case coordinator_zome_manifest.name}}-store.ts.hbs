@@ -29,7 +29,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
       ),
     },
               {{else}}
-    {{camel_case (plural ../entry_type.name)}}$: pipe(
+    {{camel_case (plural ../entry_type.name)}}: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},
@@ -79,7 +79,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         ),
     },
           {{else}}
-    {{camel_case (plural ../entry_type.name)}}$: pipe(
+    {{camel_case (plural ../entry_type.name)}}: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case linked_from.singular_arg}},

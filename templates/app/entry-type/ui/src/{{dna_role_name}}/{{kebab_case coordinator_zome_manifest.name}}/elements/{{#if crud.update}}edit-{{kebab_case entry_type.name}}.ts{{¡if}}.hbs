@@ -67,7 +67,7 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
 {{/each}}
 
   async firstUpdated() {
-    const currentRecord = await toPromise(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}}$);
+    const currentRecord = await toPromise(this.{{camel_case coordinator_zome_manifest.name}}Store.{{camel_case (plural entry_type.name)}}.get(this.{{camel_case entry_type.name}}Hash).{{#if crud.update}}latestVersion{{else}}entry{{/if}});
 {{#each entry_type.fields}}
   {{#if widget}}
     {{#if (eq cardinality "vector")}}

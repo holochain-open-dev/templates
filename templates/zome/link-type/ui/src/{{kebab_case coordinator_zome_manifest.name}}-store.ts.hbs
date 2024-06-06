@@ -34,7 +34,7 @@
         ),
       },
           {{else}}
-      {{camel_case (plural to_referenceable.name)}}$: pipe(
+      {{camel_case (plural to_referenceable.name)}}: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case from_referenceable.singular_arg}},
@@ -83,7 +83,7 @@
         ),
       },
               {{else}}
-      {{camel_case (plural from_referenceable.name)}}$: pipe(
+      {{camel_case (plural from_referenceable.name)}}: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case to_referenceable.singular_arg}},
@@ -185,7 +185,7 @@
         ),
       },
               {{else}}
-      {{camel_case (plural from_referenceable.name)}}$: pipe(
+      {{camel_case (plural from_referenceable.name)}}: pipe(
         liveLinksSignal(
           this.client,
           {{camel_case to_referenceable.singular_arg}},
