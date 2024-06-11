@@ -81,7 +81,11 @@ pub async fn sample_{{snake_case entry_type.name}}_2(conductor: &SweetConductor,
       {{#if (eq cardinality "vector")}}
 	  {{field_name}}: vec![{{> (concat field_type.type "/sample2")}}],
       {{else}}
+        {{#if (eq cardinality "option")}}
+	  {{field_name}}: Some({{> (concat field_type.type "/sample2")}}),
+        {{else}}
 	  {{field_name}}: {{> (concat field_type.type "/sample2")}},
+        {{/if}}
       {{/if}}
   {{/if}}
 {{/each}}
