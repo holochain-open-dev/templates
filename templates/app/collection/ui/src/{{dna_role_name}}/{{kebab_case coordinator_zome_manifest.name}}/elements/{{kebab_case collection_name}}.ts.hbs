@@ -4,13 +4,14 @@ import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { SignalWatcher } from '@holochain-open-dev/signals';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
-import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { mdiInformationOutline } from '@mdi/js';
 
 import '@holochain-open-dev/elements/dist/elements/display-error.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
+import { appStyles } from '../../../app-styles.js';
 import './{{kebab_case referenceable.name}}-summary.js';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
@@ -82,5 +83,5 @@ export class {{pascal_case collection_name}} extends SignalWatcher(LitElement) {
     }
   }
   
-  static styles = [sharedStyles];
+  static styles = appStyles;
 }

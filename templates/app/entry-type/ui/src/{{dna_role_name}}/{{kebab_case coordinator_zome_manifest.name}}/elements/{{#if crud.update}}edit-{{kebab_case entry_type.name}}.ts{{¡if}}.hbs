@@ -3,7 +3,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { state, customElement, property } from 'lit/decorators.js';
 import { ActionHash, Record, EntryHash, AgentPubKey } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
-import { hashState, notifyError, sharedStyles, hashProperty, wrapPathInSvg, onSubmit } from '@holochain-open-dev/elements';
+import { hashState, notifyError, hashProperty, wrapPathInSvg, onSubmit } from '@holochain-open-dev/elements';
 import { SignalWatcher, toPromise } from '@holochain-open-dev/signals';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
@@ -24,6 +24,7 @@ import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
   {{/each}}
 {{/uniq_lines}}
 
+import { appStyles } from '../../../app-styles.js';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
@@ -187,5 +188,5 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
     }
   }
 
-  static styles = [sharedStyles];
+  static styles = appStyles;
 }

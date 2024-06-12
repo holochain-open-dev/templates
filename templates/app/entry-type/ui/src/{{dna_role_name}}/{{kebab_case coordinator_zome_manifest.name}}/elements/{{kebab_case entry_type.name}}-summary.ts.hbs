@@ -3,7 +3,7 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { EntryHash, Record, ActionHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { SignalWatcher } from '@holochain-open-dev/signals';
-import { hashProperty, sharedStyles } from '@holochain-open-dev/elements';
+import { hashProperty } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 
 import { localized, msg } from '@lit/localize';
@@ -20,6 +20,7 @@ import '@holochain-open-dev/elements/dist/elements/display-error.js';
   {{/each}}
 {{/uniq_lines}}
 
+import { appStyles } from '../../../app-styles.js';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
@@ -97,5 +98,5 @@ export class {{pascal_case entry_type.name}}Summary extends SignalWatcher(LitEle
   }
 
   
-  static styles = [sharedStyles];
+  static styles = appStyles;
 }

@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { AgentPubKey, EntryHash, ActionHash, Record } from '@holochain/client';
 import { consume } from '@lit/context';
-import { hashProperty, sharedStyles, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { SignalWatcher } from '@holochain-open-dev/signals';
 import { localized, msg } from '@lit/localize';
 import { mdiInformationOutline } from '@mdi/js';
@@ -17,6 +17,7 @@ import './{{kebab_case to_referenceable.name}}-summary.js';
 import '@holochain-open-dev/profiles/dist/elements/agent-avatar.js';
 {{/if}}
 
+import { appStyles } from '../../../app-styles.js';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
 
@@ -91,5 +92,5 @@ export class {{pascal_case (plural to_referenceable.name)}}For{{pascal_case from
     }
   }
   
-  static styles = [sharedStyles];
+  static styles = appStyles;
 }

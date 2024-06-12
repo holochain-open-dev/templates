@@ -4,7 +4,7 @@ import { state, property, query, customElement } from 'lit/decorators.js';
 import { ActionHash, Record, DnaHash, AgentPubKey, EntryHash } from '@holochain/client';
 import { EntryRecord } from '@holochain-open-dev/utils';
 import { SignalWatcher } from '@holochain-open-dev/signals';
-import { hashProperty, notifyError, hashState, sharedStyles, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
+import { hashProperty, notifyError, hashState, onSubmit, wrapPathInSvg } from '@holochain-open-dev/elements';
 import { consume } from '@lit/context';
 import { localized, msg } from '@lit/localize';
 import { mdiAlertCircleOutline, mdiDelete } from "@mdi/js";
@@ -25,6 +25,7 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
   {{/each}}
 {{/uniq_lines}}
 
+import { appStyles } from '../../../app-styles.js';
 import { {{pascal_case coordinator_zome_manifest.name}}Store } from '../{{kebab_case coordinator_zome_manifest.name}}-store.js';
 import { {{camel_case coordinator_zome_manifest.name}}StoreContext } from '../context.js';
 import { {{pascal_case entry_type.name}}{{#each entry_type.fields}}{{#if (eq field_type.type "Enum")}}, {{field_type.label}}{{/if}}{{/each}} } from '../types.js';
@@ -171,5 +172,5 @@ export class Create{{pascal_case entry_type.name}} extends SignalWatcher(LitElem
       </sl-card>`;
   }
   
-  static styles = [sharedStyles];
+  static styles = appStyles;
 }
