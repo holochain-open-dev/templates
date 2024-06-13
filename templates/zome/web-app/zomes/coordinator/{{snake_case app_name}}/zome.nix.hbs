@@ -6,7 +6,7 @@
     , system
     , self'
     , ...
-    }: {
+    }: rec {
       packages.{{snake_case app_name}} = inputs.hc-infra.outputs.lib.rustZome {
         workspacePath = inputs.self.outPath;
         holochain = inputs'.holochain;
@@ -38,7 +38,10 @@
                     - name: {{snake_case app_name}}_integrity
                   dylib: ~
           '';
-          zomes = inputs.hc-infra.outputs.lib.filterZomes self'.packages;
+          zomes = {
+            {{snake_case app_name}}_integrity = self'.packages.{{snake_case app_name}}_integrity;
+            {{snake_case app_name}} = packages.{{snake_case app_name}};
+          };
           holochain = inputs'.holochain;
         });
         crateCargoToml = ./Cargo.toml;

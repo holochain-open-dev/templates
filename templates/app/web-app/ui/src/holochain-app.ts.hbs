@@ -22,7 +22,7 @@ import '@holochain-open-dev/profiles/dist/elements/my-profile.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 
-import { rootRouterContext } from './context.ts';
+import { rootRouterContext } from './context.js';
 import { appStyles } from './app-styles.js';
 import './home-page.ts';
 
@@ -109,21 +109,9 @@ export class HolochainApp extends SignalWatcher(LitElement) {
       `;
 
     return html`
-      <div class="column fill">
-        <div
-          class="row"
-          style="align-items: center; color:white; background-color: var(--sl-color-primary-900); padding: 16px"
-        >
-          ${this.renderBackButton()}
-          <span class="title" style="flex: 1">${msg("{{title_case app_name}}")}</span>
-
-          ${this.renderMyProfile()}
-        </div>
-
-        <profile-prompt style="flex: 1;">
-          ${this.router.outlet()}
-        </profile-prompt>
-      </div>
+      <profile-prompt style="flex: 1;">
+        ${this.router.outlet()}
+      </profile-prompt>
     `;
   }
 
