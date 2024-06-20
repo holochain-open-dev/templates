@@ -2,7 +2,7 @@ import { Router, Routes } from "@holochain-open-dev/elements";
 import { AsyncResult, SignalWatcher } from "@holochain-open-dev/signals";
 import { ProfilesStore, profilesStoreContext } from "@holochain-open-dev/profiles";
 import { LitElement, css, html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { EntryRecord } from "@holochain-open-dev/utils";
 import { consume } from "@lit/context";
 import { msg } from "@lit/localize";
@@ -21,7 +21,7 @@ export class HomePage extends SignalWatcher(LitElement) {
   /**
    * @internal
    */
-  @consume({ context: routerContext, subscribe: true })
+  @consume({ context: rootRouterContext, subscribe: true })
   rootRouter!: Router;
 
   /**
@@ -71,7 +71,7 @@ export class HomePage extends SignalWatcher(LitElement) {
             style="align-items: center;"
             slot="actionItems"
           >
-            <agent-avatar .agentPubKey=${this._client.myPubKey}></agent-avatar>
+            <agent-avatar .agentPubKey=${this._profilesStore.client.client.myPubKey}></agent-avatar>
             <span style="margin: 0 16px;">${myProfile.value?.entry.nickname}</span>
           </div>`;
     }

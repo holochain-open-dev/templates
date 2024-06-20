@@ -4,7 +4,7 @@
   inputs = {
     holochain = {
       url = "github:holochain/holochain";
-      inputs.versions.url = "github:holochain/holochain?dir=versions/0_3_rc";
+      inputs.versions.url = "github:holochain/holochain?dir=versions/0_3";
     };
 
     nixpkgs.follows = "holochain/nixpkgs";

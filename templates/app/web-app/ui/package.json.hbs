@@ -1,6 +1,7 @@
 {
   "name": "ui",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "start": "vite --port $UI_PORT --clearScreen false",
     "build": "vite build",
@@ -11,10 +12,10 @@
     "localize:build": "lit-localize build"
   },
   "dependencies": {
-    "@holochain/client": "^0.17.0-rc",
-    "@holochain-open-dev/elements": "^0.300.0-rc.3",
-    "@holochain-open-dev/signals": "^0.300.0-rc",
-    "@holochain-open-dev/utils": "^0.300.0-rc",
+    "@holochain/client": "^0.17.0",
+    "@holochain-open-dev/elements": "^0.300.0",
+    "@holochain-open-dev/signals": "^0.300.0",
+    "@holochain-open-dev/utils": "^0.300.0",
     "@lit/context": "^1.0.0",
     "@lit/localize": "^0.12.0",
     "@mdi/js": "^7.2.0",
@@ -30,7 +31,6 @@
     "typescript": "^5.4.5",
     "tslib": "^2.6.2",
     "vite": "^4.0.0",
-    "vite-plugin-checker": "^0.5.3",
     "vite-plugin-static-copy": "^0.13.0"
   }
 }
