@@ -47,6 +47,8 @@
     <holochain-app></holochain-app>
 
     <script type="module">
+      // Replace 'light.css' with 'dark.css' if you want the dark theme, and then add class="sl-theme-dark" to the body element
+      import '@shoelace-style/shoelace/dist/themes/light.css';
       import "urlpattern-polyfill";
       import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
       import "./src/holochain-app.ts";
