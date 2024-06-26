@@ -152,13 +152,11 @@ export class Create{{pascal_case entry_type.name}} extends SignalWatcher(LitElem
         >  
           {{#each entry_type.fields}}
             {{#if widget}}
-          <div>
               {{#if (not (eq cardinality "vector") )}}
           {{> (concat field_type.type "/" widget "/edit/render") label=(title_case field_name) field_name=field_name required=(eq cardinality "single") }}
               {{else}}
           {{> Vec/edit/render field_name=field_name field_type=field_type widget=widget }}
               {{/if}}
-          </div>
 
             {{/if}}
           {{/each}}
