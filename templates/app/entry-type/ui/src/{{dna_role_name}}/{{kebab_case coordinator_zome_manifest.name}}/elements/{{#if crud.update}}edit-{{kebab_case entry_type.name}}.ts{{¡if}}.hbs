@@ -88,7 +88,11 @@ export class Edit{{pascal_case entry_type.name}} extends SignalWatcher(LitElemen
         {{#if (eq cardinality "vector")}}
       {{snake_case field_name}}: (Array.isArray(fields.{{snake_case field_name}}!) ? fields.{{snake_case field_name}}! : [fields.{{snake_case field_name}}!] as unknown as Array<{{> (concat field_type.type "/type") }}>).map((el) => {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read="el" }}),
         {{else}}
+          {{#if (eq cardinality "single")}}
       {{snake_case field_name}}: {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read=(concat "fields." (snake_case field_name) "!" ) }},
+          {{else}}
+      {{snake_case field_name}}: fields.{{snake_case.field_name}} ? {{> (concat field_type.type "/" widget "/edit/to-value") field_name=field_name variable_to_read=(concat "fields." (snake_case field_name) ) }} : undefined,
+          {{/if}}
         {{/if}}
       {{else}}
       {{snake_case field_name}}: currentRecord.entry.{{snake_case field_name}}!,
