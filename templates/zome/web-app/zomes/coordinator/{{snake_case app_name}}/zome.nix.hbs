@@ -40,7 +40,7 @@
           '';
           zomes = {
             {{snake_case app_name}}_integrity = self'.packages.{{snake_case app_name}}_integrity;
-            {{snake_case app_name}} = packages.{{snake_case app_name}};
+            {{snake_case app_name}} = self'.packages.{{snake_case app_name}};
           };
           holochain = inputs'.holochain;
         });
