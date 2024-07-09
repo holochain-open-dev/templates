@@ -28,7 +28,7 @@ jobs:
 
       - name: Build zomes
         env:
-          CACHIX_AUTH_TOKEN: "${{ secrets.CACHIX_TOKEN_HOLOCHAIN_OPEN_DEV }}"
+          CACHIX_AUTH_TOKEN: "$\{{ secrets.CACHIX_TOKEN_HOLOCHAIN_OPEN_DEV }}"
         run: |
           nix build -L .#{{snake_case app_name}}_integrity
           cachix push holochain-open-dev $(nix path-info --accept-flake-config .#{{snake_case app_name}}_integrity)
