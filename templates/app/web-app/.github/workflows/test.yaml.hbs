@@ -8,7 +8,7 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  testbuild:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,4 +28,4 @@ jobs:
 
       - name: Install and test
         run: |
-          nix develop --command bash -c "pnpm i && pnpm t && pnpm package"
+          nix develop --accept-flake-config --command bash -c "pnpm i && pnpm t && pnpm package"

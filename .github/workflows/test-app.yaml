@@ -28,5 +28,5 @@ jobs:
 
       - name: Test app template
         run: |
-          nix develop --command bash -c "sh run_test_app.sh"
+          nix develop --accept-flake-config --command bash -c "sh run_test_app.sh"
 
