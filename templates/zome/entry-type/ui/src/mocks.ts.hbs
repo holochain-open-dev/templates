@@ -28,6 +28,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         {{#if (eq cardinality "single")}}
     const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
     this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, { 
+      base: {{camel_case ../entry_type.name}}.{{field_name}},
       target: record.signed_action.hashed.hash, 
       author: this.myPubKey,
       timestamp: Date.now() * 1000,
@@ -40,7 +41,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         {{#if (eq cardinality "option")}}
     if ({{camel_case ../entry_type.name}}.{{field_name}}) {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
-      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, { 
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, {
+        base: {{camel_case ../entry_type.name}}.{{field_name}},
         target: record.signed_action.hashed.hash, 
         author: this.myPubKey,
         timestamp: Date.now() * 1000,
@@ -54,7 +56,8 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         {{#if (eq cardinality "vector")}}
     await Promise.all({{camel_case ../entry_type.name}}.{{field_name}}.map(async {{field_name}} => {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{field_name}}) || [];
-      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, { 
+      this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, {
+        base: {{field_name}},
         target: record.signed_action.hashed.hash, 
         author: this.myPubKey,
         timestamp: Date.now() * 1000,
@@ -133,6 +136,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
         {{#if (eq cardinality "single")}}
     const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
     this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, {
+      base: {{camel_case ../entry_type.name}}.{{field_name}},
       target: record.signed_action.hashed.hash, 
       author: record.signed_action.hashed.content.author,
       timestamp: record.signed_action.hashed.content.timestamp,
@@ -146,6 +150,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     if ({{camel_case ../entry_type.name}}.{{field_name}}) {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{camel_case ../entry_type.name}}.{{field_name}}) || [];
       this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{camel_case ../entry_type.name}}.{{field_name}}, [...existing{{pascal_case field_name}}, {
+        base: {{camel_case ../entry_type.name}}.{{field_name}},
         target: record.signed_action.hashed.hash, 
         author: record.signed_action.hashed.content.author,
         timestamp: record.signed_action.hashed.content.timestamp,
@@ -160,6 +165,7 @@ import { {{pascal_case entry_type.name}} } from './types.js';
     await Promise.all({{camel_case ../entry_type.name}}.{{field_name}}.map(async {{field_name}} => {
       const existing{{pascal_case field_name}} = this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.get({{field_name}}) || [];
       this.{{camel_case (plural ../entry_type.name)}}For{{pascal_case linked_from.name}}.set({{field_name}}, [...existing{{pascal_case field_name}}, {
+        base: {{field_name}},
         target: record.signed_action.hashed.hash, 
         author: record.signed_action.hashed.content.author,
         timestamp: record.signed_action.hashed.content.timestamp,

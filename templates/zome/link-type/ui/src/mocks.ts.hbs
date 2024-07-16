@@ -14,7 +14,8 @@
   
   async add_{{snake_case to_referenceable.name}}_for_{{snake_case from_referenceable.name}}(input: { {{snake_case from_referenceable.singular_arg}}: {{from_referenceable.hash_type}}; {{snake_case to_referenceable.singular_arg}}: {{to_referenceable.hash_type}} }): Promise<void> {
     const existing = this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.get(input.{{snake_case from_referenceable.singular_arg}}) || [];
-    this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.set(input.{{snake_case from_referenceable.singular_arg}}, [...existing, { 
+    this.{{camel_case from_referenceable.name}}To{{pascal_case to_referenceable.name}}.set(input.{{snake_case from_referenceable.singular_arg}}, [...existing, {
+        base: input.{{snake_case from_referenceable.singular_arg}},
         target: input.{{snake_case to_referenceable.singular_arg}}, 
         author: this.myPubKey,
         timestamp: Date.now() * 1000,
@@ -25,7 +26,8 @@
       }]);
     {{#if bidirectional}}
     const existingReverse = this.{{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}}.get(input.{{snake_case to_referenceable.singular_arg}}) || [];
-    this.{{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}}.set(input.{{snake_case to_referenceable.singular_arg}}, [...existingReverse, { 
+    this.{{camel_case to_referenceable.name}}To{{pascal_case from_referenceable.name}}.set(input.{{snake_case to_referenceable.singular_arg}}, [...existingReverse, {
+      base: input.{{snake_case to_referenceable.singular_arg}},
       target: input.{{snake_case from_referenceable.singular_arg}}, 
       author: this.myPubKey,
       timestamp: Date.now() * 1000,
