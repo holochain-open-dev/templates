@@ -9,7 +9,7 @@ rm -rf posts-open-dev
 mkdir posts-open-dev
 cd posts-open-dev
 
-hc-scaffold web-app posts --setup-nix true -F 
+hc-scaffold web-app posts --setup-nix true -F --package-manager pnpm
 "
 
 cd /tmp/posts-open-dev/posts
