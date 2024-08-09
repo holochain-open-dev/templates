@@ -1,7 +1,7 @@
 {{#if (includes previous_file_content "export type EntryTypes = never;")}}
-{{replace previous_file_content "export type EntryTypes = never;" (concat "export type EntryTypes =\n | ({  type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ");")}}
+{{replace previous_file_content "export type EntryTypes = never;" (concat "export type EntryTypes = ({  type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ");")}}
 {{else}}
-{{replace previous_file_content "export type EntryTypes =" (concat "export type EntryTypes =\n | ({ type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ")")}}
+{{replace previous_file_content "export type EntryTypes =" (concat "export type EntryTypes = ({ type: '" (pascal_case entry_type.name) "'; } & " (pascal_case entry_type.name) ") | ")}}
 {{/if}}
 
 {{#each entry_type.fields}}
