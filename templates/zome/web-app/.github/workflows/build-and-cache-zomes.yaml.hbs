@@ -38,10 +38,16 @@ jobs:
         run: |
           cachix watch-exec holochain-open-dev -- nix build --no-update-lock-file --accept-flake-config -L .#{{snake_case app_name}}_integrity
           cachix push holochain-open-dev $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity | nix run nixpkgs#jq -- -r 'keys[0]')
-          cachix pin holochain-open-dev {{snake_case app_name}}_integrity_debug $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity | nix run nixpkgs#jq -- -r 'keys[0]')
 
           cachix watch-exec holochain-open-dev -- nix build --no-update-lock-file --accept-flake-config -L .#{{snake_case app_name}}
           cachix push holochain-open-dev $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}} | nix run nixpkgs#jq -- -r 'keys[0]')
+
+      - name: Pin debug zomes
+        if: github.event_name != 'pull_request'
+        env:
+          CACHIX_AUTH_TOKEN: "$\{{ secrets.CACHIX_TOKEN_HOLOCHAIN_OPEN_DEV }}"
+        run: |
+          cachix pin holochain-open-dev {{snake_case app_name}}_integrity_debug $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity | nix run nixpkgs#jq -- -r 'keys[0]')
           cachix pin holochain-open-dev {{snake_case app_name}}_debug $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}} | nix run nixpkgs#jq -- -r 'keys[0]')
 
       - name: Build release zomes
@@ -51,8 +57,15 @@ jobs:
         run: |
           cachix watch-exec holochain-open-dev -- nix build --no-update-lock-file --accept-flake-config -L .#{{snake_case app_name}}_integrity.meta.release
           cachix push holochain-open-dev $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity.meta.release | nix run nixpkgs#jq -- -r 'keys[0]')
-          cachix pin holochain-open-dev {{snake_case app_name}}_integrity $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity.meta.release | nix run nixpkgs#jq -- -r 'keys[0]')
 
           cachix watch-exec holochain-open-dev -- nix build --no-update-lock-file --accept-flake-config -L .#{{snake_case app_name}}.meta.release
           cachix push holochain-open-dev $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}.meta.release | nix run nixpkgs#jq -- -r 'keys[0]')
-          cachix pin holochain-open-dev {{snake_case app_name}} $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}.meta.release | nix run nixpkgs#jq -- -r 'keys[0]')
+
+      - name: Pin release zomes
+        if: github.event_name != 'pull_request' && matrix.os == 'ubuntu-latest'
+        env:
+          CACHIX_AUTH_TOKEN: "$\{{ secrets.CACHIX_TOKEN_HOLOCHAIN_OPEN_DEV }}"
+        run: |
+          cachix pin holochain-open-dev {{snake_case app_name}}_integrity_debug $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}}_integrity | nix run nixpkgs#jq -- -r 'keys[0]')
+          cachix pin holochain-open-dev {{snake_case app_name}}_debug $(nix path-info --json --accept-flake-config --no-warn-dirty .#{{snake_case app_name}} | nix run nixpkgs#jq -- -r 'keys[0]')
+
