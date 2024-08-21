@@ -14,7 +14,7 @@ hc-scaffold web-app posts --setup-nix true -F --package-manager pnpm
 
 cd /tmp/posts-open-dev/posts
 
-nix develop --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
+nix develop --no-update-lock-file --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
 set -e
 
 hc-scaffold entry-type post --zome posts_integrity --reference-entry-hash false --crud crud --link-from-original-to-each-update true --fields title:String:TextField,needs:Vec\<String\>:TextField

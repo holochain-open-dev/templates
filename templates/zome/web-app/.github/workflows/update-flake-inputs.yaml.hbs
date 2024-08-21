@@ -29,7 +29,7 @@ jobs:
       - name: Update Flake
         run: |
           nix flake update
-          nix develop --accept-flake-config
+          nix develop --accept-flake-config --command bash -c "echo \"This is here so sync-npm-git-dependencies-with-git is triggered\""
 
       - uses: dorny/paths-filter@v3
         id: changes

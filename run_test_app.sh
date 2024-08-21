@@ -12,7 +12,7 @@ hc-scaffold web-app forum-lit-open-dev --setup-nix true -F --package-manager pnp
 
 cd /tmp/forum-lit-open-dev
 
-nix develop --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
+nix develop --no-update-lock-file --accept-flake-config --override-input scaffolding "path:$DIR" --command bash -c "
 
 set -e
 hc-scaffold dna forum 

@@ -8,7 +8,7 @@
     "local-services": "hc run-local-services --bootstrap-port $BOOTSTRAP_PORT --signal-port $SIGNAL_PORT",
     "test": "pnpm run build:happ && nix flake check -L && pnpm -F tests test",
     "build:happ": "nix build -L .#{{app_name}} -o workdir/{{app_name}}.happ",
-    "package": "nix build -L .#{{app_name}}.meta.release -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
+    "package": "nix build -L .#{{app_name}}.release -o workdir/{{app_name}}.happ && pnpm -F ui package && hc web-app pack workdir"
   },
   "devDependencies": {
     "@holochain-playground/cli": "^0.300.0-rc",
