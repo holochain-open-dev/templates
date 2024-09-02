@@ -5,10 +5,11 @@
     { inputs'
     , lib
     , self'
+    , system
     , ...
     }: {
   	  packages.{{snake_case app_name}}_test_happ = inputs.hc-infra.outputs.lib.happ {
-        holochain = inputs'.holochain;
+        inherit system;
         happManifest = ./happ.yaml;
 
         dnas = {

@@ -2,21 +2,13 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    versions.url = "github:holochain/holochain?dir=versions/0_3";
+    holonix.url = "github:holochain/holonix/main-0.3";
 
-    holochain.url = "github:holochain/holochain";
-    holochain.inputs.versions.follows = "versions";
+    nixpkgs.follows = "holonix/nixpkgs";
+    flake-parts.follows = "holonix/flake-parts";
 
-    nixpkgs.follows = "holochain/nixpkgs";
-    flake-parts.follows = "holochain/flake-parts";
-
-    hc-infra = {
-      url = "github:holochain-open-dev/infrastructure";
-    };
-    scaffolding = {
-      url = "github:holochain-open-dev/templates";
-    };
-
+    hc-infra.url = "github:holochain-open-dev/infrastructure";
+    scaffolding.url = "github:holochain-open-dev/templates";
   };
 
   outputs = inputs:
@@ -29,7 +21,7 @@
           ./happ.nix
         ];
       
-        systems = builtins.attrNames inputs.holochain.devShells;
+        systems = builtins.attrNames inputs.holonix.devShells;
         perSystem =
           { inputs'
           , config
@@ -40,7 +32,7 @@
             devShells.default = pkgs.mkShell {
               inputsFrom = [ 
                 inputs'.hc-infra.devShells.synchronized-pnpm
-                inputs'.holochain.devShells.holonix
+                inputs'.holonix.devShells.default
               ];
               packages = [
                 inputs'.scaffolding.packages.hc-scaffold-app-template

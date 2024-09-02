@@ -3,12 +3,12 @@
 {
   perSystem =
     { inputs'
-    ,  system
+    , system
     , ...
     }: {
       packages.{{snake_case app_name}}_integrity = inputs.hc-infra.outputs.lib.rustZome {
+        inherit system;
         workspacePath = inputs.self.outPath;
-        holochain = inputs'.holochain;
         crateCargoToml = ./Cargo.toml;
         cargoArtifacts =
           inputs.hc-infra.outputs.lib.zomeCargoArtifacts { inherit system; };

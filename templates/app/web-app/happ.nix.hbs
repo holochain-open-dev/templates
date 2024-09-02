@@ -11,10 +11,11 @@
     { inputs'
     , lib
     , self'
+    , system
     , ...
     }: {
   	  packages.{{app_name}} = inputs.hc-infra.outputs.lib.happ {
-        holochain = inputs'.holochain;
+        inherit system;
         happManifest = ./workdir/happ.yaml;
         dnas = {
           # Include here the DNA packages for this hApp, e.g.:

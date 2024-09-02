@@ -16,11 +16,12 @@
     { inputs'
     , self'
     , lib
+    , system
     , ...
     }: {
   	  packages.{{dna_name}} = inputs.hc-infra.outputs.lib.dna {
+        inherit system;
         dnaManifest = ./workdir/dna.yaml;
-        holochain = inputs'.holochain;
         zomes = {
           # Include here the zome packages for this DNA, e.g.:
           # profiles_integrity = inputs'.profiles.packages.profiles_integrity;

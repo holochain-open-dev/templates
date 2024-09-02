@@ -2,12 +2,9 @@
   description = "Template for Holochain app development";
 
   inputs = {
-    versions.url = "github:holochain/holochain?dir=versions/0_3";
-    holochain.url = "github:holochain/holochain";
-    holochain.inputs.versions.follows = "versions";
-
-    nixpkgs.follows = "holochain/nixpkgs";
-    flake-parts.follows = "holochain/flake-parts";
+    holonix.url = "github:holochain/holonix/main-0.3";
+    nixpkgs.follows = "holonix/nixpkgs";
+    flake-parts.follows = "holonix/flake-parts";
     scaffolding.url = "github:holochain/scaffolding/holochain-0.3";
   };
 
@@ -18,12 +15,12 @@
     ];
   };
 
-  outputs = inputs@{ flake-parts, holochain, ... }:
+  outputs = inputs@{ flake-parts, holonix, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = builtins.attrNames holochain.devShells;
+      systems = builtins.attrNames holonix.devShells;
       perSystem = { config, pkgs, system, inputs', ... }: {
         devShells.default = pkgs.mkShell {
-          inputsFrom = [ holochain.devShells.${system}.holonix ];
+          inputsFrom = [ holonix.devShells.${system}.default ];
 
           packages = with pkgs; [ nodejs_20 ];
         };
