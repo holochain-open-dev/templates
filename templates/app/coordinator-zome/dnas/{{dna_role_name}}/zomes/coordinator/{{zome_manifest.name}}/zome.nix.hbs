@@ -42,7 +42,7 @@
             {{zome_manifest.name}}_integrity = self'.packages.{{zome_manifest.name}}_integrity;
             {{zome_manifest.name}} = self'.packages.{{zome_manifest.name}};
           };
-          holochain = inputs'.holochain;
+          inherit system;
         });
         crateCargoToml = ./Cargo.toml;
         cargoArtifacts = inputs.hc-infra.outputs.lib.holochainCargoArtifacts {

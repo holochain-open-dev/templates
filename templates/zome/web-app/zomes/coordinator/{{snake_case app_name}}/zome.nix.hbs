@@ -42,7 +42,7 @@
             {{snake_case app_name}}_integrity = self'.packages.{{snake_case app_name}}_integrity;
             {{snake_case app_name}} = self'.packages.{{snake_case app_name}};
           };
-          holochain = inputs'.holochain;
+          inherit system;
         });
         crateCargoToml = ./Cargo.toml;
         cargoArtifacts = inputs.hc-infra.outputs.lib.holochainCargoArtifacts {

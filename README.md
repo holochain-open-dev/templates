@@ -38,13 +38,9 @@ nix run github:holochain-open-dev/templates#hc-scaffold-zome-template -- web-app
   description = "Template for Holochain app development";
 
   inputs = {
-    versions.url  = "github:holochain/holochain?dir=versions/weekly";
-
-    holochain-flake.url = "github:holochain/holochain";
-    holochain-flake.inputs.versions.follows = "versions";
-
-    nixpkgs.follows = "holochain-flake/nixpkgs";
-    flake-parts.follows = "holochain-flake/flake-parts";
+    holonix.url = "github:holochain/holonix/main-0.3";
+    nixpkgs.follows = "holonix/nixpkgs";
+    flake-parts.follows = "holonix/flake-parts";
 
 +   scaffolding.url = "github:holochain-open-dev/templates";
   };
@@ -55,7 +51,7 @@ nix run github:holochain-open-dev/templates#hc-scaffold-zome-template -- web-app
         inherit inputs;
       }
       {
-        systems = builtins.attrNames inputs.holochain-flake.devShells;
+        systems = builtins.attrNames inputs.holonix.devShells;
         perSystem =
           { inputs'
           , config
@@ -64,7 +60,7 @@ nix run github:holochain-open-dev/templates#hc-scaffold-zome-template -- web-app
           , ...
           }: {
             devShells.default = pkgs.mkShell {
-              inputsFrom = [ inputs'.holochain-flake.devShells.holonix ];
+              inputsFrom = [ inputs'.holonix.devShells.default ];
               packages = [
                 pkgs.nodejs_20
                 # more packages go here
