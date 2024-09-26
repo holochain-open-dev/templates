@@ -19,8 +19,7 @@
     , system
     , ...
     }: {
-  	  packages.{{dna_name}} = inputs.hc-infra.outputs.lib.dna {
-        inherit system;
+  	  packages.{{dna_name}} = inputs.hc-infra.outputs.builders.${system}.dna {
         dnaManifest = ./workdir/dna.yaml;
         zomes = {
           # Include here the zome packages for this DNA, e.g.:

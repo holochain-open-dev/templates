@@ -14,8 +14,7 @@
     , system
     , ...
     }: {
-  	  packages.{{app_name}} = inputs.hc-infra.outputs.lib.happ {
-        inherit system;
+  	  packages.{{app_name}} = inputs.hc-infra.outputs.builders.${system}.happ {
         happManifest = ./workdir/happ.yaml;
         dnas = {
           # Include here the DNA packages for this hApp, e.g.:
