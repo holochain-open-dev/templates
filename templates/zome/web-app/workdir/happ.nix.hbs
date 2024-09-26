@@ -8,8 +8,7 @@
     , system
     , ...
     }: {
-  	  packages.{{snake_case app_name}}_test_happ = inputs.hc-infra.outputs.lib.happ {
-        inherit system;
+  	  packages.{{snake_case app_name}}_test_happ = inputs.hc-infra.outputs.builders.${system}.happ {
         happManifest = ./happ.yaml;
 
         dnas = {
