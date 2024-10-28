@@ -9,6 +9,7 @@
 
     hc-infra.url = "github:holochain-open-dev/infrastructure";
     scaffolding.url = "github:holochain-open-dev/templates";
+    playground.url = "github:darksoil-studio/holochain-playground";
 
     profiles.url = "github:holochain-open-dev/profiles/nixify";
   };
@@ -53,6 +54,7 @@
 
               packages = [
                 inputs'.scaffolding.packages.hc-scaffold-zome-template
+                inputs'.playground.packages.hc-playground
               ];
             };
 
