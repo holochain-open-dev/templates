@@ -3,12 +3,12 @@ manifest_version: "1"
 name: {{app_name}}_test
 description: ~
 roles:   
-  - name: {{app_name}}_test
+  - name: {{snake_case app_name}}_test
     provisioning:
       strategy: create
       deferred: false
     dna:
-      bundled: "./{{app_name}}_test.dna"
+      bundled: "./{{snake_case app_name}}_test.dna"
       modifiers:
         network_seed: ~
         properties: ~
