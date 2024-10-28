@@ -39,7 +39,7 @@
           fastTrackDisabled = pkgs.runCommand "hc-scaffold" {
             buildInputs = [ pkgs.makeWrapper ];
           }
-            "  mkdir $out/bin -p\n\n  makeWrapper ${customHcScaffold}/bin/hc-scaffold $out/bin/hc-scaffold \\\n    --add-flags \"--disable-fast-track\"\n";
+            "  mkdir $out/bin -p\n\n  makeWrapper ${customHcScaffold}/bin/hc-scaffold $out/bin/hc-scaffold \\\n    --append-flags \"--disable-fast-track\"\n";
         in fastTrackDisabled;
       };
     };
