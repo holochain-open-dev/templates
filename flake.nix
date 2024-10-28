@@ -31,11 +31,16 @@
             customTemplatePath = ./templates/app;
           };
 
-        packages.hc-scaffold-zome-template =
-          inputs.scaffolding.lib.wrapCustomTemplate {
+        packages.hc-scaffold-zome-template = let
+          customHcScaffold = inputs.scaffolding.lib.wrapCustomTemplate {
             inherit pkgs system;
             customTemplatePath = ./templates/zome;
           };
+          fastTrackDisabled = pkgs.runCommand "hc-scaffold" {
+            buildInputs = [ pkgs.makeWrapper ];
+          }
+            "  mkdir $out/bin -p\n\n  makeWrapper ${customHcScaffold}/bin/hc-scaffold $out/bin/hc-scaffold \\\n    --add-flags \"--disable-fast-track\"\n";
+        in fastTrackDisabled;
       };
     };
 }
