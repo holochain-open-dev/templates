@@ -8,7 +8,7 @@
     , system
     , ...
     }: {
-  	  packages.{{app_name}}_test_dna = inputs.hc-infra.outputs.builders.${system}.dna {
+  	  packages.{{snake_case app_name}}_test_dna = inputs.hc-infra.outputs.builders.${system}.dna {
         dnaManifest = ./dna.yaml;
         zomes = {
           # Include here the zome packages for this DNA, e.g.:
